@@ -1,0 +1,60 @@
+.paginacionCI ul {
+    display: inline-flex !important;
+}
+
+.paginacionCI ul > li > a {
+    padding: 15px !important;
+    border: 2px solid rgb(244, 111, 48);
+    width: 100%;
+    margin: 10px !important;
+    border-radius: 25px;
+    color: rgb(244, 111, 48);
+}
+
+.paginacionCI ul>li>a:hover {
+
+    background: rgb(244, 111, 48);
+
+    border-radius: 25px;
+    color: white;
+}
+
+.view-contact-2  a:hover {
+    background: rgb(244, 111, 48);
+    color: #fff;
+}
+
+.view-contact-2 a {
+  
+display: block;
+text-align: center;
+text-transform: uppercase;
+font-size: 15px;
+font-weight: 600;
+padding: 20px 5px;
+letter-spacing: .05em;
+position: relative;
+border-radius: 0 0 6px 6px;
+}
+
+.view-contact-1  a:hover {
+    background: rgb(244, 111, 48);
+    color: #fff;
+}
+
+.view-contact-1 a {
+  
+display: block;
+text-align: center;
+text-transform: uppercase;
+font-size: 15px;
+font-weight: 600;
+padding: 20px 5px;
+letter-spacing: .05em;
+position: relative;
+border-radius: 0 0 6px 6px;
+}
+
+
+
+

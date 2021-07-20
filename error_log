@@ -1,0 +1,44 @@
+[21-Jan-2021 14:09:34 America/Chicago] PHP Fatal error:  Uncaught TypeError: Argument 1 passed to CodeIgniter\HTTP\URI::setScheme() must be of the type string, null given, called in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/IncomingRequest.php on line 615 and defined in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/URI.php:665
+Stack trace:
+#0 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/IncomingRequest.php(615): CodeIgniter\HTTP\URI->setScheme(NULL)
+#1 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/IncomingRequest.php(184): CodeIgniter\HTTP\IncomingRequest->detectURI('REQUEST_URI', '/UNICEQ/')
+#2 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/Config/Services.php(624): CodeIgniter\HTTP\IncomingRequest->__construct(Object(Config\App), Object(CodeIgniter\HTTP\URI), '', Object(CodeIgniter\HTTP\UserAgent))
+#3 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/Config/BaseService.php(123): CodeIgniter\Config\Services::request(Object(Config\App), false)
+#4 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/Config/Servi in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/URI.php on line 665
+[21-Jan-2021 14:09:35 America/Chicago] PHP Fatal error:  Uncaught TypeError: Argument 1 passed to CodeIgniter\HTTP\URI::setScheme() must be of the type string, null given, called in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/IncomingRequest.php on line 615 and defined in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/URI.php:665
+Stack trace:
+#0 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/IncomingRequest.php(615): CodeIgniter\HTTP\URI->setScheme(NULL)
+#1 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/IncomingRequest.php(184): CodeIgniter\HTTP\IncomingRequest->detectURI('REQUEST_URI', '/UNICEQ/')
+#2 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/Config/Services.php(624): CodeIgniter\HTTP\IncomingRequest->__construct(Object(Config\App), Object(CodeIgniter\HTTP\URI), '', Object(CodeIgniter\HTTP\UserAgent))
+#3 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/Config/BaseService.php(123): CodeIgniter\Config\Services::request(Object(Config\App), false)
+#4 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/Config/Servi in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/URI.php on line 665
+[14-Feb-2021 11:08:21 America/Chicago] PHP Fatal error:  Uncaught TypeError: Argument 1 passed to CodeIgniter\HTTP\URI::setScheme() must be of the type string, null given, called in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/IncomingRequest.php on line 615 and defined in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/URI.php:665
+Stack trace:
+#0 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/IncomingRequest.php(615): CodeIgniter\HTTP\URI->setScheme(NULL)
+#1 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/IncomingRequest.php(184): CodeIgniter\HTTP\IncomingRequest->detectURI('REQUEST_URI', 'www.cubouniceq....')
+#2 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/Config/Services.php(624): CodeIgniter\HTTP\IncomingRequest->__construct(Object(Config\App), Object(CodeIgniter\HTTP\URI), '', Object(CodeIgniter\HTTP\UserAgent))
+#3 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/Config/BaseService.php(123): CodeIgniter\Config\Services::request(Object(Config\App), false)
+#4 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/Co in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/URI.php on line 665
+[14-Feb-2021 11:08:23 America/Chicago] PHP Fatal error:  Uncaught TypeError: Argument 1 passed to CodeIgniter\HTTP\URI::setScheme() must be of the type string, null given, called in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/IncomingRequest.php on line 615 and defined in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/URI.php:665
+Stack trace:
+#0 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/IncomingRequest.php(615): CodeIgniter\HTTP\URI->setScheme(NULL)
+#1 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/IncomingRequest.php(184): CodeIgniter\HTTP\IncomingRequest->detectURI('REQUEST_URI', 'www.cubouniceq....')
+#2 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/Config/Services.php(624): CodeIgniter\HTTP\IncomingRequest->__construct(Object(Config\App), Object(CodeIgniter\HTTP\URI), '', Object(CodeIgniter\HTTP\UserAgent))
+#3 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/Config/BaseService.php(123): CodeIgniter\Config\Services::request(Object(Config\App), false)
+#4 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/Co in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/URI.php on line 665
+[21-Mar-2021 15:42:36 America/Chicago] PHP Fatal error:  Cannot use [] for reading in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/app/Filters/Auth.php on line 19
+[21-Mar-2021 20:26:49 America/Chicago] PHP Fatal error:  Cannot redeclare App\Models\Admin\Usuarios_Model::_validarUusuario() in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/app/Models/Admin/Usuarios_Model.php on line 75
+[21-Mar-2021 20:38:06 America/Chicago] PHP Fatal error:  Cannot redeclare App\Models\Admin\Usuarios_Model::_validarUusuario() in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/app/Models/Admin/Usuarios_Model.php on line 75
+[29-Mar-2021 00:48:00 America/Chicago] PHP Fatal error:  Uncaught TypeError: Argument 1 passed to CodeIgniter\HTTP\URI::setScheme() must be of the type string, null given, called in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/IncomingRequest.php on line 615 and defined in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/URI.php:665
+Stack trace:
+#0 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/IncomingRequest.php(615): CodeIgniter\HTTP\URI->setScheme(NULL)
+#1 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/IncomingRequest.php(184): CodeIgniter\HTTP\IncomingRequest->detectURI('REQUEST_URI', '\thttps://www.cu...')
+#2 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/Config/Services.php(624): CodeIgniter\HTTP\IncomingRequest->__construct(Object(Config\App), Object(CodeIgniter\HTTP\URI), '', Object(CodeIgniter\HTTP\UserAgent))
+#3 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/Config/BaseService.php(123): CodeIgniter\Config\Services::request(Object(Config\App), false)
+#4 /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/C in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/system/HTTP/URI.php on line 665
+[03-Apr-2021 18:22:17 America/Chicago] PHP Fatal error:  Cannot redeclare App\Models\Admin\Index_Model::_obtenerIndicadorUsuario() in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/app/Models/Admin/Index_Model.php on line 254
+[05-Apr-2021 11:24:35 America/Chicago] PHP Fatal error:  Cannot redeclare App\Controllers\AdminController\Home::obtenerIndicadoresPorAreaUsuPer() in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/app/Controllers/AdminController/Home.php on line 751
+[06-Apr-2021 15:01:15 America/Chicago] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 127942656 bytes) in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/app/Views/Admin/Modulos/grafica.php on line 99
+[06-Apr-2021 15:01:47 America/Chicago] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 127942656 bytes) in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/app/Views/Admin/Modulos/grafica.php on line 99
+[06-Apr-2021 16:02:40 America/Chicago] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 127942656 bytes) in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/app/Views/Admin/Modulos/grafica.php on line 99
+[08-Apr-2021 18:09:52 America/Chicago] PHP Fatal error:  'break' not in the 'loop' or 'switch' context in /home/uniceqed/cubouniceq.com.mx/cubo/UNICEQ/app/Views/Admin/Modulos/grafica.php on line 97

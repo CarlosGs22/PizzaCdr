@@ -1,0 +1,38 @@
+
+    .card {
+        background-color: #fff;
+        padding: 15px;
+        border: none
+    }
+
+    .input-box {
+        position: relative
+    }
+
+    .input-box i {
+        position: absolute;
+        right: 13px;
+        top: 15px;
+        color: #ced4da
+    }
+
+    
+    .list {
+        padding-top: 20px;
+        padding-bottom: 10px;
+        display: flex;
+        align-items: center
+    }
+
+    .border-bottom {
+        border-bottom: 2px solid #eee
+    }
+
+    .list i {
+        font-size: 19px;
+        color: red
+    }
+
+    .list small {
+        color: #dedddd
+    }
