@@ -20,6 +20,7 @@ class Usuarios_modelo extends Model{
         'contrasenia' => 'required',
         'status' => 'required',
         'cve_usuario' => 'required',
+        //'id_sucursal' => 'required'
     ];
     
     /*protected $validationMessages = [

@@ -10,9 +10,10 @@ public $table = 'sucursal_localidad';
 
 public $primaryKey = 'id';
 
-protected $allowedFields = ['id', 'id_sucursal','id_localidad'];
+protected $allowedFields = ['id','precio','id_sucursal','id_localidad'];
     
 protected $validationRules    = [
+    
     'id_sucursal' => 'required',
     'id_localidad' => 'required'
 ];

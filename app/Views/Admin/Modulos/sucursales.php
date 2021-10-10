@@ -238,55 +238,106 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Registros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Registrar localidades</a>
+                        </li>
 
-                    <?php if ($idSucursal_localidad) {
-                        $mostrar_modal_localidad = 1;
-                        $id_sucursal = $idSucursal_localidad['idSucursal'];
-                    }
-                    ?>
+                    </ul>
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                            <div class="row">
+                                <div class="col-12">
+                                <div class="pb-20">
+                                <table class="data-table table">
+                    	<thead>
+							<tr>
+								<th class="table-plus">Id</th>
+								<th>Localidad</th>
+								<th>Precio</th>
+                                <th>Acción</th>
+                                
+							</tr>
+						</thead>
+						<tbody>
+							<?php if ($lista_localidades_registradas) {
+								foreach ($lista_localidades_registradas as $key => $value) { ?>
+									<tr>
+										<td class="table-plus"><?=$value['idSL']?></td>
+										<td><?=$value['nombreLoca'] . " " . $value['nombreMun'] ?></td>
+										
+										<td><input type="text" name="txtPrecio" class="form-control txtPrecio" value="<?=$value['precio']?>"></td>
+                                        <td><button type="button" id="<?=$value['idSL']?>" class="btn btnPrecioLoca" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);"><i class="fa fa-edit"></i>Editar</button></t>
+								
+									</tr>
+							<?php }
+							} ?>
 
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label>Estado: *</label>
-                                <select class='form-control' name="txtEstado" id="txtEstado">
 
-                                    <option value='0'></option>
-                                    <?php if ($lista_estados) { ?>
-                                        <?php foreach ($lista_estados as $key => $value) { ?>
-                                            <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] ==  $id_estado) ? ' selected="selected"' : ''; ?>><?php echo $value['nombre']; ?></option>
-                                    <?php }
-                                    } ?>
-                                </select>
+						</tbody>
+					</table>
+				</div>
+
+                                </div>
+
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label>Municipio: *</label>
-                                <select class='form-control' id="txtMunicipio" name="txtMunicipio">
-                                    <option value='0'></option>
-                                    <?php if ($lista_municipios) { ?>
-                                        <?php foreach ($lista_municipios as $key => $value) { ?>
-                                            <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] ==  $id_municipio) ? ' selected="selected"' : ''; ?>><?php echo $value['nombre']; ?></option>
-                                    <?php }
-                                    } ?>
+                        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                            <?php if ($idSucursal_localidad) {
+                                $mostrar_modal_localidad = 1;
+                                $id_sucursal = $idSucursal_localidad['idSucursal'];
+                            }
+                            ?>
 
-                                </select>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Estado: *</label>
+                                        <select class='form-control' name="txtEstado" id="txtEstado">
+
+                                            <option value='0'></option>
+                                            <?php if ($lista_estados) { ?>
+                                                <?php foreach ($lista_estados as $key => $value) { ?>
+                                                    <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] ==  $id_estado) ? ' selected="selected"' : ''; ?>><?php echo $value['nombre']; ?></option>
+                                            <?php }
+                                            } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Municipio: *</label>
+                                        <select class='form-control' id="txtMunicipio" name="txtMunicipio">
+                                            <option value='0'></option>
+                                            <?php if ($lista_municipios) { ?>
+                                                <?php foreach ($lista_municipios as $key => $value) { ?>
+                                                    <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] ==  $id_municipio) ? ' selected="selected"' : ''; ?>><?php echo $value['nombre']; ?></option>
+                                            <?php }
+                                            } ?>
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row" id="panelIngredientes">
+
+                                </div>
+
+
+
+
+                            </div>
+
+                            <div class="row" id="panelLocalidades">
+
                             </div>
                         </div>
-
-                        <div class="row" id="panelIngredientes">
-
-                        </div>
-
-
-
-
                     </div>
 
-                    <div class="row" id="panelLocalidades">
 
-                    </div>
 
                 </div>
             </div>
@@ -298,6 +349,11 @@
 
 <script>
     $(function() {
+
+    
+
+
+        
         var idSucursal = <?php echo ($mostrar_modal == 1) ? $mostrar_modal : '"0"'; ?>;
         if (idSucursal == '1') {
             $("#modal_sucursales").modal('show');
@@ -309,7 +365,7 @@
         $(".btn_add_sucursal").click(function() {
             $("#frm_sucursal input").val("");
             $("#txtStatus").val("1");
-            idSucursal_localidad
+
         });
 
         $('select[name="txtEstado"]').on("change", function() {
@@ -353,7 +409,8 @@
                 url: "<?= base_url() ?>/admin/obtenerEntidades",
                 dataType: 'json',
                 data: {
-                    id_municipio: $(this).val()
+                    id_municipio: $(this).val(),
+                    id_sucursal: '<?php echo $id_sucursal ?>'
                 },
                 beforeSend: function() {
                     $(".loader").fadeIn(1000);
@@ -371,7 +428,7 @@
 
                         } else {
                             for (var i = 0; i < data.lista_localidades.length; i++) {
-                                $("#panelLocalidades").append('<div class="col-md-3"><div class="card h-100"><div class="list border-bottom"> <span class="icon-copy ti-location-pin"></span> <div class="d-flex flex-column ml-3"> <span>' + data.lista_localidades[i].nombre + ' <input type="checkbox" class="checksLocalidad" name="txtLocalidad" id="' + data.lista_localidades[i].nombre + '" /></span>  </div> </div></div></div>');
+                                $("#panelLocalidades").append('<div class="col-md-3"><div class="card h-100"><div class="list border-bottom"> <span class="icon-copy ti-location-pin"></span> <div class="d-flex flex-column ml-3"> <span>' + data.lista_localidades[i].nombre + ' <input type="checkbox" class="checksLocalidad" name="txtLocalidad" id="' + data.lista_localidades[i].nombre + '" value="' + data.lista_localidades[i].id + '" /></span>  </div> </div></div></div>');
                             }
                         }
 
@@ -393,7 +450,7 @@
             if ($(this).is(':checked')) {
                 opcion = "0";
             } else {
-               opcion = "1";
+                opcion = "1";
             }
 
             $.ajax({
@@ -402,18 +459,56 @@
                 dataType: 'json',
                 data: {
                     opcion: opcion,
-                    idSucursal: "<?=$id_sucursal?>",
-                    idLocalidad: $(this).attr('id')
+                    idSucursal: "<?= $id_sucursal ?>",
+                    idLocalidad: $(this).val()
                 },
                 beforeSend: function() {
                     $(".loader").fadeIn(1000);
                 },
                 success: function(data) {
                     $(".loader").fadeOut(1000);
-                    alert(data);
+                    Swal.fire({
+                        icon: '' + data[1] + '',
+                        title: '',
+                        text: '' + data[0] + ''
+                    });
                 },
                 error: function(request, status, error) {
-                    alert(request.responseText + " " + error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: '',
+                        text: '' + request + ''
+                    });
+                    $(".loader").fadeOut(1000);
+                }
+            });
+        });
+
+         $(".btnPrecioLoca").click(function() {
+             alert( $(this).attr("id"));
+         
+
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo base_url("admin/accion_registrar_localidades") ?>",
+                dataType: 'json',
+                data: {
+                    precio :$(this).closest('tbody').find('input').val(),
+                    idSucursal_localidad : $(this).attr("id")
+                },
+                beforeSend: function() {
+                    $(".loader").fadeIn(1000);
+                },
+                success: function(data) {
+                    Swal.fire({
+                        icon: data[1],
+                        title: '',
+                        text: data[0]
+                    });
+                    $(".loader").fadeOut(1000);
+                },
+                error: function(error, hxrt, status) {
+                    alert(error);
                     $(".loader").fadeOut(1000);
                 }
             });

@@ -56,7 +56,7 @@
                                             </div>
                                             <div class="row justify-center">
                                                 <div class="col-12 mb-20 h-100">
-                                                    <a href="<?php echo base_url("admin/tamanios?id_tamanio_ingrediente=" . $value['id']) ?>" class="btn" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);"><i class="fa fa-edit"></i>Ingredientes</a>
+                                                    
                                                 </div>
                                             </div>
                                         </div>

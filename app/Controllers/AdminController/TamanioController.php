@@ -33,7 +33,7 @@ class TamanioController extends Controller
   {
     parent::initController($request, $response, $logger);
 
-    $this->session = \Config\Services::session($config);
+    $this->session = \Config\Services::session();
 
     $submenu_web = new Permiso_menu_modelo();
     $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(1);
@@ -43,7 +43,7 @@ class TamanioController extends Controller
     $this->tipos_modelo = new Tipos_modelo();
     $this->tipos_tamanio_modelo = new Tipo_Tamanio_modelo();
     $this->tamanios_ingredientes_modelo = new Tamanios_Ingredientes_modelo();
-    $this->ingredientes_modelo = new Ingredientes_modelo();
+    //$this->ingredientes_modelo = new Ingredientes_modelo();
 
 
     $this->funciones = new Funciones();

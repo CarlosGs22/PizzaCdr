@@ -100,6 +100,7 @@
                             $usuario  = null;
                             $contrasenia = null;
                             $status = null;
+                            $id_sucursal = null;
                             $id = null;
 
                             foreach ($lista_edit_usuarios as $key => $value) {
@@ -110,6 +111,7 @@
                                 $contrasenia = $value['contrasenia'];
                                 $status = $value['status'];
                                 $id_usuario = $value['id'];
+                                $id_sucursal = $value['id_sucursal'];
                                 break;
                             }
                         } ?>
@@ -155,6 +157,23 @@
                                     <?php if ($lista_status) { ?>
                                         <?php foreach ($lista_status as $key => $value) { ?>
                                             <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] ==  $status) ? ' selected="selected"' : ''; ?>><?php echo $value['status']; ?></option>
+                                    <?php }
+                                    } ?>
+
+                                </select>
+
+                            </div>
+                        </div>
+
+                        
+                        <div class="form-group row">
+                            <label class="col-sm-12 col-md-2 col-form-label">Sucursal: *</label>
+                            <div class="col-sm-12 col-md-10">
+                                <select name="txtSucursal" id="txtSucursal" class="form-control">
+                                    <option value="0"></option>
+                                    <?php if ($lista_sucursales) { ?>
+                                        <?php foreach ($lista_sucursales as $key => $value) { ?>
+                                            <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] ==  $id_sucursal) ? ' selected="selected"' : ''; ?>><?php echo $value['nombre']; ?></option>
                                     <?php }
                                     } ?>
 

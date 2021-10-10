@@ -23,12 +23,7 @@ class App extends BaseConfig
 	| environments.
 	|
 	*/
-	public $baseURL = 'https://localhost/pizzacdr/';
-
-
-
-
-
+	public $baseURL = 'https://localhost/PizzaCdr/';
 	/*
 	|--------------------------------------------------------------------------
 	| Index File

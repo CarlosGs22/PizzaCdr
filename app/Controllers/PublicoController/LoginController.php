@@ -20,7 +20,7 @@ class LoginController extends Controller
   {
     parent::initController($request, $response, $logger);
 
-    $this->session = \Config\Services::session($config);
+    $this->session = \Config\Services::session();
 
     $this->usuarios_modelo = new Usuarios_modelo();
     $this->permisos_modelo = new Permisos_modelo();

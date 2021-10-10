@@ -40,7 +40,7 @@
             Swal.fire({
                 icon: 'error',
                 title: '',
-                text: '<?= $_SESSION['error']; ?>'
+                text: '<?= $_SESSION['error'][0]; ?>'
             });
         </script>
     <?php unset($_SESSION['error']);

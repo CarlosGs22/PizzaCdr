@@ -6,6 +6,7 @@ use App\Models\Admin\Especiales_modelo;
 use App\Models\Admin\Funciones;
 use App\Models\Admin\Permiso_menu_modelo;
 use App\Models\Admin\Status_modelo;
+use App\Models\Admin\Sucursal_modelo;
 use App\Models\Admin\Usuarios_modelo;
 use CodeIgniter\Controller;
 use phpDocumentor\Reflection\Types\Static_;
@@ -18,19 +19,21 @@ class UsuariosController extends Controller
   protected $datamenu;
   protected $usuarios_modelo;
   protected $status_modelo;
+  protected $sucursales_modelo;
   protected $funciones;
 
   public function initController(\CodeIgniter\HTTP\RequestInterface $request, \CodeIgniter\HTTP\ResponseInterface $response, \Psr\Log\LoggerInterface $logger)
   {
     parent::initController($request, $response, $logger);
 
-    $this->session = \Config\Services::session($config);
+    $this->session = \Config\Services::session();
 
     $submenu_web = new Permiso_menu_modelo();
     $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(1);
 
     $this->usuarios_modelo = new Usuarios_modelo();
     $this->status_modelo = new Status_modelo();
+    $this->sucursales_modelo = new Sucursal_modelo();
 
     $this->funciones = new Funciones();
     $this->session = session();
@@ -49,6 +52,11 @@ class UsuariosController extends Controller
     $lista['lista_usuarios'] = $this->usuarios_modelo->findAll();
 
     $lista['lista_status'] = $this->status_modelo->findAll();
+
+    $lista['lista_sucursales'] = $this->sucursales_modelo->findAll();
+
+
+    
 
     if ($this->request->getVar('id')) {
       $lista['lista_edit_usuarios'] = $this->usuarios_modelo->where("id", $this->request->getVar('id'))->findAll();
@@ -79,11 +87,12 @@ class UsuariosController extends Controller
       'nombres' =>  $this->request->getVar('txtNombre'),
       'apellido_paterno' =>  $this->request->getVar('txtApe1'),
       'apellido_materno' =>  $this->request->getVar('txtApe2'),
-      'tipo' => "1",
+      'tipo' => $idTipoUsuario,
       'usuario' =>  $this->request->getVar('txtUsuario'),
       'contrasenia' =>  $this->request->getVar('txtContrasenia'),
       'status' => $this->request->getVar('txtStatus'),
-      'cve_usuario' =>  1
+      'cve_usuario' =>  1,
+      'id_sucursal' => $this->request->getVar('id_sucursal'),
     ];
 
     if ($idUsuario != null) {
@@ -166,7 +175,7 @@ class UsuariosController extends Controller
       return redirect()->to(base_url("mi_cuenta"));
     } else {
       $_SESSION['error'] = $respuesta;
-      $session->markAsFlashdata('error');
+      $this->session->setFlashdata('respuesta', $respuesta);
       return redirect()->to(base_url("login"));
     }
   }

@@ -57,6 +57,9 @@ $routes->get('/admin/sucursales', 'AdminController/SucursalController::sucursale
 $routes->post('/admin/accion_sucursales', 'AdminController/SucursalController::accion_sucursales');
 $routes->get('/admin/entidades', 'AdminController/SucursalController::entidades',['filter' => 'auth']);
 $routes->get('/admin/obtenerEntidades', 'AdminController/SucursalController::obtenerEntidades');
+$routes->get('/admin/accion_sucursales_localidades', 'AdminController/SucursalController::accion_sucursales_localidades');
+$routes->post('/admin/accion_registrar_localidades', 'AdminController/SucursalController::accion_registrar_localidades');
+
 
 
 //usuarios
@@ -76,7 +79,7 @@ $routes->get('/admin/proveedores', 'AdminController/ProveedorController::proveed
 $routes->post('/admin/accion_proveedores', 'AdminController/ProveedorController::accion_proveedores');
 
 //salir
-$routes->get('/salir', 'PublicoController/LoginController::salir',['filter' => 'auth']);
+$routes->get('/salir', 'PublicoController/LoginController::salir');
 
 //usuarios_clientes
 $routes->get('/admin/usuarios_cliente', 'AdminController/UsuariosController::usuarios_cliente',['filter' => 'auth']);
@@ -96,6 +99,13 @@ $routes->get('/getAll', 'AdmnController/Articulo::getAll');
 $routes->post('/getOne', 'AdminController/Articulo::getOne');
 $routes->post('/add', 'AdminController/Articulo::add');
 $routes->post('/edit', 'AdminController/Articulo::edit');
+
+
+//ingredientes
+$routes->get('/admin/ingredientes', 'AdminController/IngredienteController::ingredientes',['filter' => 'auth']);
+$routes->post('/admin/accion_ingredientes', 'AdminController/IngredienteController::accion_ingredientes');
+$routes->post('/admin/accion_menu', 'AdminController/IngredienteController::accion_menu');
+$routes->post('/admin/consultaMenuIngredientes', 'AdminController/IngredienteController::consultaMenuIngredientes');
 
 
 /**

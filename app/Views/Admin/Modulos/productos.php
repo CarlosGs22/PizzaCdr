@@ -42,12 +42,12 @@
                                 <div class="col-md-4 mb-30 h-100">
                                     <div class="card-box pricing-card mt-30 mb-30 card h-100">
                                         <div class="price-title textoTipo">
-                                            <?= $value["tipo"] . " - " . $value["tamanio"]; ?> <i class="icon-copy fa fa-check-circle" aria-hidden="true"></i>
+                                            <?= $value["nombreMenu"]; ?> <i class="icon-copy fa fa-check-circle" aria-hidden="true"></i>
                                         </div>
                                         <div class="pricing-icon h-100">
                                             <div class="da-card card h-100" style="margin-left: 7%; margin-right:7%;">
                                                 <div class="da-card-photo ">
-                                                    <?php if ($value['imagen'] != null) { ?>
+                                                    <?php if ($value['imagen'] != null || $value['imagen'] = "") { ?>
                                                         <img style="max-height: 35vh;" src="<?= base_url("public/Admin/img/productos/" . $value['imagen']) ?>" alt="">
                                                     <?php } else { ?>
                                                         <img style="max-height: 35vh;" src="<?= base_url("public/Admin/img/productos/warning.png") ?>" alt="">
@@ -113,8 +113,11 @@
                     $status = null;
                     $id_masa = null;
                     $id_categoria = null;
-                    $id_categoria = null;
+                    $id_menu = null;
+                    $id_clasificacion = null;
                     $id_tipo = null;
+                    $total = null;
+                    $id_tamanio = null;
                     foreach ($lista_edit_productos as $key => $value) {
                         $id_producto = $value['idProducto'];
                         $nombre = $value['nombre'];
@@ -123,7 +126,12 @@
                         $id_categoria = $value['idCategoria'];
                         $precio = $value['precioProducto'];
                         $id_tipo = $value['idTipoTamanio'];
-                        $id_masa = $value['idCategoria'];
+                        $id_masa = $value['idMasa'];
+                        $id_menu = $value['idMenu'];
+                        $id_clasificacion = $value['idClasificacion'];
+                        $total = $value['total'];
+                        $id_tipo_tamanio = $value['idTamanio'];
+
                         break;
                     }
                 } ?>
@@ -164,19 +172,26 @@
                             </select>
                         </div>
 
-                        <label class="col-sm-12 col-md-2 col-form-label">Tipo: </label>
+                        <label class="col-sm-12 col-md-2 col-form-label">Menú: </label>
                         <div class="col-sm-12 col-md-4">
-                            <select name="txtTipoTamanio" id="txtTipoTamanio" class=" form-control height-auto">
+                            <select name="txtMenu" id="txtMenu" class=" form-control height-auto">
 
                                 <option value="0"></option>
-                                <?php if ($lista_tipo_tamanio) { ?>
-                                    <?php foreach ($lista_tipo_tamanio as $key => $value) { ?>
-                                        <option value="<?php echo $value['id_tipo_tamanio']; ?>" <?php echo ($value['id_tipo_tamanio'] == $id_tipo) ? ' selected="selected"' : ''; ?>><?php echo $value['tipo'] . " (" . $value['tamanio'] . " - $" . $value['precio'] . ")"; ?></option>
+                                <?php if ($lista_menu) { ?>
+                                    <?php foreach ($lista_menu as $key => $value) { ?>
+                                        <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] ==  $id_menu) ? ' selected="selected"' : ''; ?>><?php echo $value['nombre']; ?></option>
+
                                 <?php }
                                 } ?>
                             </select>
                         </div>
+
+
                     </div>
+
+
+
+
 
                     <div class=" form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Masa: </label>
@@ -204,7 +219,50 @@
                         </div>
                     </div>
 
-                   <!--< <div class="row mb-4">
+                    <div class=" form-group row">
+
+                        <label class="col-sm-12 col-md-2 col-form-label">Clasificación: </label>
+                        <div class="col-sm-12 col-md-2">
+                            <select name="txtClasificacion" id="txtClasificacion" class=" form-control height-auto">
+
+                                <option value="0"></option>
+                                <?php if ($lista_clasificacion) { ?>
+                                    <?php foreach ($lista_clasificacion as $key => $valuec) { ?>
+                                        <option value="<?php echo $valuec['id']; ?>" <?php echo ($valuec['id'] ==  $id_clasificacion) ? ' selected="selected"' : ''; ?>><?php echo $valuec['nombre']; ?></option>
+
+                                <?php }
+                                } ?>
+                            </select>
+                        </div>
+
+
+                        <label class="col-sm-12 col-md-2 col-form-label panelProm">Total: </label>
+                        <div class="col-sm-12 col-md-1 panelProm">
+                            <select name="txtTotal" id="txtTotal" class=" form-control height-auto">
+                                <option value="<?php echo $total; ?>"><?php echo $total; ?></option>
+                                <?php for ($i = 1; $i < 10; $i++) { ?>
+                                    <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+
+                        <label class="col-sm-12 col-md-2 col-form-label panelProm">Tamaño: </label>
+                        <div class="col-sm-12 col-md-3 panelProm">
+                            <select name="txtTamanio" id="txtTamanio" class=" form-control height-auto">
+
+                                <option value="0"></option>
+                                <?php if ($lista_tipo_tamanio) { ?>
+                                    <?php foreach ($lista_tipo_tamanio as $key => $valuec) { ?>
+                                        <option value="<?php echo $valuec['id_tipo_tamanio']; ?>" <?php echo ($valuec['id_tipo_tamanio'] ==  $id_tipo_tamanio) ? ' selected="selected"' : ''; ?>><?php echo $valuec['tipo'] ." ".$valuec['tamanio'] ; ?></option>
+
+                                <?php }
+                                } ?>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <!--< <div class="row mb-4">
                         <div class="col-12 text-center">
                             <button type="button" class="btn btn-outline-success">Ingredientes</button>
                         </div>
@@ -449,49 +507,49 @@
             }
         });
 
-       /* $("#txtTipoTamanio").on('change', function() {
-            $("#panelIngredientes").empty();
-            $("#panelListaIngredientes").empty();
-            fetch('<?php echo base_url("admin/consulta_porciones") ?>?txtTipoTamanio=' + $(this).val())
-                .then((response) => {
-                    return response.json()
-                })
-                .then((data) => {
-                    if (data.ingredientes_tamanio) {
+        /* $("#txtTipoTamanio").on('change', function() {
+             $("#panelIngredientes").empty();
+             $("#panelListaIngredientes").empty();
+             fetch('<?php echo base_url("admin/consulta_porciones") ?>?txtTipoTamanio=' + $(this).val())
+                 .then((response) => {
+                     return response.json()
+                 })
+                 .then((data) => {
+                     if (data.ingredientes_tamanio) {
 
-                        var check = "";
+                         var check = "";
 
-                        var id_gen, id_sub, ingrediente, porcion, cantidad;
-                        var arreglo = [];
-                        for (var i = 0; i < data.ingredientes_tamanio.length; i++) {
-                            id_gen = data.ingredientes_tamanio[i].id;
-                            arreglo.push(id_gen);
-                        }
+                         var id_gen, id_sub, ingrediente, porcion, cantidad;
+                         var arreglo = [];
+                         for (var i = 0; i < data.ingredientes_tamanio.length; i++) {
+                             id_gen = data.ingredientes_tamanio[i].id;
+                             arreglo.push(id_gen);
+                         }
 
-                        for (var i = 0; i < data.ingredientes_gen.length; i++) {
-                            id_sub = data.ingredientes_gen[i].id;
-                            ingrediente = data.ingredientes_gen[i].ingrediente;
-                            cantidad = data.ingredientes_gen[i].cantidad;
+                         for (var i = 0; i < data.ingredientes_gen.length; i++) {
+                             id_sub = data.ingredientes_gen[i].id;
+                             ingrediente = data.ingredientes_gen[i].ingrediente;
+                             cantidad = data.ingredientes_gen[i].cantidad;
 
-                            if (typeof data.ingredientes_tamanio[i] !== 'undefined') {
-                                porcion = data.ingredientes_tamanio[i].porcion;
-                            } else {
-                                porcion = 0;
-                            }
+                             if (typeof data.ingredientes_tamanio[i] !== 'undefined') {
+                                 porcion = data.ingredientes_tamanio[i].porcion;
+                             } else {
+                                 porcion = 0;
+                             }
 
-                            var found = arreglo.includes(id_sub);
-                            if (found) {
-                                $("#panelIngredientes").append('<div class="form-check "><label for="">' + ingrediente + ' (' + cantidad + ' g) </label> <input type="checkbox" id="' + id_sub + '" name="' + ingrediente + '" value="' + id_sub + '" /><br><input type="text" id="' + id_sub + '-1" name="' + ingrediente + '-1" style="height: 35px;" class="form-control input-lg" value="' + porcion + '" /></div>');
-                            } else {
-                                $("#panelIngredientes").append('<div class="form-check "><label for="">' + ingrediente + ' (' + cantidad + ' g) </label> <input type="checkbox" id="' + id_sub + '" name="' + ingrediente + '" value="' + id_sub + '" /><br><input type="text" id="' + id_sub + '-1" name="' + ingrediente + '-1" style="height: 35px;" class="form-control input-lg" value="' + porcion + '" /></div>');
-                            }
-                        }
-                    }
-                })
-                .catch((err) => {
-                    alert(err);
-                });
-        });*/
+                             var found = arreglo.includes(id_sub);
+                             if (found) {
+                                 $("#panelIngredientes").append('<div class="form-check "><label for="">' + ingrediente + ' (' + cantidad + ' g) </label> <input type="checkbox" id="' + id_sub + '" name="' + ingrediente + '" value="' + id_sub + '" /><br><input type="text" id="' + id_sub + '-1" name="' + ingrediente + '-1" style="height: 35px;" class="form-control input-lg" value="' + porcion + '" /></div>');
+                             } else {
+                                 $("#panelIngredientes").append('<div class="form-check "><label for="">' + ingrediente + ' (' + cantidad + ' g) </label> <input type="checkbox" id="' + id_sub + '" name="' + ingrediente + '" value="' + id_sub + '" /><br><input type="text" id="' + id_sub + '-1" name="' + ingrediente + '-1" style="height: 35px;" class="form-control input-lg" value="' + porcion + '" /></div>');
+                             }
+                         }
+                     }
+                 })
+                 .catch((err) => {
+                     alert(err);
+                 });
+         });*/
 
 
         $(".fileImagen").on('change', function() {
@@ -506,11 +564,26 @@
         });
 
 
-
-
-
         $(".txtStatus").on('change', function() {
             $(this).closest(".formImagen").find(".btnImagen").show();
         });
+
+
+        $("#txtClasificacion").on('change', function() {
+
+            if ($(this).val() == "2") {
+                $(".panelProm").show();
+            } else {
+                $(".panelProm").hide();
+            }
+        });
+
+
+        var id_tipo_tamanio = <?php echo ($id_clasificacion == "2") ? "1" : '"0"'; ?>;
+        if (id_tipo_tamanio == '1') {
+            $(".panelProm").show();
+        } else {
+            $(".panelProm").hide();
+        }
     });
 </script>

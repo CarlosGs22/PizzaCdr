@@ -31,7 +31,7 @@ class SucursalController extends Controller
   {
     parent::initController($request, $response, $logger);
 
-    $this->session = \Config\Services::session($config);
+    $this->session = \Config\Services::session();
 
     $submenu_web = new Permiso_menu_modelo();
     $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(1);
@@ -65,19 +65,17 @@ class SucursalController extends Controller
 
     $lista['lista_estados'] = $this->estados_modelo->findAll();
 
-
     $lista['lista_edit_sucursales'] = $this->sucursales_modelo->select('sucursal.*, municipio.id as muni_id, localidad.id as loca_id, municipio.estado_id as esta_id')
       ->join('localidad', 'localidad.id = sucursal.id_localidad')
       ->join('municipio', 'municipio.id = localidad.municipio_id')->where("sucursal.id", $this->request->getVar('id'))->findAll();
 
-
     $lista['lista_municipios'] = $this->municipios_modelo->where("estado_id",  $lista['lista_edit_sucursales'][0]['esta_id'])->findAll();
-
 
     $lista['lista_localidades'] = $this->localidades_modelo->where("municipio_id",  $lista['lista_edit_sucursales'][0]['muni_id'])->findAll();
 
     if ($this->request->getVar('idSucursal')) {
       $lista['idSucursal_localidad'] = array('idSucursal' => $this->request->getVar('idSucursal'));
+      $lista['lista_localidades_registradas'] = $this->localidades_modelo->_obtenerLocalidadesRegistradas($this->request->getVar('idSucursal'));
     }
 
     echo view($this->rutaHeader, $this->datamenu);
@@ -93,7 +91,7 @@ class SucursalController extends Controller
     }
 
     if ($this->request->getVar('id_municipio')) {
-      $lista['lista_localidades'] = $this->localidades_modelo->where("municipio_id", $this->request->getVar('id_municipio'))->findAll();
+      $lista['lista_localidades'] = $this->localidades_modelo->_obtenerLocalidadesNot($this->request->getVar('id_municipio'), $this->request->getVar('id_sucursal'));
     }
 
     header('Content-Type: application/json');
@@ -150,17 +148,37 @@ class SucursalController extends Controller
     $opcion = $this->request->getVar('opcion');
 
     $datos_sucursal_localidad = [
-      'id_sucursal' =>  $this->request->getVar('IdSucursal'),
+      'id_sucursal' =>  $this->request->getVar('idSucursal'),
       'id_localidad' =>  $this->request->getVar('idLocalidad'),
     ];
 
     $respuesta = null;
     try {
       if ($opcion == '0') {
-        $respuesta = $this->sucursales_localidades_modelo->insert($datos_sucursal_localidad);
+        $respuesta = $this->sucursales_localidades_modelo->save($datos_sucursal_localidad);
       } else {
         $respuesta = $this->sucursales_localidades_modelo->where('id_sucursal', $this->request->getVar('idSucursal'))->where('id_localidad', $this->request->getVar('idLocalidad')->delete());
       }
+    } catch (\Throwable $th) {
+      $respuesta = $this->sucursales_localidades_modelo->error();
+    }
+
+    $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->sucursales_localidades_modelo->errors());
+
+    echo json_encode($respuesta);
+  }
+
+  public function accion_registrar_localidades()
+  {
+
+    $datos_registro = [
+      'precio' => $this->request->getVar("precio"),
+      'id' =>  $this->request->getVar('idSucursal_localidad')
+    ];
+
+    $respuesta = null;
+    try {
+      $respuesta = $this->sucursales_localidades_modelo->update($this->request->getVar('idSucursal_localidad'), $datos_registro);
     } catch (\Throwable $th) {
       $respuesta = $this->sucursales_localidades_modelo->error();
     }

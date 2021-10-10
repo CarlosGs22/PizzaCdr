@@ -12,8 +12,8 @@ class Productos_modelo extends Model
     protected $primaryKeuy = 'id';
 
     protected $allowedFields = [
-        'id', 'nombre', 'descripcion', 'precio',
-        'status', 'id_masa', 'id_categoria', 'id_tipo_tamanio', 'cve_usuario'
+        'id', 'nombre', 'descripcion', 'precio','total',
+        'status', 'id_masa', 'id_categoria', 'id_menu', 'id_clasificacion','id_tamanio','cve_usuario'
     ];
 
     protected $validationRules    = [
@@ -23,7 +23,8 @@ class Productos_modelo extends Model
         'status' => 'required',
         'id_masa' => 'required',
         'id_categoria' => 'required',
-        'id_tipo_tamanio' => 'required',
+        'id_menu' => 'required',
+        'id_clasificacion' => 'required',
         'cve_usuario' => 'required'
     ];
 
@@ -38,19 +39,23 @@ class Productos_modelo extends Model
 
         $sql = "SELECT producto.id as idProducto, producto.nombre,producto.descripcion,producto.precio precioProducto,producto.status,producto.cve_fecha,
         masa.id as idMasa,masa.masa,
-        categoria.id as idCategoria, categoria.categoria,
-        tipo_tamanio.id as idTipoTamanio,tipo_tamanio.precio as precioTamanio,
-        tipo.id as idTipo,tipo.tipo,
-        tamanio.id as idTamanio, tamanio.tamanio,
-        imagen.id,imagen.imagen
+        categoria.id as idCategoria, categoria.categoria,menu.id as idMenu,menu.nombre as nombreMenu,
+        imagen.id,imagen.imagen,
+        clasificacion.id as idClasificacion,clasificacion.nombre as nombreClasificacion,total,
+        tipo.id as idTipo,tipo.tipo,tamanio.id as idTamanio,tamanio.tamanio
+       
         FROM producto
+        
         INNER JOIN masa on masa.id = producto.id_masa
         INNER JOIN categoria on categoria.id = producto.id_categoria
-        INNER JOIN tipo_tamanio on tipo_tamanio.id = producto.id_tipo_tamanio
-        INNER JOIN tipo on tipo.id = tipo_tamanio.id_tipo
-        INNER JOIN tamanio on tamanio.id = tipo_tamanio.id_tamanio
+        INNER JOIN clasificacion on clasificacion.id = producto.id_clasificacion
+        LEFT JOIN tipo_tamanio on tipo_tamanio.id = producto.id_tamanio
+        LEFT JOIN tipo on tipo.id = tipo_tamanio.id_tipo
+        LEFT JOIN tamanio on tamanio.id = tipo_tamanio.id_tamanio
+        
+        INNER JOIN menu on menu.id = producto.id_menu
         LEFT JOIN imagen on imagen.id_producto = producto.id "
-        . $condicion . " GROUP BY producto.id";
+            . $condicion . " GROUP BY producto.id";
 
         $query = $this->query($sql);
         return $query->getResultArray();
