@@ -1,19 +1,23 @@
 <div class="xs-pd-20-10 pd-ltr-20">
     <div class="page-header">
         <div class="row">
-            <div class="col-md-6 col-sm-12">
+            <div class="col-6 col-md-6 col-sm-6">
                 <div class="title">
-                    <?php
-                    $pieces = explode("/", uri_string());
-                    ?>
-                    <h4><?php echo $pieces[1];  ?></h4>
+                    <h4>compras</h4>
                 </div>
                 <nav aria-label="breadcrumb" role="navigation">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a><?php echo $pieces[0]; ?></a></li>
-                        <li class="breadcrumb-item"><a><?php echo $pieces[1]; ?></a></li>
+
+                        <li class="breadcrumb-item"><a>admin</a></li>
+                        <li class="breadcrumb-item"><a>compras</a></li>
                     </ol>
                 </nav>
+            </div>
+            <div class="col-6 col-md-6 col-sm-6 text-right">
+                <h3 class="text-blue h3">
+                    <button type="button" class="btn btn_add_menu" data-toggle="modal" data-target="#modal_ingrediente" data-bgcolor="#007bb5" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 123, 181);"><i class="fa fa-plus"></i> Nuevo</button>
+
+                </h3>
             </div>
         </div>
     </div>
@@ -32,14 +36,9 @@
                 <div class="col-12">
                     <div class="card-box mb-30">
                         <div class="pb-20 pt-20">
-                            <div class="pd-20">
-                                <h3 class="text-blue h3">
-                                    <button type="button" class="btn btn_add_menu" data-toggle="modal" data-target="#modal_ingrediente" data-bgcolor="#007bb5" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 123, 181);"><i class="fa fa-plus"></i> Nuevo</button>
-                                    <h3>
 
-                            </div>
 
-                            <table class="data-table table hover multiple-select-row nowrap">
+                            <table class="data-table table  nowrap">
                                 <thead>
                                     <tr>
                                         <th class="table-plus">ID</th>
@@ -53,7 +52,7 @@
                                         foreach ($lista_ingredientes as $key => $value) { ?>
                                             <tr>
                                                 <td><?php echo $value['id']; ?></td>
-                                                <td><?php echo $value['ingrediente']; ?></td>
+                                                <td class="table-plus"><?php echo $value['ingrediente']; ?></td>
                                                 <td><?php echo ($value['status'] == "1") ? "Activo" : 'Inactivo'; ?></td>
                                                 <td><a href="<?php echo base_url("admin/ingredientes?id=" . $value['id']) ?>" class="btn" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);"><i class="fa fa-edit"></i>Editar</a></td>
                                             </tr>
@@ -253,9 +252,11 @@
             <div class="modal-body">
                 <div class="row">
                     <?php if ($lista_ingredientes) {
+                        $idMenu = null;
 
                         if ($lista_validar_ing) {
                             $mostrar_modal_menu_ingredientes = 1;
+                            $idMenu = $lista_validar_ing["idMenuIng"];
                         }
 
                         $idIngrediente;
@@ -279,12 +280,12 @@
 
                                 if (in_array($id_sub, $arreglo)) { ?>
                                     <div class="col-3">
-                                        <div class="form-check form-check-inline"> <input class="form-check-input" checked type="checkbox" id="inlineCheckbox1" value="<?php echo $value["id"]; ?>"> <label class="form-check-label" for="inlineCheckbox1"><?php echo $value2["ingrediente"]; ?></label> </div>
+                                        <div class="form-check form-check-inline"> <input class="form-check-input checkIngredientes" checked type="checkbox" id="<?php echo $value2["id"]; ?>" value="<?php echo $value2["id"]; ?>"> <label class="form-check-label" for="inlineCheckbox1"><?php echo $value2["ingrediente"]; ?></label> </div>
                                     </div>
 
                                 <?php } else { ?>
                                     <div class="col-3">
-                                        <div class="form-check form-check-inline"> <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="<?php echo $value["id"]; ?>"> <label class="form-check-label" for="inlineCheckbox1"><?php echo $value2["ingrediente"]; ?></label> </div>
+                                        <div class="form-check form-check-inline"> <input class="form-check-input checkIngredientes" type="checkbox" id="<?php echo $value2["id"]; ?>" value="<?php echo $value2["id"]; ?>"> <label class="form-check-label" for="inlineCheckbox1"><?php echo $value2["ingrediente"]; ?></label> </div>
                                     </div>
                     <?php }
                             }
@@ -321,10 +322,43 @@
             $("#modal_menu_ingredientes").modal('show');
         }
 
-        $(".btn_add_categoria").click(function() {
-            $("#frm_categoria input").val("");
-            $("#txtStatus").val("1");
-        });
+        $(document).delegate(".checkIngredientes", "click", function(e) {
+            var opcion = null;
+            if ($(this).is(':checked')) {
+                opcion = "0";
+            } else {
+                opcion = "1";
+            }
 
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>/admin/accion_ingredientes_menu",
+                dataType: 'json',
+                data: {
+                    opcion: opcion,
+                    id_menu: "<?= $idMenu ?>",
+                    id_ingrediente: $(this).val()
+                },
+                beforeSend: function() {
+                    $(".loader").fadeIn(1000);
+                },
+                success: function(data) {
+                    $(".loader").fadeOut(1000);
+                    Swal.fire({
+                        icon: '' + data[1] + '',
+                        title: '',
+                        text: '' + data[0] + ''
+                    });
+                },
+                error: function(request, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '',
+                        text: '' + request + ''
+                    });
+                    $(".loader").fadeOut(1000);
+                }
+            });
+        });
     });
 </script>

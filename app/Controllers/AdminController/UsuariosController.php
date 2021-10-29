@@ -29,7 +29,7 @@ class UsuariosController extends Controller
     $this->session = \Config\Services::session();
 
     $submenu_web = new Permiso_menu_modelo();
-    $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(1);
+    $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(session()->get('id'));
 
     $this->usuarios_modelo = new Usuarios_modelo();
     $this->status_modelo = new Status_modelo();
@@ -56,7 +56,7 @@ class UsuariosController extends Controller
     $lista['lista_sucursales'] = $this->sucursales_modelo->findAll();
 
 
-    
+
 
     if ($this->request->getVar('id')) {
       $lista['lista_edit_usuarios'] = $this->usuarios_modelo->where("id", $this->request->getVar('id'))->findAll();
@@ -83,16 +83,18 @@ class UsuariosController extends Controller
       $idEstatus = $this->request->getVar('txtStatus');
     }*/
 
+    $hash = password_hash($this->request->getVar('txtContrasenia'), PASSWORD_DEFAULT);
+
     $datos_usuario = [
       'nombres' =>  $this->request->getVar('txtNombre'),
       'apellido_paterno' =>  $this->request->getVar('txtApe1'),
       'apellido_materno' =>  $this->request->getVar('txtApe2'),
       'tipo' => $idTipoUsuario,
       'usuario' =>  $this->request->getVar('txtUsuario'),
-      'contrasenia' =>  $this->request->getVar('txtContrasenia'),
+      'contrasenia' =>  $hash,
       'status' => $this->request->getVar('txtStatus'),
       'cve_usuario' =>  1,
-      'id_sucursal' => $this->request->getVar('id_sucursal'),
+      'id_sucursal' => $this->request->getVar('txtSucursal')
     ];
 
     if ($idUsuario != null) {
@@ -105,6 +107,13 @@ class UsuariosController extends Controller
       $datos_usuario,
       "imagen"
     );
+
+    $contras = $this->usuarios_modelo->_validarContraseniaHash($this->request->getVar('txtUsuario'));
+    if ($contras == $this->request->getVar('txtContrasenia')) {
+      $datos_usuario['contrasenia'] = $contras;
+    } else {
+      $datos_usuario['contrasenia'] = $hash;
+    }
 
     $respuesta = null;
     try {
@@ -127,6 +136,7 @@ class UsuariosController extends Controller
   {
 
     $idUsuario = $this->request->getVar("txtId");
+    $hash = password_hash($this->request->getVar('txtContrasenia'), PASSWORD_DEFAULT);
 
     $datos_usuario = [
       'nombres' =>  $this->request->getVar('txtNombre'),
@@ -134,7 +144,7 @@ class UsuariosController extends Controller
       'apellido_materno' =>  $this->request->getVar('txtApe2'),
       'tipo' => "2",
       'usuario' =>  $this->request->getVar('txtUsuario'),
-      'contrasenia' =>  $this->request->getVar('txtContrasenia'),
+      'contrasenia' =>  $hash,
       'status' => "1",
       'cve_usuario' =>  "1"
     ];
@@ -148,6 +158,13 @@ class UsuariosController extends Controller
       $datos_usuario,
       "imagen"
     );
+
+    $contras = $this->usuarios_modelo->_validarContraseniaHash($this->request->getVar('txtUsuario'));
+    if ($contras == $this->request->getVar('txtContrasenia')) {
+      $datos_usuario['contrasenia'] = $contras;
+    } else {
+      $datos_usuario['contrasenia'] = $hash;
+    }
 
     $respuesta = null;
     try {

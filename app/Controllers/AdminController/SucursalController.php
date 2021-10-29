@@ -34,8 +34,8 @@ class SucursalController extends Controller
     $this->session = \Config\Services::session();
 
     $submenu_web = new Permiso_menu_modelo();
-    $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(1);
-
+    $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(session()->get('id'));
+    
     $this->sucursales_modelo = new Sucursal_modelo();
     $this->status_modelo = new Status_modelo();
     $this->localidades_modelo = new Localidades_modelo();

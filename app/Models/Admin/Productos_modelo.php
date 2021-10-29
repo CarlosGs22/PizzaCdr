@@ -12,8 +12,8 @@ class Productos_modelo extends Model
     protected $primaryKeuy = 'id';
 
     protected $allowedFields = [
-        'id', 'nombre', 'descripcion', 'precio','total',
-        'status', 'id_masa', 'id_categoria', 'id_menu', 'id_clasificacion','id_tamanio','cve_usuario'
+        'id', 'nombre', 'descripcion', 'precio', 'total',
+        'status', 'id_masa', 'id_categoria', 'id_menu', 'id_clasificacion', 'id_tamanio', 'cve_usuario'
     ];
 
     protected $validationRules    = [
@@ -59,5 +59,30 @@ class Productos_modelo extends Model
 
         $query = $this->query($sql);
         return $query->getResultArray();
+    }
+
+    public function getProductos($buscar)
+    {
+        $this->select('producto.id as idProducto, producto.nombre,producto.descripcion,producto.precio precioProducto,producto.status,producto.cve_fecha,
+        masa.id as idMasa,masa.masa,
+        categoria.id as idCategoria, categoria.categoria,menu.id as idMenu,menu.nombre as nombreMenu,
+        imagen.id,imagen.imagen,
+        clasificacion.id as idClasificacion,clasificacion.nombre as nombreClasificacion,total,
+        tipo.id as idTipo,tipo.tipo,tamanio.id as idTamanio,tamanio.tamanio')
+            ->join('masa', 'masa.id = producto.id_masa')
+            ->join('categoria', 'categoria.id = producto.id_categoria')
+            ->join('clasificacion', 'clasificacion.id = producto.id_clasificacion')
+            ->join('tipo_tamanio', 'tipo_tamanio.id = producto.id_tamanio', 'LEFT')
+            ->join('tipo', 'tipo.id = tipo_tamanio.id_tipo', 'LEFT')
+            ->join('tamanio', 'tamanio.id = tipo_tamanio.id_tamanio', 'LEFT')
+            ->join('menu', 'menu.id = producto.id_menu')
+            ->join('imagen', 'imagen.id_producto = producto.id', 'LEFT')
+            ->groupBy("producto.id");
+
+        if ($buscar == null) {
+            return $this->paginate(5);
+        } else {
+            return $this->like("producto.nombre", $buscar)->paginate(5);
+        }
     }
 }

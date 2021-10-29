@@ -3,8 +3,8 @@
 namespace App\Controllers\AdminController;
 
 use App\Models\Admin\Funciones;
-use App\Models\Admin\Categorias_modelo;
 use App\Models\Admin\Especiales_modelo;
+use App\Models\Admin\Ingredientes_Menu_modelo;
 use App\Models\Admin\Ingredientes_modelo;
 use App\Models\Admin\Menu_Modelo;
 use App\Models\Admin\Permiso_menu_modelo;
@@ -20,20 +20,22 @@ class IngredienteController extends Controller
     protected $ingredientes_modelo;
     protected $menu_modelo;
     protected $status_modelo;
+    protected $ingredientes_menu_modelo;
     protected $funciones;
 
     public function initController(\CodeIgniter\HTTP\RequestInterface $request, \CodeIgniter\HTTP\ResponseInterface $response, \Psr\Log\LoggerInterface $logger)
     {
         parent::initController($request, $response, $logger);
 
-        $this->session = \Config\Services::session($config);
+        $this->session = \Config\Services::session();
 
         $submenu_web = new Permiso_menu_modelo();
-        $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(1);
+        $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(session()->get('id'));
 
         $this->ingredientes_modelo = new Ingredientes_modelo();
         $this->status_modelo = new Status_modelo();
         $this->menu_modelo = new Menu_Modelo();
+        $this->ingredientes_menu_modelo = new Ingredientes_Menu_modelo();
         $this->funciones = new Funciones();
         $this->session = session();
 
@@ -135,5 +137,39 @@ class IngredienteController extends Controller
 
         $this->session->setFlashdata('respuesta', $respuesta);
         return redirect()->to(base_url("admin/ingredientes"));
+    }
+
+    public function accion_ingredientes_menu()
+    {
+        $opcion = $this->request->getVar('opcion');
+
+        $datos_ingrediente_menu = [
+            'id_ingrediente' =>  $this->request->getVar('id_ingrediente'),
+            'id_menu' =>  $this->request->getVar('id_menu'),
+            'cve_usuario' =>  "1"
+        ];
+
+        $idIngrediente = $this->request->getVar('id_ingrediente');
+        $idMenu = $this->request->getVar('id_menu');
+
+        $respuesta = null;
+        try {
+            if ($opcion == '0') {
+                $respuesta = $this->ingredientes_menu_modelo->save($datos_ingrediente_menu);
+            } else if ($opcion == '1')  {
+                $this->ingredientes_menu_modelo->where('id_ingrediente', $idIngrediente)->where('id_menu', $idMenu);
+                if ($this->ingredientes_menu_modelo->delete()) {
+                     $respuesta = "1";
+                }
+            }
+            else{
+                $respuesta = "";
+            }
+        } catch (\Throwable $th) {
+            $respuesta = $this->ingredientes_menu_modelo->error();
+        }
+        $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->ingredientes_menu_modelo->errors());
+
+        echo json_encode($respuesta);
     }
 }

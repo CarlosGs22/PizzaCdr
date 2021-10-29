@@ -1,20 +1,23 @@
 <div class="xs-pd-20-10 pd-ltr-20">
-    <div class="page-header">
+<div class="page-header">
         <div class="row">
-            <div class="col-md-6 col-sm-12">
+            <div class="col-6 col-md-6 col-sm-6">
                 <div class="title">
-                    <?php
-                    $pieces = explode("/", uri_string());
-                    ?>
-                    <h4><?php echo $pieces[1];  ?></h4>
+                    <h4>compras</h4>
                 </div>
                 <nav aria-label="breadcrumb" role="navigation">
                     <ol class="breadcrumb">
 
-                        <li class="breadcrumb-item"><a><?php echo $pieces[0]; ?></a></li>
-                        <li class="breadcrumb-item"><a><?php echo $pieces[1]; ?></a></li>
+                        <li class="breadcrumb-item"><a>admin</a></li>
+                        <li class="breadcrumb-item"><a>compras</a></li>
                     </ol>
                 </nav>
+            </div>
+            <div class="col-6 col-md-6 col-sm-6 text-right">
+                <h3 class="text-blue h3">
+                <button type="button" class="btn btn_add_tamanio" data-toggle="modal" data-target="#modal_usuarios" data-bgcolor="#007bb5" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 123, 181);"><i class="fa fa-plus"></i> Nuevo</button>
+                            
+                </h3>
             </div>
         </div>
     </div>
@@ -23,11 +26,7 @@
         <div class="col-12">
             <div class="card-box mb-30">
                 <div class="pb-20 pt-20">
-                    <div class="pd-20">
-                        <h3 class="text-blue h3">
-                            <button type="button" class="btn btn_add_tamanio" data-toggle="modal" data-target="#modal_usuarios" data-bgcolor="#007bb5" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 123, 181);"><i class="fa fa-plus"></i> Nuevo</button>
-                            <h3>
-                    </div>
+                    
                     <div class="row pd-20">
                         <section class="container">
                             <div class="row active-with-click">
@@ -78,7 +77,6 @@
         </div>
 
     </div>
-
 
 
     <div class="modal fade" id="modal_usuarios" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -145,7 +143,7 @@
                         <div class="form-group row">
                             <label class="col-sm-12 col-md-2 col-form-label">Contraseña: *</label>
                             <div class="col-sm-12 col-md-10">
-                                <input class="form-control" type="text" id="txtContrasenia" value="<?php echo ($contrasenia) ? $contrasenia : ''; ?>" name="txtContrasenia">
+                                <input class="form-control" type="password" id="txtContrasenia" value="<?php echo ($contrasenia) ? $contrasenia : ''; ?>" name="txtContrasenia">
                             </div>
                         </div>
 

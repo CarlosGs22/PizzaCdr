@@ -1,20 +1,23 @@
 <div class="xs-pd-20-10 pd-ltr-20">
     <div class="page-header">
         <div class="row">
-            <div class="col-md-6 col-sm-12">
+            <div class="col-6 col-md-6 col-sm-6">
                 <div class="title">
-                    <?php
-                    $pieces = explode("/", uri_string());
-                    ?>
-                    <h4><?php echo $pieces[1];  ?></h4>
+                    <h4>compras</h4>
                 </div>
                 <nav aria-label="breadcrumb" role="navigation">
                     <ol class="breadcrumb">
 
-                        <li class="breadcrumb-item"><a><?php echo $pieces[0]; ?></a></li>
-                        <li class="breadcrumb-item"><a><?php echo $pieces[1]; ?></a></li>
+                        <li class="breadcrumb-item"><a>admin</a></li>
+                        <li class="breadcrumb-item"><a>compras</a></li>
                     </ol>
                 </nav>
+            </div>
+            <div class="col-6 col-md-6 col-sm-6 text-right">
+                <h3 class="text-blue h3">
+                    <button type="button" class="btn btn_add_surcusal" data-toggle="modal" data-target="#modal_sucursales" data-bgcolor="#007bb5" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 123, 181);"><i class="fa fa-plus"></i> Nuevo</button>
+
+                </h3>
             </div>
         </div>
     </div>
@@ -23,11 +26,6 @@
         <div class="col-12">
             <div class="card-box mb-30">
                 <div class="pb-20 pt-20">
-                    <div class="pd-20">
-                        <h3 class="text-blue h3">
-                            <button type="button" class="btn btn_add_surcusal" data-toggle="modal" data-target="#modal_sucursales" data-bgcolor="#007bb5" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 123, 181);"><i class="fa fa-plus"></i> Nuevo</button>
-                            <h3>
-                    </div>
 
                     <div class="row pd-20">
 
@@ -251,35 +249,35 @@
                         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                             <div class="row">
                                 <div class="col-12">
-                                <div class="pb-20">
-                                <table class="data-table table">
-                    	<thead>
-							<tr>
-								<th class="table-plus">Id</th>
-								<th>Localidad</th>
-								<th>Precio</th>
-                                <th>Acción</th>
-                                
-							</tr>
-						</thead>
-						<tbody>
-							<?php if ($lista_localidades_registradas) {
-								foreach ($lista_localidades_registradas as $key => $value) { ?>
-									<tr>
-										<td class="table-plus"><?=$value['idSL']?></td>
-										<td><?=$value['nombreLoca'] . " " . $value['nombreMun'] ?></td>
-										
-										<td><input type="text" name="txtPrecio" class="form-control txtPrecio" value="<?=$value['precio']?>"></td>
-                                        <td><button type="button" id="<?=$value['idSL']?>" class="btn btnPrecioLoca" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);"><i class="fa fa-edit"></i>Editar</button></t>
-								
-									</tr>
-							<?php }
-							} ?>
+                                    <div class="pb-20">
+                                        <table class="data-table table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="table-plus">Id</th>
+                                                    <th>Localidad</th>
+                                                    <th>Precio</th>
+                                                    <th>Acción</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php if ($lista_localidades_registradas) {
+                                                    foreach ($lista_localidades_registradas as $key => $value) { ?>
+                                                        <tr>
+                                                            <td class="table-plus"><?= $value['idSL'] ?></td>
+                                                            <td><?= $value['nombreLoca'] . " " . $value['nombreMun'] ?></td>
+
+                                                            <td><input type="text" name="txtPrecio" class="form-control txtPrecio" value="<?= $value['precio'] ?>"></td>
+                                                            <td><button type="button" id="<?= $value['idSL'] ?>" class="btn btnPrecioLoca" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);"><i class="fa fa-edit"></i>Editar</button></t>
+
+                                                        </tr>
+                                                <?php }
+                                                } ?>
 
 
-						</tbody>
-					</table>
-				</div>
+                                            </tbody>
+                                        </table>
+                                    </div>
 
                                 </div>
 
@@ -350,10 +348,10 @@
 <script>
     $(function() {
 
-    
 
 
-        
+
+
         var idSucursal = <?php echo ($mostrar_modal == 1) ? $mostrar_modal : '"0"'; ?>;
         if (idSucursal == '1') {
             $("#modal_sucursales").modal('show');
@@ -484,17 +482,17 @@
             });
         });
 
-         $(".btnPrecioLoca").click(function() {
-             alert( $(this).attr("id"));
-         
+        $(".btnPrecioLoca").click(function() {
+            alert($(this).attr("id"));
+
 
             $.ajax({
                 type: 'POST',
                 url: "<?php echo base_url("admin/accion_registrar_localidades") ?>",
                 dataType: 'json',
                 data: {
-                    precio :$(this).closest('tbody').find('input').val(),
-                    idSucursal_localidad : $(this).attr("id")
+                    precio: $(this).closest('tbody').find('input').val(),
+                    idSucursal_localidad: $(this).attr("id")
                 },
                 beforeSend: function() {
                     $(".loader").fadeIn(1000);

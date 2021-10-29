@@ -30,6 +30,19 @@
     margin-bottom: 9px !important;
 }
 
+body{
+    background-image: url('<?php echo base_url('public/Publico/images/pizza_login.jpg') ?>');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-y: center;
+}
+
+.pnlForm{
+    background: #ffffffa6;
+}
+
+
+
 </style>
 
 </head>
@@ -40,7 +53,7 @@
             Swal.fire({
                 icon: 'error',
                 title: '',
-                text: '<?= $_SESSION['error'][0]; ?>'
+                text: '<?= $_SESSION['error']; ?>'
             });
         </script>
     <?php unset($_SESSION['error']);
@@ -66,10 +79,10 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6 col-lg-7">
-                    <img src="<?php echo base_url("public/Admin/vendors/images/login-page-img.png"); ?>" alt="">
+                  
                 </div>
                 <div class="col-md-6 col-lg-5 login-panel">
-                    <div class="login-box bg-white box-shadow border-radius-10 ">
+                    <div class="login-box box-shadow border-radius-10 pnlForm ">
                         <div class="login-title">
                             <h2 class="text-center text-primary">Bienvenido</h2>
                         </div>
@@ -108,8 +121,8 @@
                         </form>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-5 register-panel">
-                    <div class="login-box bg-white box-shadow border-radius-10">
+                <div class="col-md-6 col-lg-5 register-panel ">
+                    <div class="login-box box-shadow border-radius-10 pnlForm">
                         <div class="login-title">
                             <h2 class="text-center text-primary">Bienvenido</h2>
                         </div>

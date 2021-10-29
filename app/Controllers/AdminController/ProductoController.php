@@ -22,6 +22,7 @@ use App\Models\Admin\Tamanios_Ingredientes_modelo;
 use App\Models\Admin\Tipo_Tamanio_modelo;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\Request;
+use CodeIgniter\Pager\Pager;
 
 class ProductoController extends Controller
 {
@@ -41,6 +42,7 @@ class ProductoController extends Controller
   protected $clasificacion_modelo;
   protected $tipo_tamanio_modelo;
   protected $funciones;
+  protected $pager;
 
   public function initController(\CodeIgniter\HTTP\RequestInterface $request, \CodeIgniter\HTTP\ResponseInterface $response, \Psr\Log\LoggerInterface $logger)
   {
@@ -49,8 +51,8 @@ class ProductoController extends Controller
     $this->session = \Config\Services::session();
 
     $submenu_web = new Permiso_menu_modelo();
-    $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(1);
-
+    $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(session()->get('id'));
+    
     $this->productos_modelo = new Productos_modelo();
     //$this->ingredientes_modelo = new Ingredientes_modelo();
     //$this->tipo_tamanio_modelo = new Tipo_Tamanio_modelo();
@@ -67,6 +69,9 @@ class ProductoController extends Controller
     $this->tipo_tamanio_modelo = new Tipo_Tamanio_modelo();
     $this->session = session();
 
+    $this->pager = \Config\Services::pager();
+    
+
     $especiales = new Especiales_modelo();
     $this->datamenu['listas_especiales'] = $especiales->findAll();
   }
@@ -78,7 +83,17 @@ class ProductoController extends Controller
 
   public function productos()
   {
-    $lista['lista_productos'] = $this->productos_modelo->_obtenerProductos(null);
+
+    $search = null;
+		if ($this->request->getVar('txtBuscar') != null) {
+			$search = $this->request->getVar('txtBuscar');
+		}
+    if ($search == null) {
+			$lista['lista_productos'] = $this->productos_modelo->getProductos(null);
+		} else {
+			$lista['lista_productos'] = $this->productos_modelo->getProductos($search);
+		}
+
     $lista['lista_status'] = $this->status_modelo->findAll();
     $lista['lista_categorias'] = $this->categorias_modelo->findAll();
     $lista['lista_masas'] = $this->masas_modelo->findAll();
@@ -98,6 +113,9 @@ class ProductoController extends Controller
       $lista['lista_edit_imagenes'] = $this->imagenes_modelo->where('id_producto', $this->request->getVar('idImagenProducto'))->findAll();
       $lista['lista_validar_imagen'] = array('idImagenProducto' => $this->request->getVar('idImagenProducto'));
     }
+
+    $lista["pager"] = $this->productos_modelo->pager->links();
+
 
     echo view($this->rutaHeader, $this->datamenu);
     echo view($this->rutaModulo . 'productos', $lista);

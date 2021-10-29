@@ -23,15 +23,17 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Admin/src/plugins/datatables/css/responsive.bootstrap4.min.css") ?> ">
 
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Admin/vendors/styles/usuarios.css") ?>">
-	
+
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Admin/vendors/styles/promociones.css") ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Admin/vendors/styles/sucursales.css") ?>">
-	
+
 
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Admin/vendors/styles/productos.css") ?>">
-	
+
 	<script src="<?php echo base_url("public/Admin/vendors/scripts/jquery-3.6.0.min.js") ?>"></script>
 	<script src="<?php echo base_url("public/Admin/src/plugins/sweetalert2/sweetalert2.all.js"); ?>"></script>
+
+	<script src="<?php echo base_url("public/Admin/src/scripts/own.js") ?>"></script>
 
 </head>
 
@@ -62,7 +64,7 @@
 	<div class="header">
 		<div class="header-left">
 			<div class="menu-icon dw dw-menu"></div>
-			
+
 			<div class="header-search">
 				<h1>Bienvenido <?php echo session()->get('nombre'); ?></h1>
 			</div>
@@ -70,16 +72,8 @@
 		<div class="header-right">
 			<div class="user-info-dropdown">
 				<div class="dropdown">
-					<a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
-						<span class="user-icon">
-							<img class="h-100 w-100" src="<?php echo base_url("public/Admin/img/usuarios/" . session()->get('imagen') . "") ?>" alt="mi imagen">
-						</span>
-						<span class="user-name"><?php echo session()->get('usuario'); ?></span>
-					</a>
-					<div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
-						<a class="dropdown-item" href="profile.html"><i class="dw dw-user1"></i> Perfil</a>
-						<a class="dropdown-item" href="<?php echo base_url("salir"); ?>"><i class="dw dw-logout"></i> Salir</a>
-					</div>
+				<a class="dropdown-item" href="<?php echo base_url("salir"); ?>"><i class="dw dw-logout"></i> Salir</a>
+					
 				</div>
 			</div>
 		</div>
@@ -88,12 +82,28 @@
 
 	<div class="left-side-bar">
 		<div class="brand-logo">
-			<a href="index.html">
+
+			<div class="card" style="background: transparent;">
+				<div class="card-header">
+					<div class="profile_pic">
+						<img src="<?php echo base_url("public/Admin/img/usuarios/" . session()->get('imagen') . "") ?>">
+					</div>
+				</div>
+				<div class="card-body">
+					<div class="d-lfex justify-content-center flex-column">
+						<div class="name_container">
+							<div class="name"><?php echo session()->get('nombre'); ?></div>
+						</div>
+						<div class="address">Sucursal: <?php echo session()->get('nombre_sucursal'); ?></div>
+					</div>
+					<div class="follow">
+						<div class="follow_btn">Mi cuenta</div>
+					</div>
+
+				</div>
+
+			</div>
 			
-				<img src="<?php echo base_url("public/Admin/img/especiales/".$listas_especiales[0]["img1"]); ?>" alt="" class="dark-logo">
-				<img src="<?php echo base_url("public/Admin/img/especiales/".$listas_especiales[0]["img1"]); ?>" alt="" class="light-logo">
-		
-			</a>
 			<div class="close-sidebar" data-toggle="left-sidebar-close">
 				<i class="ion-close-round"></i>
 			</div>
@@ -129,3 +139,72 @@
 				});
 			</script>
 		<?php endif; ?>
+
+		<style>
+			.card-header {
+				background-image: url('<?php echo base_url("public/Admin/img/especiales/" . $listas_especiales[0]["img1"]); ?>') !important;
+				padding: 0 !important;
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size: cover;
+				height: 150px;
+				position: relative;
+				display: flex;
+				justify-content: center;
+				text-align: center;
+				background-position-y: -65px;
+			}
+
+			.profile_pic {
+				position: absolute;
+				bottom: -60px;
+				height: 112px;
+				width: 112px;
+				padding: 5px;
+				border: 2px solid #f39c12;
+				border-radius: 50%;
+			}
+
+			.card-body {
+				padding-top: 55px !important;
+			}
+
+			.profile_pic img {
+				height: 100px;
+				width: 100px;
+				border-radius: 50%;
+			}
+
+			.name_container {
+				display: flex;
+				justify-content: center;
+
+			}
+
+			.name {
+				font-size: 20px;
+				font-weight: 700;
+				color: white;
+				position: relative;
+			}
+
+			.follow {
+				padding-top: 20px;
+				display: flex;
+				justify-content: center;
+			}
+
+			.follow_btn {
+				background: rgb(244, 111, 48);
+				padding: 7px;
+				color: #fff;
+				border-radius: 12px;
+				cursor: pointer;
+			}
+			.address{
+				display: flex;
+				justify-content: center;
+				font-size: 12px;
+				color: white;
+			}
+		</style>

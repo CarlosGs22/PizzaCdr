@@ -61,7 +61,6 @@ $routes->get('/admin/accion_sucursales_localidades', 'AdminController/SucursalCo
 $routes->post('/admin/accion_registrar_localidades', 'AdminController/SucursalController::accion_registrar_localidades');
 
 
-
 //usuarios
 $routes->get('/admin/usuarios', 'AdminController/UsuariosController::usuarios',['filter' => 'auth']);
 $routes->post('/admin/accion_usuarios', 'AdminController/UsuariosController::accion_usuarios');
@@ -106,21 +105,22 @@ $routes->get('/admin/ingredientes', 'AdminController/IngredienteController::ingr
 $routes->post('/admin/accion_ingredientes', 'AdminController/IngredienteController::accion_ingredientes');
 $routes->post('/admin/accion_menu', 'AdminController/IngredienteController::accion_menu');
 $routes->post('/admin/consultaMenuIngredientes', 'AdminController/IngredienteController::consultaMenuIngredientes');
+$routes->post('/admin/accion_ingredientes_menu', 'AdminController/IngredienteController::accion_ingredientes_menu');
 
 
-/**
- * --------------------------------------------------------------------
- * Additional Routing
- * --------------------------------------------------------------------
- *
- * There will often be times that you need additional routing and you
- * need it to be able to override any defaults in this file. Environment
- * based routes is one such time. require() additional route files here
- * to make that happen.
- *
- * You will have access to the $routes object within that file without
- * needing to reload it.
- */
+//compras
+$routes->get('/admin/compras', 'AdminController/ComprasController::compras',['filter' => 'auth']);
+$routes->post('/admin/accion_compras', 'AdminController/ComprasController::accion_compras');
+$routes->post('/admin/accion_compras_borrar', 'AdminController/ComprasController::accion_compras_borrar');
+
+
+//permisos
+$routes->get('/admin/permisos', 'AdminController/PermisosController::permisos',['filter' => 'auth']);
+$routes->post('/admin/PermisosController', 'AdminController/PermisosController::accion_permisos');
+
+
+
+
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
 	require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }

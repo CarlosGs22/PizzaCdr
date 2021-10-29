@@ -1,33 +1,58 @@
 <div class="xs-pd-20-10 pd-ltr-20">
     <div class="page-header">
         <div class="row">
-            <div class="col-md-6 col-sm-12">
+            <div class="col-6 col-md-6 col-sm-6">
                 <div class="title">
-                    <?php
-                    $pieces = explode("/", uri_string());
-                    ?>
-                    <h4><?php echo $pieces[1];  ?></h4>
+                    <h4>compras</h4>
                 </div>
                 <nav aria-label="breadcrumb" role="navigation">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a><?php echo $pieces[0]; ?></a></li>
-                        <li class="breadcrumb-item"><a><?php echo $pieces[1]; ?></a></li>
+
+                        <li class="breadcrumb-item"><a>admin</a></li>
+                        <li class="breadcrumb-item"><a>compras</a></li>
                     </ol>
                 </nav>
+            </div>
+            <div class="col-6 col-md-6 col-sm-6 text-right">
+                <h3 class="text-blue h3">
+                    <button type="button" class="btn btn_add_producto" data-toggle="modal" data-target="#modal_productos" data-bgcolor="#007bb5" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 123, 181);"><i class="fa fa-plus"></i> Nuevo</button>
+
+                </h3>
             </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-12">
+
             <div class="card-box mb-30">
-                <div class="pb-20 pt-20">
-                    <div class="pd-20">
-                        <h3 class="text-blue h3">
-                            <button type="button" class="btn btn_add_producto" data-toggle="modal" data-target="#modal_productos" data-bgcolor="#007bb5" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 123, 181);"><i class="fa fa-plus"></i> Nuevo</button>
-                            <h3>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+
                     </div>
-                    <div class="row pd-20">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form class="form-inline" action="<?php echo base_url("admin/productos") ?>" accept-charset="UTF-8" method="get">
+                                        <div class="flex-fill mr-2">
+                                            <input type="text" name="txtBuscar" id="txtBuscar" value="" placeholder="Nombre, Descripción , Masa, Clasificación, Categoria" class="form-control w-100" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-success"><i class="ti-search"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="pb-20">
+
+                    <div class="row pr-20 pl-20">
                         <?php
                         $mostrar_modal_imagen;
 
@@ -39,18 +64,18 @@
                         if ($lista_productos) {
                             foreach ($lista_productos as $key => $value) {
                         ?>
-                                <div class="col-md-4 mb-30 h-100">
-                                    <div class="card-box pricing-card mt-30 mb-30 card h-100">
-                                        <div class="price-title textoTipo">
+                                <div class="col-6 col-sm-6 col-md-3 col-lg-3">
+                                    <div class="card-box pricing-card card mt-30  h-100 cardProductos">
+                                        <div class="price-title textoTipo divText">
                                             <?= $value["nombreMenu"]; ?> <i class="icon-copy fa fa-check-circle" aria-hidden="true"></i>
                                         </div>
-                                        <div class="pricing-icon h-100">
-                                            <div class="da-card card h-100" style="margin-left: 7%; margin-right:7%;">
+                                        <div class="pricing-icon">
+                                            <div class="da-card card h-100" style="margin-left: 7%; margin-right:7%; border:none">
                                                 <div class="da-card-photo ">
                                                     <?php if ($value['imagen'] != null || $value['imagen'] = "") { ?>
-                                                        <img style="max-height: 35vh;" src="<?= base_url("public/Admin/img/productos/" . $value['imagen']) ?>" alt="">
+                                                        <img style="height: 180px;" src="<?= base_url("public/Admin/img/productos/" . $value['imagen']) ?>" alt="">
                                                     <?php } else { ?>
-                                                        <img style="max-height: 35vh;" src="<?= base_url("public/Admin/img/productos/warning.png") ?>" alt="">
+                                                        <img style="height: 180px;" src="<?= base_url("public/Admin/img/productos/warning.png") ?>" alt="">
 
 
                                                     <?php }  ?>
@@ -69,7 +94,7 @@
                                         </div>
 
 
-                                        <div class="text textoNombre">
+                                        <div class="text textoNombre divText">
                                             <?= $value["nombre"]; ?>
                                         </div>
 
@@ -85,6 +110,14 @@
                         <?php }
                         } ?>
 
+                    </div>
+
+                    <div class="paginadordiv mt-30">
+                        <?php
+                        if ($pager) {
+                            echo $pager;
+                        }
+                        ?>
                     </div>
 
                 </div>
@@ -191,8 +224,6 @@
 
 
 
-
-
                     <div class=" form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Masa: </label>
                         <div class="col-sm-12 col-md-4">
@@ -253,7 +284,7 @@
                                 <option value="0"></option>
                                 <?php if ($lista_tipo_tamanio) { ?>
                                     <?php foreach ($lista_tipo_tamanio as $key => $valuec) { ?>
-                                        <option value="<?php echo $valuec['id_tipo_tamanio']; ?>" <?php echo ($valuec['id_tipo_tamanio'] ==  $id_tipo_tamanio) ? ' selected="selected"' : ''; ?>><?php echo $valuec['tipo'] ." ".$valuec['tamanio'] ; ?></option>
+                                        <option value="<?php echo $valuec['id_tipo_tamanio']; ?>" <?php echo ($valuec['id_tipo_tamanio'] ==  $id_tipo_tamanio) ? ' selected="selected"' : ''; ?>><?php echo $valuec['tipo'] . " " . $valuec['tamanio']; ?></option>
 
                                 <?php }
                                 } ?>
@@ -577,7 +608,6 @@
                 $(".panelProm").hide();
             }
         });
-
 
         var id_tipo_tamanio = <?php echo ($id_clasificacion == "2") ? "1" : '"0"'; ?>;
         if (id_tipo_tamanio == '1') {

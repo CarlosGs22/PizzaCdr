@@ -22,7 +22,7 @@ class ClienteController extends Controller
     $this->session = \Config\Services::session($config);
 
     $submenu_web = new Permiso_menu_modelo();
-    $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(1);
+    $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(session()->get('id'));
     $this->session = session();
     $this->clientes_modelo = new Clientes_modelo();
 

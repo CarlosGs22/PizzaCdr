@@ -28,7 +28,7 @@ class PromocionController extends Controller
   {
     parent::initController($request, $response, $logger);
 
-    $this->session = \Config\Services::session($config);
+    $this->session = \Config\Services::session();
 
     $submenu_web = new Permiso_menu_modelo();
     $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(1);

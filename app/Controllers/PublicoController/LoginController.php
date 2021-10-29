@@ -66,7 +66,10 @@ class LoginController extends Controller
             'nombre'     => $value->nombres,
             'usuario' => $value->usuario,
             'imagen' => $value->imagen,
-            'status' => $value->status
+            'status' => $value->status,
+            'id_sucursal' => $value->id_sucursal,
+            'nombre_sucursal' => $value->nombre_sucursal
+
           ];
           break;
         }

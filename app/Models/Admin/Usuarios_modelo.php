@@ -9,7 +9,7 @@ class Usuarios_modelo extends Model{
 
     public $primaryKey = 'id';
     
-    protected $allowedFields = ['id', 'nombres','apellido_paterno','apellido_materno','tipo','usuario','contrasenia','imagen','status','cve_usuario'];
+    protected $allowedFields = ['id', 'nombres','apellido_paterno','apellido_materno','tipo','usuario','contrasenia','imagen','status','cve_usuario','id_sucursal'];
     
     protected $validationRules    = [
         'nombres' => 'required',
@@ -49,6 +49,22 @@ class Usuarios_modelo extends Model{
       return false;
     }
   }
+
+  public function _validarContraseniaHash($usuario)
+
+  {
+
+    $sql = "SELECT contrasenia FROM usuario where usuario = ? limit 1";
+
+    $query = $this->query($sql,$usuario);
+
+    $result=  $query->getResult();
+
+
+    return $result[0]->contrasenia;
+
+  }
+
 
 
 }

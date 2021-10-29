@@ -1,68 +1,67 @@
-
 <div class="xs-pd-20-10 pd-ltr-20">
     <div class="page-header">
         <div class="row">
-            <div class="col-md-6 col-sm-12">
+            <div class="col-6 col-md-6 col-sm-6">
                 <div class="title">
-                    <?php
-                    $pieces = explode("/", uri_string());
-                    ?>
-                    <h4><?php echo $pieces[1];  ?></h4>
+                    <h4>compras</h4>
                 </div>
                 <nav aria-label="breadcrumb" role="navigation">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a><?php echo $pieces[0]; ?></a></li>
-                        <li class="breadcrumb-item"><a><?php echo $pieces[1]; ?></a></li>
+
+                        <li class="breadcrumb-item"><a>admin</a></li>
+                        <li class="breadcrumb-item"><a>compras</a></li>
                     </ol>
                 </nav>
             </div>
-        </div>
-    </div>
+            <div class="col-6 col-md-6 col-sm-6 text-right">
+                <h3 class="text-blue h3">
+                    <button type="button" class="btn btn_add_categoria" data-toggle="modal" data-target="#modal_categorias" data-bgcolor="#007bb5" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 123, 181);"><i class="fa fa-plus"></i> Nuevo</button>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card-box mb-30">
-                <div class="pb-20 pt-20">
-                    <div class="pd-20">
-                        <h3 class="text-blue h3">
-                            <button type="button" class="btn btn_add_categoria" data-toggle="modal" data-target="#modal_categorias" data-bgcolor="#007bb5" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 123, 181);"><i class="fa fa-plus"></i> Nuevo</button>
-                            <h3>
-
-                    </div>
-
-                    <table class="data-table table hover multiple-select-row nowrap">
-                        <thead>
-                            <tr>
-                                <th class="table-plus">ID</th>
-                                <th>Imagen</th>
-                                <th>Categoria</th>
-                                <th>Status</th>
-                                <th>Fecha de registro</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if ($lista_categorias) {
-                                foreach ($lista_categorias as $key => $value) { ?>
-                                    <tr>
-                                        <td><?php echo $value['id']; ?></td>
-                                        <td class="table-plus" style="width: 13%;"><img class="img-fluid" src="<?php echo base_url("public/Admin/img/categorias/" . $value['imagen']) ?>" alt="categoria"></td>
-                                        <td><?php echo $value['categoria']; ?></td>
-                                        <td><?php echo ($value['status'] == "1") ? "Activo" : 'Inactivo'; ?></td>
-                                        <td class="table-plus"><?php echo $value['cve_fecha']; ?></td>
-                                        <td><a href="<?php echo base_url("admin/categorias?id=" . $value['id']) ?>" class="btn" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);"><i class="fa fa-edit"></i>Editar</a></td>
-                                    </tr>
-                            <?php }
-                            } ?>
-
-                        </tbody>
-                    </table>
-                </div>
-
+                </h3>
             </div>
         </div>
-
     </div>
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card-box mb-30">
+            <div class="pb-20 pt-20">
+
+
+                <table class="data-table table hover multiple-select-row nowrap">
+                    <thead>
+                        <tr>
+                            <th class="table-plus">ID</th>
+                            <th>Imagen</th>
+                            <th>Categoria</th>
+                            <th>Status</th>
+                            <th>Fecha de registro</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if ($lista_categorias) {
+                            foreach ($lista_categorias as $key => $value) { ?>
+                                <tr>
+                                    <td><?php echo $value['id']; ?></td>
+                                    <td class="table-plus" style="width: 13%;"><img class="img-fluid imgTable" src="<?php echo base_url("public/Admin/img/categorias/" . $value['imagen']) ?>" alt="categoria"></td>
+                                    <td><?php echo $value['categoria']; ?></td>
+                                    <td><?php echo ($value['status'] == "1") ? "Activo" : 'Inactivo'; ?></td>
+                                    <td class="table-plus"><?php echo $value['cve_fecha']; ?></td>
+                                    <td><a href="<?php echo base_url("admin/categorias?id=" . $value['id']) ?>" class="btn" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);"><i class="fa fa-edit"></i>Editar</a></td>
+                                </tr>
+                        <?php }
+                        } ?>
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</div>
 </div>
 <div class="modal fade" id="modal_categorias" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
