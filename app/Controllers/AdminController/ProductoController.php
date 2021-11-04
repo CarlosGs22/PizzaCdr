@@ -89,9 +89,9 @@ class ProductoController extends Controller
 			$search = $this->request->getVar('txtBuscar');
 		}
     if ($search == null) {
-			$lista['lista_productos'] = $this->productos_modelo->getProductos(null);
+			$lista['lista_productos'] = $this->productos_modelo->getProductos(null,session()->get('id_sucursal'));
 		} else {
-			$lista['lista_productos'] = $this->productos_modelo->getProductos($search);
+			$lista['lista_productos'] = $this->productos_modelo->getProductos($search,session()->get('id_sucursal'));
 		}
 
     $lista['lista_status'] = $this->status_modelo->findAll();
@@ -148,6 +148,7 @@ class ProductoController extends Controller
       'id_menu' =>  $this->request->getVar('txtMenu'),
       'id_clasificacion' =>  $this->request->getVar('txtClasificacion'),
       'id_tamanio' => $id_tipo_tamanio,
+      'id_sucursal' => session()->get('id_sucursal'),
       'cve_usuario' =>  "1"
     ];
 

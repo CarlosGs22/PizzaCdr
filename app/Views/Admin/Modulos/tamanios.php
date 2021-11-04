@@ -34,7 +34,7 @@
                                 <div class="col-6 col-sm-6 col-md-4 col-lg-4 mb-30">
                                     <div class="card card-box">
 
-                                        <h5 class="card-header weight-500">Estado: <?php echo ($value['status'] == '1') ? 'Activo' : 'Inactivo'; ?></h5>
+                                        <h5 class="weight-500">Estado: <?php echo ($value['status'] == '1') ? 'Activo' : 'Inactivo'; ?></h5>
                                         <div class="card-body text-center">
                                             <h5 class="card-title "><?php echo $value['tamanio']; ?></h5>
 

@@ -13,7 +13,9 @@ class Productos_modelo extends Model
 
     protected $allowedFields = [
         'id', 'nombre', 'descripcion', 'precio', 'total',
-        'status', 'id_masa', 'id_categoria', 'id_menu', 'id_clasificacion', 'id_tamanio', 'cve_usuario'
+        'status', 'id_masa', 'id_categoria', 'id_menu', 
+        'id_clasificacion', 'id_tamanio','id_sucursal', 
+        'cve_usuario'
     ];
 
     protected $validationRules    = [
@@ -61,7 +63,7 @@ class Productos_modelo extends Model
         return $query->getResultArray();
     }
 
-    public function getProductos($buscar)
+    public function getProductos($buscar,$id_sucursal)
     {
         $this->select('producto.id as idProducto, producto.nombre,producto.descripcion,producto.precio precioProducto,producto.status,producto.cve_fecha,
         masa.id as idMasa,masa.masa,
@@ -80,9 +82,9 @@ class Productos_modelo extends Model
             ->groupBy("producto.id");
 
         if ($buscar == null) {
-            return $this->paginate(5);
+            return $this->where("id_sucursal",$id_sucursal)->paginate(10);
         } else {
-            return $this->like("producto.nombre", $buscar)->paginate(5);
+            return $this->where("id_sucursal",$id_sucursal)->like("producto.nombre", $buscar)->paginate(10);
         }
     }
 }

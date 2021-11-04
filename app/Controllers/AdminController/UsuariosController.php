@@ -49,13 +49,11 @@ class UsuariosController extends Controller
 
   public function usuarios()
   {
-    $lista['lista_usuarios'] = $this->usuarios_modelo->findAll();
+    $lista['lista_usuarios'] = $this->usuarios_modelo->where("tipo", "1")->findAll();
 
     $lista['lista_status'] = $this->status_modelo->findAll();
 
     $lista['lista_sucursales'] = $this->sucursales_modelo->findAll();
-
-
 
 
     if ($this->request->getVar('id')) {
@@ -195,5 +193,77 @@ class UsuariosController extends Controller
       $this->session->setFlashdata('respuesta', $respuesta);
       return redirect()->to(base_url("login"));
     }
+  }
+
+
+
+  public function micuenta()
+  {
+    $lista['lista_micuenta'] = $this->usuarios_modelo->where("id", session()->get('id'))->findAll();
+
+    echo view($this->rutaHeader, $this->datamenu);
+    echo view($this->rutaModulo . 'micuenta', $lista);
+    echo view($this->rutaFooter);
+  }
+
+  public function accion_micuenta()
+  {
+
+    $hash = password_hash($this->request->getVar('txtContrasenia'), PASSWORD_DEFAULT);
+
+    $datos_usuario = [
+      'nombres' =>  $this->request->getVar('txtNombre'),
+      'apellido_paterno' =>  $this->request->getVar('txtApe1'),
+      'apellido_materno' =>  $this->request->getVar('txtApe2'),
+      'usuario' =>  $this->request->getVar('txtUsuario'),
+      'contrasenia' =>  $hash,
+    ];
+
+
+    $datos_usuario = $this->funciones->_GuardarImagen(
+      $this->request->getFile('imgFoto'),
+      './public/Admin/img/usuarios',
+      $datos_usuario,
+      "imagen"
+    );
+
+    $contras = $this->usuarios_modelo->_validarContraseniaHash($this->request->getVar('txtUsuario'));
+    if ($contras == $this->request->getVar('txtContrasenia')) {
+      $datos_usuario['contrasenia'] = $contras;
+    } else {
+      $datos_usuario['contrasenia'] = $hash;
+    }
+
+    $respuesta = null;
+    try {
+      $respuesta = $this->usuarios_modelo->update(session()->get('id'), $datos_usuario);
+    } catch (\Throwable $th) {
+      $respuesta = $this->usuarios_modelo->error();
+    }
+
+    $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->usuarios_modelo->errors());
+    $session = session();
+    if ($respuesta[1] == 'success') {
+      try {
+        $this->session->remove("nombre");
+        $this->session->remove("usuario");
+
+        $newdata = [
+          'nombre'     => $this->request->getVar('txtNombre'),
+          'usuario' => $this->request->getVar('txtUsuario')
+        ];
+
+        if ($datos_usuario["imagen"] != null) {
+          $newdata['imagen'] = $datos_usuario["imagen"];
+        }
+
+        $session->set($newdata);
+      } catch (\Throwable $th) {
+        $respuesta = array('0' => "Ocurrió un error al guardar", '1' => "error");
+      }
+    }
+
+    $this->session->setFlashdata('respuesta', $respuesta);
+    return redirect()->to(base_url("admin/micuenta"));
   }
 }

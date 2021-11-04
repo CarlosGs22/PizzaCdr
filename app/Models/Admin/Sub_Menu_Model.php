@@ -35,7 +35,6 @@ class Sub_Menu_Model extends Model
     public function _obtenerMenus()
 
     {
-
         return $this->findAll();
     }
 

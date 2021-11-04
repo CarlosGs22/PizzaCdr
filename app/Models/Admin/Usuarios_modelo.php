@@ -65,6 +65,13 @@ class Usuarios_modelo extends Model{
 
   }
 
+  public function _obtenerUsuarios($notUsuario)
+  {
+    return $this->where("id != ",$notUsuario)->findAll();
+    //return $this->findAll();
+
+  }
+
 
 
 }

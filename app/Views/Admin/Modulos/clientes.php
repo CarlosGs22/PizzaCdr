@@ -23,17 +23,16 @@
 		<div class="col-12">
 			<div class="card-box mb-30">
 				<div class="pd-20">
-					<h4 class="text-blue h4">Exportar datos</h4>
 				</div>
 				<div class="pb-20">
-					<table class="table hover multiple-select-row data-table-export nowrap">
+					<table class="table hover nowrap">
 						<thead>
 							<tr>
-								<th class="table-plus datatable-nosort">Id</th>
+								<th class="table-plus">Id</th>
 								<th>Nombres</th>
 								<th>Apellido paterno</th>
 								<th>Aepllido materno</th>
-								<th>Télefono</th>
+						
 								<th>Creación</th>
 							</tr>
 						</thead>
@@ -41,11 +40,10 @@
 							<?php if ($lista_clientes) {
 								foreach ($lista_clientes as $key => $value) { ?>
 									<tr>
-										<td class="table-plus"><?=$value['id']?></td>
-										<td><?=$value['nombres']?></td>
+										<td><?=$value['id']?></td>
+										<td class="table-plus"><?=$value['nombres']?></td>
 										<td><?=$value['apellido_paterno']?></td>
 										<td><?=$value['apellido_materno']?> </td>
-										<td><?=$value['telefono']?></td>
 										<td><?=$value['cve_fecha']?></td>
 									</tr>
 							<?php }

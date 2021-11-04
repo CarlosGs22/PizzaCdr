@@ -3,13 +3,16 @@
         <div class="row">
             <div class="col-6 col-md-6 col-sm-6">
                 <div class="title">
-                    <h4>compras</h4>
+                    <?php
+                    $pieces = explode("/", uri_string());
+                    ?>
+                    <h4><?php echo $pieces[1];  ?></h4>
                 </div>
                 <nav aria-label="breadcrumb" role="navigation">
                     <ol class="breadcrumb">
 
-                        <li class="breadcrumb-item"><a>admin</a></li>
-                        <li class="breadcrumb-item"><a>compras</a></li>
+                        <li class="breadcrumb-item"><a><?php echo $pieces[0]; ?></a></li>
+                        <li class="breadcrumb-item"><a><?php echo $pieces[1]; ?></a></li>
                     </ol>
                 </nav>
             </div>
@@ -23,45 +26,45 @@
     </div>
 
 
-<div class="row">
-    <div class="col-12">
-        <div class="card-box mb-30">
-            <div class="pb-20 pt-20">
+    <div class="row">
+        <div class="col-12">
+            <div class="card-box mb-30">
+                <div class="pb-20 pt-20">
 
 
-                <table class="data-table table hover multiple-select-row nowrap">
-                    <thead>
-                        <tr>
-                            <th class="table-plus">ID</th>
-                            <th>Imagen</th>
-                            <th>Categoria</th>
-                            <th>Status</th>
-                            <th>Fecha de registro</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if ($lista_categorias) {
-                            foreach ($lista_categorias as $key => $value) { ?>
-                                <tr>
-                                    <td><?php echo $value['id']; ?></td>
-                                    <td class="table-plus" style="width: 13%;"><img class="img-fluid imgTable" src="<?php echo base_url("public/Admin/img/categorias/" . $value['imagen']) ?>" alt="categoria"></td>
-                                    <td><?php echo $value['categoria']; ?></td>
-                                    <td><?php echo ($value['status'] == "1") ? "Activo" : 'Inactivo'; ?></td>
-                                    <td class="table-plus"><?php echo $value['cve_fecha']; ?></td>
-                                    <td><a href="<?php echo base_url("admin/categorias?id=" . $value['id']) ?>" class="btn" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);"><i class="fa fa-edit"></i>Editar</a></td>
-                                </tr>
-                        <?php }
-                        } ?>
+                    <table class="data-table table hover multiple-select-row nowrap">
+                        <thead>
+                            <tr>
+                                <th class="table-plus">ID</th>
+                                <th>Imagen</th>
+                                <th>Categoria</th>
+                                <th>Status</th>
+                                <th>Fecha de registro</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if ($lista_categorias) {
+                                foreach ($lista_categorias as $key => $value) { ?>
+                                    <tr>
+                                        <td><?php echo $value['id']; ?></td>
+                                        <td class="table-plus" style="width: 13%;"><img class="img-fluid imgTable" src="<?php echo base_url("public/Admin/img/categorias/" . $value['imagen']) ?>" alt="categoria"></td>
+                                        <td><?php echo $value['categoria']; ?></td>
+                                        <td><?php echo ($value['status'] == "1") ? "Activo" : 'Inactivo'; ?></td>
+                                        <td class="table-plus"><?php echo $value['cve_fecha']; ?></td>
+                                        <td><a href="<?php echo base_url("admin/categorias?id=" . $value['id']) ?>" class="btn" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);"><i class="fa fa-edit"></i>Editar</a></td>
+                                    </tr>
+                            <?php }
+                            } ?>
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
-
         </div>
-    </div>
 
-</div>
+    </div>
 </div>
 <div class="modal fade" id="modal_categorias" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -90,20 +93,20 @@
                     <div class="form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Nombre: *</label>
                         <div class="col-sm-12 col-md-10">
-                            <input class="form-control" type="text" id="txtNombre" value="<?php echo ($nombre) ? $nombre : ''; ?>" name="txtNombre">
+                            <input class="form-control nombre" type="text" id="txtNombre" value="<?php echo ($nombre) ? $nombre : ''; ?>" name="txtNombre">
                         </div>
                     </div>
 
                     <div class=" form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Imagen: </label>
                         <div class="col-sm-12 col-md-10">
-                            <input type="file" id="imgCategoria" name="imgCategoria" class="form-control-file form-control height-auto">
+                            <input type="file" id="imgCategoria" name="imgCategoria" class="form-control-file form-control height-auto archivo">
                         </div>
                     </div>
                     <div class=" form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Status: </label>
                         <div class="col-sm-12 col-md-10">
-                            <select name="txtStatus" id="txtStatus" class=" form-control height-auto">
+                            <select name="txtStatus" id="txtStatus" class=" form-control height-auto status">
 
                                 <option value="0"></option>
                                 <?php if ($lista_status) { ?>
@@ -141,6 +144,20 @@
         $(".btn_add_categoria").click(function() {
             $("#frm_categoria input").val("");
             $("#txtStatus").val("1");
+        });
+
+        $("#frm_categoria").submit(function(e) {
+            e.preventDefault();
+
+            var valid = false;
+
+            if (validacionInput("frm_categoria")) {
+                if (validacionSelect("frm_categoria")) {
+                    valid = true;
+                }
+            }
+
+            if (valid) this.submit();
         });
 
     });

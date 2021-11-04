@@ -258,12 +258,12 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="firstName">Fecha</label>
-                                        <input class="form-control txtFecha txtForm" data-language="en" name="txtFecha" type="text" value="<?= $fecha ?>">
+                                        <input class="form-control txtForm txtFecha fecha" data-language="en" name="txtFecha" type="text" value="<?= $fecha ?>">
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label for="firstName">Usuario</label>
-                                        <input type="text" class="form-control txtForm" disabled id="txtUsuario" value="<?php echo $lista_edit_compras != null ? $usuario :  $_SESSION["nombre"] ?>">
+                                        <input type="text" class="form-control txtForm usuario" disabled id="txtUsuario" value="<?php echo $lista_edit_compras != null ? $usuario :  $_SESSION["nombre"] ?>">
                                     </div>
                                 </div>
                             </div>

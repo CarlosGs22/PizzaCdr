@@ -3,13 +3,16 @@
         <div class="row">
             <div class="col-6 col-md-6 col-sm-6">
                 <div class="title">
-                    <h4>compras</h4>
+                    <?php
+                    $pieces = explode("/", uri_string());
+                    ?>
+                    <h4><?php echo $pieces[1];  ?></h4>
                 </div>
                 <nav aria-label="breadcrumb" role="navigation">
                     <ol class="breadcrumb">
 
-                        <li class="breadcrumb-item"><a>admin</a></li>
-                        <li class="breadcrumb-item"><a>compras</a></li>
+                        <li class="breadcrumb-item"><a><?php echo $pieces[0]; ?></a></li>
+                        <li class="breadcrumb-item"><a><?php echo $pieces[1]; ?></a></li>
                     </ol>
                 </nav>
             </div>
@@ -64,7 +67,7 @@
                         if ($lista_productos) {
                             foreach ($lista_productos as $key => $value) {
                         ?>
-                                <div class="col-6 col-sm-6 col-md-3 col-lg-3">
+                                <div class="col-6 col-sm-6 col-md-3 col-lg-3 pb-20">
                                     <div class="card-box pricing-card card mt-30  h-100 cardProductos">
                                         <div class="price-title textoTipo divText">
                                             <?= $value["nombreMenu"]; ?> <i class="icon-copy fa fa-check-circle" aria-hidden="true"></i>
@@ -172,21 +175,21 @@
                     <div class="form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Nombre: *</label>
                         <div class="col-sm-12 col-md-10">
-                            <input class="form-control" type="text" id="txtNombre" value="<?php echo ($nombre) ? $nombre : ''; ?>" name="txtNombre">
+                            <input class="form-control nombre" type="text" id="txtNombre" value="<?php echo ($nombre) ? $nombre : ''; ?>" name="txtNombre">
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Descripción: *</label>
                         <div class="col-sm-12 col-md-7">
-                            <textarea class="form-control" id="txtDescripcion" name="txtDescripcion">
+                            <textarea class="form-control descripcion" id="txtDescripcion" name="txtDescripcion">
                                 <?php echo ($descripcion) ? $descripcion : ''; ?>
                             </textarea>
 
                         </div>
                         <label class="col-sm-12 col-md-1 col-form-label">Precio: *</label>
                         <div class="col-sm-12 col-md-2">
-                            <input class="form-control" type="text" id="txtPrecio" value="<?php echo ($precio) ? $precio : '0'; ?>" name="txtPrecio">
+                            <input class="form-control precio" type="text" id="txtPrecio" value="<?php echo ($precio) ? $precio : '0'; ?>" name="txtPrecio">
                         </div>
                     </div>
 
@@ -194,7 +197,7 @@
                     <div class=" form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Status: </label>
                         <div class="col-sm-12 col-md-4">
-                            <select name="txtStatus" id="txtStatus" class=" form-control height-auto">
+                            <select name="txtStatus" id="txtStatus" class="form-control height-auto status">
 
                                 <option value="0"></option>
                                 <?php if ($lista_status) { ?>
@@ -207,7 +210,7 @@
 
                         <label class="col-sm-12 col-md-2 col-form-label">Menú: </label>
                         <div class="col-sm-12 col-md-4">
-                            <select name="txtMenu" id="txtMenu" class=" form-control height-auto">
+                            <select name="txtMenu" id="txtMenu" class=" form-control height-auto menu">
 
                                 <option value="0"></option>
                                 <?php if ($lista_menu) { ?>
@@ -227,7 +230,7 @@
                     <div class=" form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Masa: </label>
                         <div class="col-sm-12 col-md-4">
-                            <select name="txtMasa" id="txtMasa" class=" form-control height-auto">
+                            <select name="txtMasa" id="txtMasa" class="form-control height-auto masa">
                                 <option value="0"></option>
                                 <?php if ($lista_masas) { ?>
                                     <?php foreach ($lista_masas as $key => $value) { ?>
@@ -239,7 +242,7 @@
 
                         <label class="col-sm-12 col-md-2 col-form-label">Categoria: </label>
                         <div class="col-sm-12 col-md-4">
-                            <select name="txtCategoria" id="txtCategoria" class="form-control height-auto">
+                            <select name="txtCategoria" id="txtCategoria" class="form-control height-auto categoria">
                                 <option value="0"></option>
                                 <?php if ($lista_categorias) { ?>
                                     <?php foreach ($lista_categorias as $key => $value) { ?>
@@ -254,7 +257,7 @@
 
                         <label class="col-sm-12 col-md-2 col-form-label">Clasificación: </label>
                         <div class="col-sm-12 col-md-2">
-                            <select name="txtClasificacion" id="txtClasificacion" class=" form-control height-auto">
+                            <select name="txtClasificacion" id="txtClasificacion" class=" form-control height-auto clasificación">
 
                                 <option value="0"></option>
                                 <?php if ($lista_clasificacion) { ?>
@@ -269,8 +272,10 @@
 
                         <label class="col-sm-12 col-md-2 col-form-label panelProm">Total: </label>
                         <div class="col-sm-12 col-md-1 panelProm">
-                            <select name="txtTotal" id="txtTotal" class=" form-control height-auto">
-                                <option value="<?php echo $total; ?>"><?php echo $total; ?></option>
+                            <select name="txtTotal" id="txtTotal" class=" form-control height-auto total">
+                                <?php if($total != null){ ?> 
+                                    <option value="<?php echo $total; ?>"><?php echo $total; ?></option>
+                                    <?php } ?>
                                 <?php for ($i = 1; $i < 10; $i++) { ?>
                                     <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
                                 <?php } ?>
@@ -279,7 +284,7 @@
 
                         <label class="col-sm-12 col-md-2 col-form-label panelProm">Tamaño: </label>
                         <div class="col-sm-12 col-md-3 panelProm">
-                            <select name="txtTamanio" id="txtTamanio" class=" form-control height-auto">
+                            <select name="txtTamanio" id="txtTamanio" class=" form-control height-auto tamaño">
 
                                 <option value="0"></option>
                                 <?php if ($lista_tipo_tamanio) { ?>
@@ -615,5 +620,29 @@
         } else {
             $(".panelProm").hide();
         }
+
+        $("#frm_producto").submit(function(e) {
+            e.preventDefault();
+
+            var valid = false;
+
+            if (validacionInput("frm_producto")) {
+                if (validacionSelect("frm_producto")) {
+                    if ($.trim($("#txtDescripcion").val())) {
+                        valid = true;
+                    }else{
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: '',
+                            text: 'Descripción no puede estar vacio',
+                        });
+                    }
+                    
+                }
+            }
+
+            if (valid) this.submit();
+        });
     });
 </script>

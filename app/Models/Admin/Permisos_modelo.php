@@ -8,9 +8,9 @@ class Permisos_modelo extends Model
 
 public $table = 'permiso_menu';
 
-public $primaryKey = 'id';
+public $primaryKey = 'idpermiso';
 
-protected $allowedFields = ['id','id_usuario','id_menu','cve_usuario','cve_fecha'];
+protected $allowedFields = ['idpermiso','id_usuario','id_submenu','cve_usuario','cve_fecha'];
 
 public function _obtenerPermisoUsuario($idusuario)
   {

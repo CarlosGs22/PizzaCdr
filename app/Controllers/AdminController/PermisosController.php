@@ -8,9 +8,12 @@ use App\Models\Admin\Funciones;
 use App\Models\Admin\Localidades_modelo;
 use App\Models\Admin\Municipios_modelo;
 use App\Models\Admin\Permiso_menu_modelo;
+use App\Models\Admin\Permisos_modelo;
 use App\Models\Admin\Status_modelo;
+use App\Models\Admin\Sub_Menu_Model;
 use App\Models\Admin\Sucursal_Localidad_modelo;
 use App\Models\Admin\Sucursal_modelo;
+use App\Models\Admin\Usuarios_modelo;
 use CodeIgniter\Controller;
 
 class PermisosController extends Controller
@@ -19,11 +22,6 @@ class PermisosController extends Controller
   protected $helpers = [];
   protected $session;
   protected $datamenu;
-  protected $sucursales_modelo;
-  protected $localidades_modelo;
-  protected $municipios_modelo;
-  protected $estados_modelo;
-  protected $sucursales_localidades_modelo;
   protected $status_modelo;
   protected $funciones;
 
@@ -36,16 +34,11 @@ class PermisosController extends Controller
     $submenu_web = new Permiso_menu_modelo();
     $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(session()->get('id'));
     
-    $this->sucursales_modelo = new Sucursal_modelo();
+  
     $this->status_modelo = new Status_modelo();
-    $this->localidades_modelo = new Localidades_modelo();
-
-    $this->estados_modelo = new Estados_modelo();
-    $this->municipios_modelo = new Municipios_modelo();
-    $this->localidades_modelo = new Localidades_modelo();
-    $this->sucursales_localidades_modelo = new Sucursal_Localidad_modelo();
     $this->funciones = new Funciones();
     $this->session = session();
+
 
     $especiales = new Especiales_modelo();
     $this->datamenu['listas_especiales'] = $especiales->findAll();
@@ -56,135 +49,71 @@ class PermisosController extends Controller
   public $rutaFooter = 'Admin/Marcos/footer.php';
 
 
-  public function sucursales()
+ 
+  public function permisos()
   {
 
+    $usuarios_model = new Usuarios_modelo();
 
-    $lista['lista_sucursales'] = $this->sucursales_modelo->findAll();
-    $lista['lista_status'] = $this->status_modelo->findAll();
+    $lista['listas_usuarios'] = $usuarios_model->_obtenerUsuarios($this->session->get("id"));
 
-    $lista['lista_estados'] = $this->estados_modelo->findAll();
+    $submenu_model = new Sub_Menu_Model();
+    $datasubmenu['listas_submenu'] = $submenu_model->_obtenerSubmenu_web($this->session->get("id"));
 
-    $lista['lista_edit_sucursales'] = $this->sucursales_modelo->select('sucursal.*, municipio.id as muni_id, localidad.id as loca_id, municipio.estado_id as esta_id')
-      ->join('localidad', 'localidad.id = sucursal.id_localidad')
-      ->join('municipio', 'municipio.id = localidad.municipio_id')->where("sucursal.id", $this->request->getVar('id'))->findAll();
 
-    $lista['lista_municipios'] = $this->municipios_modelo->where("estado_id",  $lista['lista_edit_sucursales'][0]['esta_id'])->findAll();
-
-    $lista['lista_localidades'] = $this->localidades_modelo->where("municipio_id",  $lista['lista_edit_sucursales'][0]['muni_id'])->findAll();
-
-    if ($this->request->getVar('idSucursal')) {
-      $lista['idSucursal_localidad'] = array('idSucursal' => $this->request->getVar('idSucursal'));
-      $lista['lista_localidades_registradas'] = $this->localidades_modelo->_obtenerLocalidadesRegistradas($this->request->getVar('idSucursal'));
-    }
-
-    echo view($this->rutaHeader, $this->datamenu);
-    echo view($this->rutaModulo . 'sucursales', $lista);
+    echo view($this->rutaHeader,$this->datamenu);
+    echo view($this->rutaModulo . 'permisos', $lista);
     echo view($this->rutaFooter);
   }
 
-  public function obtenerEntidades()
+
+  public function obtenerSubmenuUsuario()
   {
+    $submenu_model = new Sub_Menu_Model();
+    $permiso_model = new Permisos_modelo();
 
-    if ($this->request->getVar('id_estado')) {
-      $lista['lista_municipios'] = $this->municipios_modelo->where("estado_id", $this->request->getVar('id_estado'))->findAll();
-    }
+    $data1 = $submenu_model->_obtenerMenus();
+    $data2 = $permiso_model->_obtenerPermisoUsuario($this->request->getVar('txtUsuario'));
 
-    if ($this->request->getVar('id_municipio')) {
-      $lista['lista_localidades'] = $this->localidades_modelo->_obtenerLocalidadesNot($this->request->getVar('id_municipio'), $this->request->getVar('id_sucursal'));
-    }
-
-    header('Content-Type: application/json');
-    echo json_encode($lista);
-  }
-
-  public function accion_sucursales()
-  {
-
-    $idSucursal = $this->request->getVar("txtId");
-
-    $datos_sucursal = [
-      'nombre' =>  $this->request->getVar('txtNombre'),
-      'telefono' =>  $this->request->getVar('txtTelefono'),
-      'calle' =>  $this->request->getVar('txtCalle'),
-      'numero' =>  $this->request->getVar('txtNumero'),
-      'colonia' =>  $this->request->getVar('txtColonia'),
-      'cp' =>  $this->request->getVar('txtCp'),
-      'status' =>  $this->request->getVar('txtStatus'),
-      'cve_usuario' =>  "1",
-      'id_localidad' =>  $this->request->getVar('txtLocalidad')
-    ];
-
-    if ($idSucursal != null) {
-      array_merge($datos_sucursal, array("id" => $idSucursal));
-    }
-
-    $datos_sucursal = $this->funciones->_GuardarImagen(
-      $this->request->getFile('imgSucursal'),
-      './public/Admin/img/sucursales',
-      $datos_sucursal,
-      "imagen"
+    $lista_datos = array(
+      'submenu' => $data1,
+      'permiso' => $data2
     );
 
-    $respuesta = null;
-    try {
-      if ($idSucursal != null) {
-        $respuesta = $this->sucursales_modelo->update($idSucursal, $datos_sucursal);
-      } else {
-        $respuesta = $this->sucursales_modelo->save($datos_sucursal);
-      }
-    } catch (\Throwable $th) {
-      $respuesta = $this->sucursales_modelo->error();
-    }
-
-    $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->sucursales_modelo->errors());
-
-    $this->session->setFlashdata('respuesta', $respuesta);
-    return redirect()->to(base_url("admin/sucursales"));
+    header('Content-Type: application/json');
+    echo json_encode($lista_datos);
   }
 
-  public function accion_sucursales_localidades()
+  public function accion_permiso()
   {
+
     $opcion = $this->request->getVar('opcion');
+    $idsubmenu = $this->request->getVar('idsubmenu');
+    $idusuario = $this->request->getVar('idusuario');
 
-    $datos_sucursal_localidad = [
-      'id_sucursal' =>  $this->request->getVar('idSucursal'),
-      'id_localidad' =>  $this->request->getVar('idLocalidad'),
+
+    $permiso_model = new Permisos_modelo();
+
+    $data = [
+      'id_submenu' =>  $idsubmenu,
+      'id_usuario' => $idusuario
     ];
 
-    $respuesta = null;
-    try {
-      if ($opcion == '0') {
-        $respuesta = $this->sucursales_localidades_modelo->save($datos_sucursal_localidad);
-      } else {
-        $respuesta = $this->sucursales_localidades_modelo->where('id_sucursal', $this->request->getVar('idSucursal'))->where('id_localidad', $this->request->getVar('idLocalidad')->delete());
+    if ($opcion == "1") {
+      $respuesta = $permiso_model->save($data);
+    } else if ($opcion == "2") {
+     
+      if($permiso_model->where("id_submenu",$idsubmenu)->where("id_usuario",$idusuario)->delete()){
+        $respuesta = "1";
+      }else{
+        $respuesta = "";
       }
-    } catch (\Throwable $th) {
-      $respuesta = $this->sucursales_localidades_modelo->error();
+    } else {
+      $respuesta = "";
     }
 
-    $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->sucursales_localidades_modelo->errors());
-
-    echo json_encode($respuesta);
-  }
-
-  public function accion_registrar_localidades()
-  {
-
-    $datos_registro = [
-      'precio' => $this->request->getVar("precio"),
-      'id' =>  $this->request->getVar('idSucursal_localidad')
-    ];
-
-    $respuesta = null;
-    try {
-      $respuesta = $this->sucursales_localidades_modelo->update($this->request->getVar('idSucursal_localidad'), $datos_registro);
-    } catch (\Throwable $th) {
-      $respuesta = $this->sucursales_localidades_modelo->error();
-    }
-
-    $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->sucursales_localidades_modelo->errors());
-
+    $respuesta = $this->funciones->_CodigoFunciones($respuesta, $permiso_model->errors());
+            
     echo json_encode($respuesta);
   }
 }

@@ -89,7 +89,7 @@
 						<img src="<?php echo base_url("public/Admin/img/usuarios/" . session()->get('imagen') . "") ?>">
 					</div>
 				</div>
-				<div class="card-body">
+				<div class="card-bodyNav">
 					<div class="d-lfex justify-content-center flex-column">
 						<div class="name_container">
 							<div class="name"><?php echo session()->get('nombre'); ?></div>
@@ -97,7 +97,7 @@
 						<div class="address">Sucursal: <?php echo session()->get('nombre_sucursal'); ?></div>
 					</div>
 					<div class="follow">
-						<div class="follow_btn">Mi cuenta</div>
+						<div class="follow_btn"><a href="<?php echo base_url("admin/micuenta"); ?>">Mi cuenta</a></div>
 					</div>
 
 				</div>
@@ -165,7 +165,7 @@
 				border-radius: 50%;
 			}
 
-			.card-body {
+			.card-bodyNav {
 				padding-top: 55px !important;
 			}
 
@@ -196,7 +196,7 @@
 
 			.follow_btn {
 				background: rgb(244, 111, 48);
-				padding: 7px;
+				
 				color: #fff;
 				border-radius: 12px;
 				cursor: pointer;

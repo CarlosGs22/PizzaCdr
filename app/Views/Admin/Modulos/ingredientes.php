@@ -1,21 +1,24 @@
 <div class="xs-pd-20-10 pd-ltr-20">
     <div class="page-header">
-        <div class="row">
+    <div class="row">
             <div class="col-6 col-md-6 col-sm-6">
                 <div class="title">
-                    <h4>compras</h4>
+                    <?php
+                    $pieces = explode("/", uri_string());
+                    ?>
+                    <h4><?php echo $pieces[1];  ?></h4>
                 </div>
                 <nav aria-label="breadcrumb" role="navigation">
                     <ol class="breadcrumb">
 
-                        <li class="breadcrumb-item"><a>admin</a></li>
-                        <li class="breadcrumb-item"><a>compras</a></li>
+                        <li class="breadcrumb-item"><a><?php echo $pieces[0]; ?></a></li>
+                        <li class="breadcrumb-item"><a><?php echo $pieces[1]; ?></a></li>
                     </ol>
                 </nav>
             </div>
             <div class="col-6 col-md-6 col-sm-6 text-right">
                 <h3 class="text-blue h3">
-                    <button type="button" class="btn btn_add_menu" data-toggle="modal" data-target="#modal_ingrediente" data-bgcolor="#007bb5" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 123, 181);"><i class="fa fa-plus"></i> Nuevo</button>
+                    <button type="button" class="btn btn_add_ingredientes" data-toggle="modal" data-target="#modal_ingredientes" data-bgcolor="#007bb5" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 123, 181);"><i class="fa fa-plus"></i> Nuevo</button>
 
                 </h3>
             </div>
@@ -116,7 +119,7 @@
 
 </div>
 
-<div class="modal fade" id="modal_ingrediente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal_ingredientes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -126,15 +129,15 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" action="<?php echo base_url("admin/accion_ingredientes") ?>" enctype="multipart/form-data" id="frm_categoria">
+                <form method="post" action="<?php echo base_url("admin/accion_ingredientes") ?>" enctype="multipart/form-data" id="frm_ingrediente">
                     <?php if ($lista_edit_ingredientes) {
                         $mostrar_modal = 1;
                         $nombre = null;
                         $status = null;
                         $id_ingrediente = null;
                         foreach ($lista_edit_ingredientes as $key => $value) {
-                            $nombre = $value['ingrediente'];
-                            $status = $value['status'];
+                            $nombreIn = $value['ingrediente'];
+                            $statusIn = $value['status'];
                             $id_ingrediente = $value['id'];
                             break;
                         }
@@ -143,7 +146,7 @@
                     <div class="form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Nombre: *</label>
                         <div class="col-sm-12 col-md-10">
-                            <input class="form-control" type="text" id="txtIngrediente" value="<?php echo ($nombre) ? $nombre : ''; ?>" name="txtIngrediente">
+                            <input class="form-control nombre" type="text" id="txtIngrediente" value="<?php echo ($nombreIn) ? $nombreIn : ''; ?>" name="txtIngrediente">
                         </div>
                     </div>
 
@@ -151,12 +154,12 @@
                     <div class=" form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Status: </label>
                         <div class="col-sm-12 col-md-10">
-                            <select name="txtStatus" id="txtStatus" class=" form-control height-auto">
+                            <select name="txtStatus" id="txtStatus" class=" form-control height-auto status">
 
                                 <option value="0"></option>
                                 <?php if ($lista_status) { ?>
                                     <?php foreach ($lista_status as $key => $value) { ?>
-                                        <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] ==  $status) ? ' selected="selected"' : ''; ?>><?php echo $value['status']; ?></option>
+                                        <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] ==  $statusIn) ? ' selected="selected"' : ''; ?>><?php echo $value['status']; ?></option>
                                 <?php }
                                 } ?>
 
@@ -188,7 +191,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" action="<?php echo base_url("admin/accion_menu") ?>" enctype="multipart/form-data" id="frm_categoria">
+                <form method="post" action="<?php echo base_url("admin/accion_menu") ?>" enctype="multipart/form-data" id="frm_menu">
                     <?php if ($lista_edit_menu) {
                         $mostrar_modal_menu = 1;
                         $nombre = null;
@@ -205,7 +208,7 @@
                     <div class="form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Nombre: *</label>
                         <div class="col-sm-12 col-md-10">
-                            <input class="form-control" type="text" id="txtNombre" value="<?php echo ($nombre) ? $nombre : ''; ?>" name="txtNombre">
+                            <input class="form-control nombre" type="text" id="txtNombre" value="<?php echo ($nombre) ? $nombre : ''; ?>" name="txtNombre">
                         </div>
                     </div>
 
@@ -213,7 +216,7 @@
                     <div class=" form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Status: </label>
                         <div class="col-sm-12 col-md-10">
-                            <select name="txtStatus" id="txtStatus" class=" form-control height-auto">
+                            <select name="txtStatus" id="txtStatus" class=" form-control height-auto status">
 
                                 <option value="0"></option>
                                 <?php if ($lista_status) { ?>
@@ -314,7 +317,7 @@
 
         var idIngrediente = <?php echo ($mostrar_modal == 1) ? $mostrar_modal : '"0"'; ?>;
         if (idIngrediente == '1') {
-            $("#modal_ingrediente").modal('show');
+            $("#modal_ingredientes").modal('show');
         }
 
         var idIngrediente_menu = <?php echo ($mostrar_modal_menu_ingredientes == 1) ? $mostrar_modal_menu_ingredientes : '"0"'; ?>;
@@ -359,6 +362,34 @@
                     $(".loader").fadeOut(1000);
                 }
             });
+        });
+
+        $("#frm_ingrediente").submit(function(e) {
+            e.preventDefault();
+
+            var valid = false;
+
+            if (validacionInput("frm_ingrediente")) {
+                if (validacionSelect("frm_ingrediente")) {
+                    valid = true;
+                }
+            }
+
+            if (valid) this.submit();
+        });
+
+        $("#frm_menu").submit(function(e) {
+            e.preventDefault();
+
+            var valid = false;
+
+            if (validacionInput("frm_menu")) {
+                if (validacionSelect("frm_menu")) {
+                    valid = true;
+                }
+            }
+
+            if (valid) this.submit();
         });
     });
 </script>

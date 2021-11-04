@@ -92,21 +92,12 @@ $routes->get('/admin/promociones/consultaTamanio', 'AdminController/PromocionCon
 $routes->post('/admin/accion_productos_promociones', 'AdminController/PromocionController::accion_productos_promociones');
 
 
-//articukos
-$routes->get('/admin/articulos', 'AdminController/Articulo::index',['filter' => 'auth']);
-$routes->get('/getAll', 'AdmnController/Articulo::getAll');
-$routes->post('/getOne', 'AdminController/Articulo::getOne');
-$routes->post('/add', 'AdminController/Articulo::add');
-$routes->post('/edit', 'AdminController/Articulo::edit');
-
-
 //ingredientes
 $routes->get('/admin/ingredientes', 'AdminController/IngredienteController::ingredientes',['filter' => 'auth']);
 $routes->post('/admin/accion_ingredientes', 'AdminController/IngredienteController::accion_ingredientes');
 $routes->post('/admin/accion_menu', 'AdminController/IngredienteController::accion_menu');
 $routes->post('/admin/consultaMenuIngredientes', 'AdminController/IngredienteController::consultaMenuIngredientes');
 $routes->post('/admin/accion_ingredientes_menu', 'AdminController/IngredienteController::accion_ingredientes_menu');
-
 
 //compras
 $routes->get('/admin/compras', 'AdminController/ComprasController::compras',['filter' => 'auth']);
@@ -116,9 +107,17 @@ $routes->post('/admin/accion_compras_borrar', 'AdminController/ComprasController
 
 //permisos
 $routes->get('/admin/permisos', 'AdminController/PermisosController::permisos',['filter' => 'auth']);
-$routes->post('/admin/PermisosController', 'AdminController/PermisosController::accion_permisos');
+$routes->post('/admin/accion_permiso', 'AdminController/PermisosController::accion_permiso');
+$routes->get('/admin/obtenerSubmenuUsuario', 'AdminController/PermisosController::obtenerSubmenuUsuario');
+
+//micuenta
+$routes->get('/admin/micuenta', 'AdminController/UsuariosController::micuenta',['filter' => 'auth']);
+$routes->post('/admin/accion_micuenta', 'AdminController/UsuariosController::accion_micuenta');
 
 
+//inventario
+$routes->get('/admin/inventario', 'AdminController/InventarioController::inventario',['filter' => 'auth']);
+$routes->post('/admin/accion_inventario', 'AdminController/InventarioController::accion_inventario');
 
 
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
