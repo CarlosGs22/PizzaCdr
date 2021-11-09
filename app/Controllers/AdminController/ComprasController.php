@@ -12,6 +12,7 @@ use App\Models\Admin\Metodos_Pago_modelo;
 use App\Models\Admin\Permiso_menu_modelo;
 use App\Models\Admin\Proveedores_modelo;
 use App\Models\Admin\Status_modelo;
+use App\Models\Admin\Sucursal_modelo;
 use App\Models\Admin\Unidades_modelo;
 use CodeIgniter\Controller;
 
@@ -29,6 +30,7 @@ class ComprasController extends Controller
   protected $metodos_pago_modelo;
   protected $ingredientes_modelo;
   protected $inventario_modelo;
+  protected $sucursal_modelo;
 
 
   protected $funciones;
@@ -41,7 +43,7 @@ class ComprasController extends Controller
 
     $submenu_web = new Permiso_menu_modelo();
     $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(session()->get('id'));
-    
+
     $this->compras_modelo = new Compras_modelo();
     $this->compras_detalle_modelo = new Detalle_compra_modelo();
     $this->status_modelo = new Status_modelo();
@@ -52,6 +54,7 @@ class ComprasController extends Controller
     $this->ingredientes_modelo = new Ingredientes_modelo();
     $this->unidades_modelo = new Unidades_modelo();
     $this->inventario_modelo = new Inventario_modelo();
+    $this->sucursal_modelo = new Sucursal_modelo();
 
 
     $especiales = new Especiales_modelo();
@@ -64,15 +67,36 @@ class ComprasController extends Controller
 
   public function compras()
   {
-    $lista['lista_compras'] = $this->compras_modelo->_obtenerCompras();
-    //$lista['lista_colum'] = $this->Categorias_modelo->getLastQuery();
+    $paginas = 10;
+    $lista['lista_compras'] = $this->compras_modelo->_obtenerCompras(null,null,$paginas,null);
+
     $lista['lista_status'] = $this->status_modelo->findAll();
+
+    $lista['lista_sucursales'] = $this->sucursal_modelo->findAll();
+    
 
     if ($this->request->getVar('id')) {
       $lista['lista_edit_compras'] = $this->compras_modelo->_obtenerComprasDetalle($this->request->getVar('id'));
     } else {
       $lista['lista_ingredientes'] = $this->ingredientes_modelo->where("status", 1)->findAll();
     }
+
+    if ($this->request->getVar('txtFechaDe') != null && $this->request->getVar('txtFechaHasta') != null) {
+      $lista['lista_compras'] = $this->compras_modelo->_obtenerCompras($this->request->getVar('txtFechaDe'),$this->request->getVar('txtFechaHasta'),$paginas,null);
+    } else if ($this->request->getVar('txtFechaDe') == null && $this->request->getVar('txtFechaHasta') == null & $this->request->getVar('txtSucursal') != null) {
+      $lista['lista_compras'] = $this->compras_modelo->_obtenerCompras(null,null,$paginas,$this->request->getVar('txtSucursal'));
+    } else if ($this->request->getVar('txtFechaDe') != null && $this->request->getVar('txtFechaHasta') != null && $this->request->getVar('txtSucursal') != null) {
+      $lista['lista_compras'] = $this->compras_modelo->_obtenerCompras($this->request->getVar('txtFechaDe'),$this->request->getVar('txtFechaHasta'),$paginas, $this->request->getVar('txtSucursal'));
+    }
+
+    $lista['lista_validar_txtFechaDeHasta'] = array(
+      'txtFechaDe' => $this->request->getVar('txtFechaDe'),
+      'txtFechaHasta' => $this->request->getVar('txtFechaHasta'),
+      'id_sucursal' => $this->request->getVar('txtSucursal')
+    );
+
+  
+    $lista["pager"] = $this->compras_modelo->pager->links();
 
     $lista['lista_proveedores'] = $this->proveedores_modelo->findAll();
     $lista['lista_metodos_pago'] = $this->metodos_pago_modelo->findAll();
@@ -174,6 +198,7 @@ class ComprasController extends Controller
 
   public function accion_compras()
   {
+    
 
     try {
 
@@ -203,7 +228,8 @@ class ComprasController extends Controller
         'total' =>  $total,
         'id_metodo_pago' =>  $this->request->getVar('txtMetodo'),
         'cve_usuario' =>  "1",
-        'id_proveedor' =>  $this->request->getVar('txtProveedor')
+        'id_proveedor' =>  $this->request->getVar('txtProveedor'),
+        'id_sucursal' =>  session()->get('id_sucursal')
       ];
 
       $respuesta = null;
@@ -257,7 +283,7 @@ class ComprasController extends Controller
                   $datos_inventario = [
                     'cantidad' =>  $this->request->getVar("txtResCant-" . $value['id']),
                     'id_ingrediente_producto' =>  $this->request->getVar("txtResProd-" . $value['id']),
-                    'id_sucursal' => "1"
+                    'id_sucursal' => session()->get('id_sucursal')
                   ];
 
                   try {

@@ -28,11 +28,35 @@
 
     <div class="row">
         <div class="col-12">
+
             <div class="card-box mb-30">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form class="form-inline" action="<?php echo base_url("admin/categorias") ?>" accept-charset="UTF-8" method="get">
+                                        <div class="flex-fill mr-2">
+                                            <input type="text" name="txtBuscar" id="txtBuscar" value="" placeholder="Nombre" class="form-control w-100" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-success"><i class="ti-search"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
                 <div class="pb-20 pt-20">
 
 
-                    <table class="data-table table hover multiple-select-row nowrap">
+                    <table class="table tablaDatatable  dt-responsive nowrap" style="width:100%">
                         <thead>
                             <tr>
                                 <th class="table-plus">ID</th>
@@ -62,12 +86,19 @@
                 </div>
 
             </div>
+            <div class="paginadordiv mt-30">
+                <?php
+                if ($pager) {
+                    echo $pager;
+                }
+                ?>
+            </div>
         </div>
 
     </div>
 </div>
 <div class="modal fade" id="modal_categorias" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Registrar categoria</h5>
@@ -136,14 +167,19 @@
 
 <script>
     $(function() {
+
+
         var idCategoria = <?php echo ($mostrar_modal == 1) ? $mostrar_modal : '"0"'; ?>;
-        if (idCategoria == '1') {
+        if (idCategoria == '1' || localStorage.getItem("opcionBtn") === '1') {
+            localStorage.removeItem("opcionBtn");
             $("#modal_categorias").modal('show');
         }
 
         $(".btn_add_categoria").click(function() {
-            $("#frm_categoria input").val("");
-            $("#txtStatus").val("1");
+            if (idCategoria == '1') {
+                localStorage.setItem("opcionBtn", "1");
+                window.location.href = "<?php echo base_url("admin/categorias"); ?>";
+            }
         });
 
         $("#frm_categoria").submit(function(e) {

@@ -2,23 +2,23 @@
     <div class="page-header">
         <div class="row">
             <div class="col-6 col-md-6 col-sm-6">
-            <div class="title">
+                <div class="title">
                     <?php
                     $pieces = explode("/", uri_string());
                     ?>
                     <h4><?php echo $pieces[1];  ?></h4>
                 </div>
                 <nav aria-label="breadcrumb" role="navigation">
-					<ol class="breadcrumb">
+                    <ol class="breadcrumb">
 
-						<li class="breadcrumb-item"><a><?php echo $pieces[0]; ?></a></li>
-						<li class="breadcrumb-item"><a><?php echo $pieces[1]; ?></a></li>
-					</ol>
-				</nav>
+                        <li class="breadcrumb-item"><a><?php echo $pieces[0]; ?></a></li>
+                        <li class="breadcrumb-item"><a><?php echo $pieces[1]; ?></a></li>
+                    </ol>
+                </nav>
             </div>
             <div class="col-6 col-md-6 col-sm-6 text-right">
                 <h3 class="text-blue h3">
-                    <button type="button" class="btn btn_add_surcusal" data-toggle="modal" data-target="#modal_sucursales" data-bgcolor="#007bb5" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 123, 181);"><i class="fa fa-plus"></i> Nuevo</button>
+                    <button type="button" class="btn btn_add_sucursal" data-toggle="modal" data-target="#modal_sucursales" data-bgcolor="#007bb5" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 123, 181);"><i class="fa fa-plus"></i> Nuevo</button>
 
                 </h3>
             </div>
@@ -56,8 +56,18 @@
                                     </div>
                                 </div>
 
-                        <?php }
-                        } ?>
+                            <?php }
+                        } else { ?>
+
+
+                            <div class="col-12 text-center">
+                                <p class="dataTables_empty">No hay resultados para mostrar</p>
+
+                            </div>
+
+
+
+                        <?php  } ?>
                     </div>
                 </div>
 
@@ -65,7 +75,7 @@
         </div>
     </div>
     <div class="modal fade" id="modal_sucursales" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Registrar sucursal</h5>
@@ -84,6 +94,9 @@
                             $colonia = null;
                             $cp = null;
                             $status = null;
+                            $frame = null;
+                            $link = null;
+                            $correo = null;
                             $id_localidad = null;
                             foreach ($lista_edit_sucursales as $key => $value) {
                                 $nombre = $value['nombre'];
@@ -93,6 +106,9 @@
                                 $colonia = $value['colonia'];
                                 $cp = $value['cp'];
                                 $status = $value['status'];
+                                $frame = $value['src_frame'];
+                                $link = $value['facebook_link'];
+                                $correo = $value['correo'];
                                 $id_localidad = $value['loca_id'];
                                 $id_municipio = $value['muni_id'];
                                 $id_estado = $value['esta_id'];
@@ -107,7 +123,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label>Nombre: *</label>
-                                    <input class="form-control" type="text" id="txtNombre" value="<?php echo ($nombre) ? $nombre : ''; ?>" name="txtNombre">
+                                    <input class="form-control nombre" type="text" id="txtNombre" value="<?php echo ($nombre) ? $nombre : ''; ?>" name="txtNombre">
                                 </div>
                             </div>
                         </div>
@@ -116,21 +132,21 @@
                             <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                                 <div class="form-group">
                                     <label>Imagen: *</label>
-                                    <input type="file" id="imgSucursal" name="imgSucursal" class="form-control-file form-control height-auto">
+                                    <input type="file" id="imgSucursal" name="imgSucursal" class="form-control-file form-control height-auto imagen">
                                 </div>
                             </div>
 
                             <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                                 <div class="form-group">
                                     <label>Télefono: *</label>
-                                    <input class="form-control" type="text" id="txtTelefono" value="<?php echo ($telefono) ? $telefono : ''; ?>" name="txtTelefono">
+                                    <input class="form-control télefono" type="text" id="txtTelefono" value="<?php echo ($telefono) ? $telefono : ''; ?>" name="txtTelefono" oninput="restrict(this);">
                                 </div>
                             </div>
 
                             <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                                 <div class="form-group">
                                     <label>Calle: *</label>
-                                    <input class="form-control" type="text" id="txtCalle" value="<?php echo ($calle) ? $calle : ''; ?>" name="txtCalle">
+                                    <input class="form-control calle" type="text" id="txtCalle" value="<?php echo ($calle) ? $calle : ''; ?>" name="txtCalle">
                                 </div>
                             </div>
                         </div>
@@ -139,27 +155,27 @@
                             <div class="col-12 col-sm-12 col-md-3 col-lg-3">
                                 <div class="form-group">
                                     <label>Número: *</label>
-                                    <input type="text" id="txtNumero" name="txtNumero" value="<?php echo ($numero) ? $numero : ''; ?>" class="form-control height-auto">
+                                    <input type="text" id="txtNumero" name="txtNumero" value="<?php echo ($numero) ? $numero : ''; ?>" class="form-control height-auto número">
                                 </div>
                             </div>
 
                             <div class="col-12 col-sm-12 col-md-3 col-lg-3">
                                 <div class="form-group">
                                     <label>Colonia: *</label>
-                                    <input class="form-control" type="text" id="txtColonia" value="<?php echo ($colonia) ? $colonia : ''; ?>" name="txtColonia">
+                                    <input class="form-control colonia" type="text" id="txtColonia" value="<?php echo ($colonia) ? $colonia : ''; ?>" name="txtColonia" maxlength="10">
                                 </div>
                             </div>
 
                             <div class="col-12 col-sm-12 col-md-3 col-lg-3">
                                 <div class="form-group">
                                     <label>CP: *</label>
-                                    <input class="form-control" type="text" id="txtCp" value="<?php echo ($cp) ? $cp : ''; ?>" name="txtCp">
+                                    <input class="form-control código-postal" type="text" id="txtCp" value="<?php echo ($cp) ? $cp : ''; ?>" name="txtCp" maxlength="4" oninput="restrict(this);">
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-md-3 col-lg-3">
                                 <div class="form-group">
                                     <label>Status: *</label>
-                                    <select name="txtStatus" id="txtStatus" class="form-control">
+                                    <select name="txtStatus" id="txtStatus" class="form-control status">
                                         <option value="0"></option>
                                         <?php if ($lista_status) { ?>
                                             <?php foreach ($lista_status as $key => $value) { ?>
@@ -171,11 +187,35 @@
                             </div>
                         </div>
 
+
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label>Frame Maps: </label>
+                                    <input type="text" id="txtFrame" name="txtFrame" value="<?php echo ($frame) ? $frame : '0'; ?>" class="form-control height-auto maps">
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label>Link Facebook: </label>
+                                    <input class="form-control  height-auto Link" type="text" id="txtLink" value="<?php echo ($link) ? $link : '0'; ?>" name="txtLink">
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label>Correo: </label>
+                                    <input class="form-control  height-auto correo" type="text" id="txtCorreo" value="<?php echo ($correo) ? $correo : '0'; ?>" name="txtCorreo">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-4">
                                 <div class="form-group">
                                     <label>Estado: *</label>
-                                    <select class='form-control' name="txtEstado" id="txtEstado">
+                                    <select class='form-control estado' name="txtEstado" id="txtEstado">
 
                                         <option value='0'></option>
                                         <?php if ($lista_estados) { ?>
@@ -189,7 +229,7 @@
                             <div class="col-4">
                                 <div class="form-group">
                                     <label>Municipio: *</label>
-                                    <select class='form-control' id="txtMunicipio" name="txtMunicipio">
+                                    <select class='form-control municipio' id="txtMunicipio" name="txtMunicipio">
                                         <option value='0'></option>
                                         <?php if ($lista_municipios) { ?>
                                             <?php foreach ($lista_municipios as $key => $value) { ?>
@@ -203,7 +243,7 @@
                             <div class="col-4">
                                 <div class="form-group">
                                     <label>Localidad: *</label>
-                                    <select class='form-control' id="txtLocalidad" name="txtLocalidad">
+                                    <select class='form-control localidad' id="txtLocalidad" name="txtLocalidad">
                                         <option value='0'></option>
                                         <?php if ($lista_localidades) { ?>
                                             <?php foreach ($lista_localidades as $key => $value) { ?>
@@ -218,7 +258,7 @@
                         <div class="row">
                             <div class="col text-center">
                                 <input type="hidden" name="txtId" id="txtId" value="<?php echo $id_sucursal; ?>">
-                                <button type="submit" class="btn" data-bgcolor="#00b489" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 180, 137);"><i class="fa fa-save"></i> Guardar</button>
+                                <button type="submit" class="btn " data-bgcolor="#00b489" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 180, 137);"><i class="fa fa-save"></i> Guardar</button>
                             </div>
                         </div>
                     </form>
@@ -356,18 +396,37 @@
 
 
         var idSucursal = <?php echo ($mostrar_modal == 1) ? $mostrar_modal : '"0"'; ?>;
-        if (idSucursal == '1') {
+        if (idSucursal == '1' || localStorage.getItem("opcionBtn") === '1') {
+            localStorage.removeItem("opcionBtn");
             $("#modal_sucursales").modal('show');
+
         }
         var idSucursal_localidad = <?php echo ($mostrar_modal_localidad == 1) ? $mostrar_modal_localidad : '"0"'; ?>;
         if (idSucursal_localidad == '1') {
             $("#modal_localidades").modal('show');
         }
-        $(".btn_add_sucursal").click(function() {
-            $("#frm_sucursal input").val("");
-            $("#txtStatus").val("1");
 
+        $(".btn_add_sucursal").click(function() {
+            if (idSucursal == '1') {
+                localStorage.setItem("opcionBtn", "1");
+                window.location.href = "<?php echo base_url("admin/sucursales"); ?>";
+            }
         });
+
+        $("#frm_sucursal").submit(function(e) {
+            e.preventDefault();
+
+            var valid = false;
+
+            if (validacionInput("frm_sucursal")) {
+                if (validacionSelect("frm_sucursal")) {
+                    valid = true;
+                }
+            }
+
+            if (valid) this.submit();
+        });
+
 
         $('select[name="txtEstado"]').on("change", function() {
             $.ajax({

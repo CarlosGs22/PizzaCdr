@@ -9,7 +9,9 @@ class Proveedores_modelo extends Model{
 
     public $primaryKey = 'id';
     
-    protected $allowedFields = ['id','nombre','razon_social',
+    protected $allowedFields = ['id','nombre',
+    'apellido_paterno','apellido_materno',
+    'razon_social',
     'telefono','direccion','correo','status','cve_usuario'];
     
     protected $validationRules    = [
@@ -17,7 +19,7 @@ class Proveedores_modelo extends Model{
         'razon_social' => 'required',
         'telefono' => 'required',
         'direccion' => 'required',
-        'correo' => 'required',
+        //'correo' => 'required',
         'status' => 'required',
         'cve_usuario' => 'required'
     ];

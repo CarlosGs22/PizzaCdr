@@ -97,7 +97,7 @@
 						<div class="address">Sucursal: <?php echo session()->get('nombre_sucursal'); ?></div>
 					</div>
 					<div class="follow">
-						<div class="follow_btn"><a href="<?php echo base_url("admin/micuenta"); ?>">Mi cuenta</a></div>
+						<div class="follow_btn"><a href="<?php echo base_url("admin/micuenta"); ?>"><i class="icon-copy dw dw-user3"></i> Mi cuenta</a></div>
 					</div>
 
 				</div>

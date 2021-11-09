@@ -111,6 +111,9 @@ class SucursalController extends Controller
       'colonia' =>  $this->request->getVar('txtColonia'),
       'cp' =>  $this->request->getVar('txtCp'),
       'status' =>  $this->request->getVar('txtStatus'),
+      'src_frame' =>  $this->request->getVar('txtFrame'),
+      'facebook_link' =>  $this->request->getVar('txtLink'),
+      'correo' =>  $this->request->getVar('txtCorreo'),
       'cve_usuario' =>  "1",
       'id_localidad' =>  $this->request->getVar('txtLocalidad')
     ];

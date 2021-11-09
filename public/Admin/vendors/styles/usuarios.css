@@ -1,6 +1,5 @@
 @import "https://fonts.googleapis.com/css?family=Raleway:400,300,200,500,600,700";
 @import "//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css";
-
 .container {
     margin-top: 20px;
 }
@@ -15,7 +14,6 @@
         -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
     }
-
     100% {
         -webkit-transform: rotate(359deg);
         transform: rotate(359deg);
@@ -27,7 +25,6 @@
         -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
     }
-
     100% {
         -webkit-transform: rotate(359deg);
         transform: rotate(359deg);
@@ -323,33 +320,33 @@
 }
 
 .material-card.Red h2 {
-    background-color: #4668CE;
+    background-color: #0B132B;
 }
 
 .material-card.Red h2:after {
-    border-top-color: #4668CE;
-    border-right-color: #4668CE;
+    border-top-color: #F27525;
+    border-right-color: #F27525;
     border-bottom-color: transparent;
     border-left-color: transparent;
 }
 
 .material-card.Red h2:before {
     border-top-color: transparent;
-    border-right-color: #114AA2;
-    border-bottom-color: #114AA2;
+    border-right-color: #F27525;
+    border-bottom-color: #F27525;
     border-left-color: transparent;
 }
 
 .material-card.Red.mc-active h2:before {
     border-top-color: transparent;
-    border-right-color: #4668CE;
-    border-bottom-color: #4668CE;
+    border-right-color: #F27525;
+    border-bottom-color: #F27525;
     border-left-color: transparent;
 }
 
 .material-card.Red.mc-active h2:after {
-    border-top-color: #114AA2;
-    border-right-color: #114AA2;
+    border-top-color: #F27525;
+    border-right-color: #F27525;
     border-bottom-color: transparent;
     border-left-color: transparent;
 }
@@ -1521,4 +1518,3 @@
 .material-card.Blue-Grey.mc-active .mc-btn-action {
     border-color: #ECEFF1;
 }
-

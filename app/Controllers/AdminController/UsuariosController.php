@@ -49,8 +49,21 @@ class UsuariosController extends Controller
 
   public function usuarios()
   {
-    $lista['lista_usuarios'] = $this->usuarios_modelo->where("tipo", "1")->findAll();
 
+    $paginas = 10;
+
+    $search = null;
+		if ($this->request->getVar('txtBuscar') != null) {
+			$search = $this->request->getVar('txtBuscar');
+		}
+    if ($search == null) {
+      $lista['lista_usuarios'] = $this->usuarios_modelo->where("tipo", "1")->paginate($paginas);
+		} else {
+			$lista['lista_usuarios'] = $this->usuarios_modelo->where("tipo", "1")->
+      like("nombres", $search)->orlike("usuario", $search)->paginate($paginas);
+		}
+
+   
     $lista['lista_status'] = $this->status_modelo->findAll();
 
     $lista['lista_sucursales'] = $this->sucursales_modelo->findAll();
@@ -59,6 +72,9 @@ class UsuariosController extends Controller
     if ($this->request->getVar('id')) {
       $lista['lista_edit_usuarios'] = $this->usuarios_modelo->where("id", $this->request->getVar('id'))->findAll();
     }
+
+    
+    $lista["pager"] = $this->usuarios_modelo->pager->links();
 
     echo view($this->rutaHeader, $this->datamenu);
     echo view($this->rutaModulo . 'usuarios', $lista);

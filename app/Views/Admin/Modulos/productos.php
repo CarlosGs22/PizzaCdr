@@ -110,8 +110,18 @@
                                         </div>
                                     </div>
                                 </div>
-                        <?php }
-                        } ?>
+                            <?php }
+                        } else { ?>
+
+
+                            <div class="col-12 text-center">
+                                <p class="dataTables_empty">No hay resultados para mostrar</p>
+
+                            </div>
+
+
+
+                        <?php  } ?>
 
                     </div>
 
@@ -189,7 +199,7 @@
                         </div>
                         <label class="col-sm-12 col-md-1 col-form-label">Precio: *</label>
                         <div class="col-sm-12 col-md-2">
-                            <input class="form-control precio" type="text" id="txtPrecio" value="<?php echo ($precio) ? $precio : '0'; ?>" name="txtPrecio">
+                            <input class="form-control precio" type="text" id="txtPrecio" value="<?php echo ($precio) ? $precio : '0'; ?>" name="txtPrecio" oninput="restrict(this);">
                         </div>
                     </div>
 
@@ -273,9 +283,9 @@
                         <label class="col-sm-12 col-md-2 col-form-label panelProm">Total: </label>
                         <div class="col-sm-12 col-md-1 panelProm">
                             <select name="txtTotal" id="txtTotal" class=" form-control height-auto total">
-                                <?php if($total != null){ ?> 
+                                <?php if ($total != null) { ?>
                                     <option value="<?php echo $total; ?>"><?php echo $total; ?></option>
-                                    <?php } ?>
+                                <?php } ?>
                                 <?php for ($i = 1; $i < 10; $i++) { ?>
                                     <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
                                 <?php } ?>
@@ -521,7 +531,8 @@
 <script>
     $(function() {
         var idProducto = <?php echo ($mostrar_modal == 1) ? $mostrar_modal : '"0"'; ?>;
-        if (idProducto == '1') {
+        if (idProducto == '1' || localStorage.getItem("opcionBtn") === '1') {
+            localStorage.removeItem("opcionBtn");
             $("#modal_productos").modal('show');
         }
 
@@ -530,15 +541,10 @@
             $("#modal_imagenes").modal('show');
         }
 
-        $(".btn_add_categoria").click(function() {
-            $("#frm_categoria input").val("");
-            $("#txtStatus").val("1");
-        });
 
         $(".btn_add_producto").click(function() {
-            $("#modal_productos").modal('hide');
-            var idProducto = <?php echo ($mostrar_modal == 1) ? $mostrar_modal : '"0"'; ?>;
             if (idProducto == '1') {
+                localStorage.setItem("opcionBtn", "1");
                 window.location.href = "<?php echo base_url("admin/productos"); ?>";
             }
         });
@@ -630,7 +636,7 @@
                 if (validacionSelect("frm_producto")) {
                     if ($.trim($("#txtDescripcion").val())) {
                         valid = true;
-                    }else{
+                    } else {
 
                         Swal.fire({
                             icon: 'error',
@@ -638,7 +644,7 @@
                             text: 'Descripción no puede estar vacio',
                         });
                     }
-                    
+
                 }
             }
 

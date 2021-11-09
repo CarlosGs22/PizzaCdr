@@ -29,7 +29,7 @@ class ProveedorController extends Controller
 
     $submenu_web = new Permiso_menu_modelo();
     $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(session()->get('id'));
-    
+
     $this->proveedores_modelo = new Proveedores_modelo();
     $this->status_modelo = new Status_modelo();
 
@@ -47,16 +47,31 @@ class ProveedorController extends Controller
 
   public function proveedores()
   {
-    $lista['lista_proveedores'] = $this->proveedores_modelo->findAll();
+
+    $paginas = 10;
+
+    $search = null;
+    if ($this->request->getVar('txtBuscar') != null) {
+      $search = $this->request->getVar('txtBuscar');
+    }
+    if ($search == null) {
+      $lista['lista_proveedores'] = $this->proveedores_modelo->paginate($paginas);
+    } else {
+      $lista['lista_proveedores'] = $this->proveedores_modelo->like("nombre", $search)->paginate($paginas);
+    }
+
+
 
     $lista['lista_status'] = $this->status_modelo->findAll();
-    
+
     if ($this->request->getVar('id')) {
       $lista['lista_edit_proveedores'] = $this->proveedores_modelo->where("id", $this->request->getVar('id'))->findAll();
     }
 
+    $lista["pager"] = $this->proveedores_modelo->pager->links();
+
     echo view($this->rutaHeader, $this->datamenu);
-    echo view($this->rutaModulo .'proveedores',$lista);
+    echo view($this->rutaModulo . 'proveedores', $lista);
     echo view($this->rutaFooter);
   }
 
@@ -67,6 +82,8 @@ class ProveedorController extends Controller
 
     $datos_proveedor = [
       'nombre' =>  $this->request->getVar('txtNombre'),
+      'apellido_paterno' =>  $this->request->getVar('txtApe1'),
+      'apellido_materno' =>  $this->request->getVar('txtApe2'),
       'razon_social' =>  $this->request->getVar('txtRazon'),
       'telefono' =>  $this->request->getVar('txtTelefono'),
       'direccion' =>  $this->request->getVar('txtDireccion'),
@@ -96,8 +113,4 @@ class ProveedorController extends Controller
     $this->session->setFlashdata('respuesta', $respuesta);
     return redirect()->to(base_url("admin/proveedores"));
   }
-
-
-
-
 }

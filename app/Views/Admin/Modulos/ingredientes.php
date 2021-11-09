@@ -1,6 +1,6 @@
 <div class="xs-pd-20-10 pd-ltr-20">
     <div class="page-header">
-    <div class="row">
+        <div class="row">
             <div class="col-6 col-md-6 col-sm-6">
                 <div class="title">
                     <?php
@@ -38,10 +38,35 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card-box mb-30">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                               
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <form class="form-inline" action="<?php echo base_url("admin/ingredientes") ?>" accept-charset="UTF-8" method="get">
+                                                <div class="flex-fill mr-2">
+                                                    <input type="text" name="txtBuscar" id="txtBuscar" value="" placeholder="Ingrediente" class="form-control w-100" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-success"><i class="ti-search"></i></button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                         <div class="pb-20 pt-20">
 
 
-                            <table class="data-table table  nowrap">
+                            <table class="table tablaDatatable 
+                         dt-responsive nowrap" style="width:100%">
+
                                 <thead>
                                     <tr>
                                         <th class="table-plus">ID</th>
@@ -66,6 +91,14 @@
                             </table>
                         </div>
 
+                        <div class="paginadordiv mt-30">
+                            <?php
+                            if ($pager) {
+                                echo $pager;
+                            }
+                            ?>
+                        </div>
+
                     </div>
                 </div>
 
@@ -75,15 +108,37 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card-box mb-30">
-                        <div class="pb-20 pt-20">
-                            <div class="pd-20">
-                                <h3 class="text-blue h3">
-                                    <button type="button" class="btn btn_add_menu" data-toggle="modal" data-target="#modal_menu" data-bgcolor="#007bb5" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 123, 181);"><i class="fa fa-plus"></i> Nuevo</button>
-                                    <h3>
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                <div class="pd-20">
+                                    <h3 class="text-blue h3">
+                                        <button type="button" class="btn btn_add_menu" data-toggle="modal" data-target="#modal_menu" data-bgcolor="#007bb5" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 123, 181);"><i class="fa fa-plus"></i> Nuevo</button>
+                                        <h3>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
 
                             </div>
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <form class="form-inline" action="<?php echo base_url("admin/ingredientes") ?>" accept-charset="UTF-8" method="get">
+                                                <div class="flex-fill mr-2">
+                                                    <input type="text" name="txtBuscarMenu" id="txtBuscarMenu" value="" placeholder="Menú" class="form-control w-100" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-success"><i class="ti-search"></i></button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
 
-                            <table class="data-table table hover multiple-select-row nowrap">
+                            </div>
+                        </div>
+
+                        <div class="pb-20 pt-20">
+
+                            <table class="table tablaDatatable dt-responsive nowrap" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th class="table-plus">ID</th>
@@ -109,6 +164,16 @@
                             </table>
                         </div>
 
+                        <div class="paginadordiv mt-30">
+                            <?php
+                            if ($pagerM) {
+                                echo $pagerM;
+                            }
+                            ?>
+                        </div>
+
+
+
                     </div>
                 </div>
 
@@ -120,7 +185,7 @@
 </div>
 
 <div class="modal fade" id="modal_ingredientes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Registrar ingrediente</h5>
@@ -182,7 +247,7 @@
 </div>
 
 <div class="modal fade" id="modal_menu" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Registrar menú</h5>
@@ -311,14 +376,31 @@
     $(function() {
 
         var idMenu = <?php echo ($mostrar_modal_menu == 1) ? $mostrar_modal_menu : '"0"'; ?>;
-        if (idMenu == '1') {
+        if (idMenu == '1' || localStorage.getItem("opcionBtnMen") === '1') {
+            localStorage.removeItem("opcionBtnMen");
             $("#modal_menu").modal('show');
         }
 
+        $(".btn_add_menu").click(function() {
+            if (idMenu == '1') {
+                localStorage.setItem("opcionBtnMen", "1");
+                window.location.href = "<?php echo base_url("admin/ingredientes"); ?>";
+            }
+        });
+
         var idIngrediente = <?php echo ($mostrar_modal == 1) ? $mostrar_modal : '"0"'; ?>;
-        if (idIngrediente == '1') {
+        if (idIngrediente == '1' || localStorage.getItem("opcionBtnIng") === '1') {
+            localStorage.removeItem("opcionBtnIng");
             $("#modal_ingredientes").modal('show');
         }
+
+
+        $(".btn_add_ingredientes").click(function() {
+            if (idIngrediente == '1') {
+                localStorage.setItem("opcionBtnIng", "1");
+                window.location.href = "<?php echo base_url("admin/ingredientes"); ?>";
+            }
+        });
 
         var idIngrediente_menu = <?php echo ($mostrar_modal_menu_ingredientes == 1) ? $mostrar_modal_menu_ingredientes : '"0"'; ?>;
         if (idIngrediente_menu == '1') {

@@ -14,17 +14,22 @@ class Compras_modelo extends Model
 
     protected $useAutoIncrement = true;
 
-    protected $allowedFields = ['id', 'fecha', 'total', 'id_metodo_pago', 'cve_fecha', 'cve_usuario','id_proveedor'];
+    protected $allowedFields = [
+        'id', 'fecha',
+        'total', 'id_metodo_pago', 'cve_fecha',
+        'cve_usuario', 'id_proveedor', 'id_sucursal'
+    ];
 
     protected $validationRules    = [
         'fecha' => 'required',
         'total' => 'required',
         'id_metodo_pago' => 'required',
-        'cve_usuario' => 'required'
+        'cve_usuario' => 'required',
+        'id_sucursal' => 'required'
     ];
 
 
-    public function _obtenerCompras()
+    public function _obtenerComprasQuery()
     {
         $sql = "SELECT c.id, c.fecha,count(detalle_compra.id_compra) as cantidad,c.total,proveedor.nombre as proveedor
         FROM compra c
@@ -35,6 +40,26 @@ class Compras_modelo extends Model
         $query = $this->query($sql);
 
         return $query->getResultArray();
+    }
+
+    public function _obtenerCompras($buscarde, $buscarhasta,$paginas,$idSucursal)
+    {
+        $this->select('compra.id, compra.fecha,count(detalle_compra.id_compra) as cantidad,compra.total,proveedor.nombre as proveedor')
+            ->join('detalle_compra', 'detalle_compra.id_compra = compra.id')
+            ->join('proveedor', 'proveedor.id = compra.id_proveedor')
+            ->groupBy("compra.id");
+
+        if ($buscarde == null && $buscarhasta == null && $idSucursal == null) {
+            return $this->paginate($paginas);
+        } else if ($buscarde != null && $buscarhasta != null && $idSucursal != null) { 
+            return $this->where("fecha >=", $buscarde)->where("fecha <=", $buscarhasta)->where("id_sucursal", $idSucursal)->paginate($paginas);
+        }
+        else if ($buscarde != null && $buscarhasta != null && $idSucursal == null) { 
+            return $this->where("fecha >=", $buscarde)->where("fecha <=", $buscarhasta)->paginate($paginas);
+        }
+        else if ($buscarde == null && $buscarhasta == null && $idSucursal != null) { 
+            return $this->where("id_sucursal", $idSucursal)->paginate($paginas);
+        }
     }
 
     public function _obtenerComprasDetalle($idCompra)
@@ -49,7 +74,7 @@ class Compras_modelo extends Model
         INNER JOIN usuario on usuario.id = c.cve_usuario
         where id_compra = ?";
 
-        $query = $this->query($sql,$idCompra);
+        $query = $this->query($sql, $idCompra);
 
         return $query->getResultArray();
     }

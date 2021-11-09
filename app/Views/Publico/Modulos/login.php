@@ -110,11 +110,11 @@ body{
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="input-group mb-0">
-                                        <input class="btn btn-primary btn-lg btn-block" type="submit" value="Iniciar sesión">
+                                        <input class="btn btn-lg btn-block" type="submit" value="Iniciar sesión" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);"> 
                                     </div>
                                     <div class="font-16 weight-600 pt-10 pb-10 text-center" data-color="#707373">ó</div>
                                     <div class="input-group mb-0">
-                                        <a class="btn btn-outline-primary btn-lg btn-block btnPaneles" id="btnRegPanel">Registrarse</a>
+                                    <a class="btn btn-lg btn-block btn-block btnPaneles" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);" id="btnRegPanel">Registrarse</a>
                                     </div>
                                 </div>
                             </div>
@@ -164,11 +164,11 @@ body{
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="input-group mb-0">
-                                        <input class="btn btn-primary btn-lg btn-block" type="submit" value="Registrarse">
+                                        <input class="btn btn-lg btn-block" type="submit" value="Registrarse" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);">
                                     </div>
                                     <div class="font-16 weight-600 pt-10 pb-10 text-center" data-color="#707373">ó</div>
                                     <div class="input-group mb-0">
-                                        <a class="btn btn-outline-primary btn-lg btn-block btnPaneles" id="btnLogPanel">Iniciar sesión</a>
+                                        <a class="btn btn-lg btn-block btn-block btnPaneles" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);" id="btnLogPanel">Iniciar sesión</a>
                                     </div>
                                 </div>
                             </div>

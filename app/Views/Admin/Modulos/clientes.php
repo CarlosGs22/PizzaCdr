@@ -25,7 +25,8 @@
 				<div class="pd-20">
 				</div>
 				<div class="pb-20">
-					<table class="table hover nowrap">
+				<table class="table tablaDatatable dt-responsive nowrap" style="width:100%">
+                    
 						<thead>
 							<tr>
 								<th class="table-plus">Id</th>

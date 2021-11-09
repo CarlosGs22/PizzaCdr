@@ -4801,3 +4801,14 @@ table tr {
 table td {
     text-align: center;
 }
+
+.dataTables_empty {
+    border-bottom: 2px solid #f46f30 !important;
+    color: #d87a4e !important;
+    font-size: 19px !important;
+}
+
+.row {
+    margin-right: -10px !important;
+    margin-left: -10px !important;
+}

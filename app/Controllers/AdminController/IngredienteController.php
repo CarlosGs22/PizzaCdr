@@ -50,8 +50,33 @@ class IngredienteController extends Controller
 
     public function ingredientes()
     {
-        $lista['lista_ingredientes'] = $this->ingredientes_modelo->findAll();
-        $lista['lista_menu'] = $this->menu_modelo->findAll();
+
+        $paginas = 10;
+
+        $search = null;
+        if ($this->request->getVar('txtBuscar') != null) {
+            $search = $this->request->getVar('txtBuscar');
+        }
+        if ($search == null) {
+            $lista['lista_ingredientes'] = $this->ingredientes_modelo->paginate($paginas);
+        } else {
+            $lista['lista_ingredientes'] = $this->ingredientes_modelo->like("ingrediente", $search)->paginate($paginas);
+        }
+
+
+
+        $searchM = null;
+        if ($this->request->getVar('txtBuscarMenu') != null) {
+            $searchM = $this->request->getVar('txtBuscarMenu');
+        }
+        if ($searchM == null) {
+            $lista['lista_menu'] = $this->menu_modelo->paginate($paginas);
+        } else {
+            $lista['lista_menu'] = $this->menu_modelo->like("nombre", $searchM)->paginate($paginas);
+        }
+
+
+
         $lista['lista_status'] = $this->status_modelo->findAll();
 
         if ($this->request->getVar('id')) {
@@ -67,6 +92,11 @@ class IngredienteController extends Controller
 
             $lista['lista_validar_ing'] = array('idMenuIng' => $this->request->getVar('idMenuIng'));
         }
+
+        $lista["pager"] = $this->ingredientes_modelo->pager->links();
+        $lista["pagerM"] = $this->menu_modelo->pager->links();
+
+
 
         echo view($this->rutaHeader, $this->datamenu);
         echo view($this->rutaModulo . 'ingredientes', $lista);
@@ -156,13 +186,12 @@ class IngredienteController extends Controller
         try {
             if ($opcion == '0') {
                 $respuesta = $this->ingredientes_menu_modelo->save($datos_ingrediente_menu);
-            } else if ($opcion == '1')  {
+            } else if ($opcion == '1') {
                 $this->ingredientes_menu_modelo->where('id_ingrediente', $idIngrediente)->where('id_menu', $idMenu);
                 if ($this->ingredientes_menu_modelo->delete()) {
-                     $respuesta = "1";
+                    $respuesta = "1";
                 }
-            }
-            else{
+            } else {
                 $respuesta = "";
             }
         } catch (\Throwable $th) {

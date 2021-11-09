@@ -14,7 +14,9 @@ class Sucursal_modelo extends Model
 
     protected $allowedFields = [
         'id', 'nombre', 'imagen', 'telefono',
-        'calle', 'numero', 'colonia', 'cp', 'status', 'cve_usuario', 'cve_fecha', 'id_localidad'
+        'calle', 'numero', 'colonia', 'cp', 'status',
+        'src_frame','facebook_link','correo',    
+        'cve_usuario', 'cve_fecha', 'id_localidad',
     ];
 
     protected $validationRules    = [

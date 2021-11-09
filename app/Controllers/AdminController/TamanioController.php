@@ -61,8 +61,21 @@ class TamanioController extends Controller
     public function tamanios()
   {
 
+    $paginas = 10;
+
+    $search = null;
+		if ($this->request->getVar('txtBuscar') != null) {
+			$search = $this->request->getVar('txtBuscar');
+		}
+    if ($search == null) {
+      $lista['lista_tamanios'] = $this->tamanios_modelo->paginate($paginas);
+		} else {
+      $lista['lista_tamanios'] = $this->tamanios_modelo->like("tamanio",$search)->paginate($paginas);
+		}
+
+
     $lista['lista_status'] = $this->status_modelo->findAll();
-    $lista['lista_tamanios'] = $this->tamanios_modelo->findAll();
+    
 
     if ($this->request->getVar('id')) {
       $lista['lista_edit_tamanio'] = $this->tamanios_modelo->where("id", $this->request->getVar('id'))->findAll();
@@ -80,6 +93,8 @@ class TamanioController extends Controller
       $lista['lista_tipos'] = $this->tipos_modelo->findAll();
       $lista['lista_ingredientes'] = $this->ingredientes_modelo->findAll();
     }
+
+    $lista["pager"] = $this->tamanios_modelo->pager->links();
 
     echo view($this->rutaHeader, $this->datamenu);
     echo view($this->rutaModulo . 'tamanios', $lista);

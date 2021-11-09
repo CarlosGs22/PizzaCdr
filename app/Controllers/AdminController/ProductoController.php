@@ -133,8 +133,8 @@ class ProductoController extends Controller
       $total = $this->request->getVar('txtTotal');
       $id_tipo_tamanio = $this->request->getVar('txtTamanio');
     } else {
-      $total = null;
-      $id_tipo_tamanio = null;
+      $total = "0";
+      $id_tipo_tamanio = "0";
     }
 
     $datos_producto = [

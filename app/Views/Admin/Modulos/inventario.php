@@ -24,9 +24,33 @@
     <div class="row">
         <div class="col-12">
             <div class="card-box mb-30">
+            <div class="row">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form class="form-inline" action="<?php echo base_url("admin/inventario") ?>" accept-charset="UTF-8" method="get">
+                                        <div class="flex-fill mr-2">
+                                            <input type="text" name="txtBuscar" id="txtBuscar" value="" placeholder="Ingrediente/Producto" class="form-control w-100" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-success"><i class="ti-search"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
                 <div class="pb-20 pt-20">
 
-                    <table class="table hover  nowrap">
+                <table class="table tablaDatatable  dt-responsive nowrap" style="width:100%">
+                    
                         <thead>
                             <tr>
                                 <th class="table-plus">ID</th>
@@ -52,6 +76,14 @@
                         </tbody>
                     </table>
                 </div>
+
+                <div class="paginadordiv mt-30">
+                        <?php
+                        if ($pager) {
+                            echo $pager;
+                        }
+                        ?>
+                    </div>
 
             </div>
         </div>

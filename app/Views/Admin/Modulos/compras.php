@@ -27,8 +27,71 @@
     <div class="row">
         <div class="col-12">
             <div class="card-box mb-30">
+                <form class="form-inline row" action="<?php echo base_url("admin/compras") ?>" accept-charset="UTF-8" method="get">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-3 col-lg-3">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-inline">
+                                        <label for="">Sucursal</label>
+                                        <select class="form-control txtForm txtSucursal w-100" name="txtSucursal" id="txtSucursal">
+                                            <option value="">Todas</option>
+                                            <?php 
+                                            $fechaDe = null;
+                                            $fechaHasta = null;
+                                            $id_sucursal = null;
+
+                                            if ($lista_validar_txtFechaDeHasta["txtFechaDe"] != null) {
+                                                $fechaDe = $lista_validar_txtFechaDeHasta["txtFechaDe"];
+                                            }
+                                            if ($lista_validar_txtFechaDeHasta["txtFechaHasta"] != null) {
+                                                $fechaHasta = $lista_validar_txtFechaDeHasta["txtFechaHasta"];
+                                            }
+                                            if ($lista_validar_txtFechaDeHasta["id_sucursal"] != null) {
+                                                $id_sucursal = $lista_validar_txtFechaDeHasta["id_sucursal"];
+                                            }
+                                            
+                                            if ($lista_sucursales) {
+                                                foreach ($lista_sucursales as $key => $value) {
+                                            ?>
+                                                    <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] ==  $id_sucursal) ? ' selected="selected"' : ''; ?>><?php echo $value['nombre']; ?></option>
+
+                                            <?php }
+                                            } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <div class="container">
+                            <div class="form-inline">
+                                <label for="">Filtro</label>
+                                <div class="row">
+                                    <div class="col-6 col-sm-6 col-md-4 col-lg-4">
+                                        <input class="form-control txtForm txtFecha fecha form-control w-100" data-language="en" type="text" name="txtFechaDe" id="txtBuscarDe" value="<?=$fechaDe != null ?  $fechaDe : "" ?>" placeholder="De">
+                                    </div>
+                                    <div class="col-6 col-sm-6 col-md-4 col-lg-4">
+                                        <input class="form-control txtForm txtFecha fecha form-control w-100" data-language="en" type="text" name="txtFechaHasta" id="txtBuscarHasta" value="<?=$fechaHasta != null ?  $fechaHasta : "" ?>" placeholder="Hasta">
+
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                        <button type="submit" class="btn btn-success"><i class="ti-search"></i></button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </form>
                 <div class="pb-20 pd-20">
-                    <table class="table hover  nowrap">
+                    <table class="table tablaDatatable  dt-responsive nowrap" style="width:100%">
                         <thead>
                             <tr>
                                 <th class="table-plus datatable-nosort">Id</th>
@@ -57,6 +120,15 @@
                         </tbody>
                     </table>
                 </div>
+
+            </div>
+
+            <div class="paginadordiv mt-30">
+                <?php
+                if ($pager) {
+                    echo $pager;
+                }
+                ?>
             </div>
 
         </div>
@@ -303,9 +375,10 @@
         }
 
         var idCompra = <?php echo ($mostrar_modal == 1) ? $mostrar_modal : '"0"'; ?>;
-        if (idCompra == '1') {
+        if (idCompra == '1'  || localStorage.getItem("opcionBtn") === '1') {
             $("#modal_compras").modal('show');
             $(".txtForm").prop('disabled', true);
+            localStorage.removeItem("opcionBtn");
         }
 
         $(".listaIngredientes").hide();
@@ -320,9 +393,11 @@
         });
 
 
-        $(".btn_add_categoria").click(function() {
-            $("#frm_categoria input").val("");
-            $("#txtStatus").val("1");
+        $(".btn_add_compra").click(function() {
+            if (idCompra == '1') {
+                localStorage.setItem("opcionBtn", "1");
+                window.location.href = "<?php echo base_url("admin/compras"); ?>";
+            }
         });
 
 
@@ -443,6 +518,8 @@
             }
             if (valid) this.submit();
         });
+
+
 
 
     });

@@ -49,12 +49,28 @@ class InventarioController extends Controller
 
   public function inventario()
   {
+    $paginas = 10;
+    
     $this->inventario_modelo->select("ingrediente.ingrediente,cantidad,fecha_actualizacion,inventario.id,sucursal.nombre as sucursal");
     $this->inventario_modelo->join("ingrediente","inventario.id_ingrediente_producto = ingrediente.id");
     $this->inventario_modelo->join("sucursal","sucursal.id = inventario.id_sucursal");
     
-    $lista["lista_inventario"] =  $this->inventario_modelo-> findAll();
-    
+   
+    $search = null;
+		if ($this->request->getVar('txtBuscar') != null) {
+			$search = $this->request->getVar('txtBuscar');
+		}
+    if ($search == null) {
+      $lista["lista_inventario"] =  $this->inventario_modelo->paginate($paginas);
+		} else {
+			$lista['lista_inventario'] = $this->inventario_modelo->like("ingrediente",$this->request->getVar('txtBuscar'))->paginate($paginas);
+		}
+
+    $lista["pager"] = $this->inventario_modelo->pager->links();
+
+
+
+  
  
     echo view($this->rutaHeader, $this->datamenu);
     echo view($this->rutaModulo . 'inventario',$lista);

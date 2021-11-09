@@ -1,6 +1,6 @@
 <div class="xs-pd-20-10 pd-ltr-20">
-<div class="page-header">
-<div class="row">
+    <div class="page-header">
+        <div class="row">
             <div class="col-6 col-md-6 col-sm-6">
                 <div class="title">
                     <?php
@@ -23,57 +23,94 @@
                 </h3>
             </div>
         </div>
-	</div>
+    </div>
 
     <div class="row">
         <div class="col-12">
             <div class="card-box mb-30">
-                <div class="pb-20 pt-20">
-                    
-                    <div class="row pd-20">
-                        <section class="container">
-                            <div class="row active-with-click">
-                                <?php if ($lista_usuarios) {
-                                    foreach ($lista_usuarios as $key => $value) { ?>
-                                        <div class="col-md-4 col-sm-6 col-xs-12">
-                                            <article class="material-card Red">
-                                                <h2>
-                                                    <strong>
-                                                        <a class="text-white enlaceUsuario" href="<?php echo base_url("admin/usuarios?id=" . $value["id"]) ?>"><i class="fa fa-edit"></i>
-                                                            <?php echo $value["usuario"]; ?></a>
-                                                    </strong>
-                                                </h2>
-                                                <div class="mc-content">
-                                                    <div class="img-container">
-                                                        <img class="img-fluid w-100 h-100" src="<?php echo base_url("public/Admin/img/usuarios/".$value["imagen"]); ?>">
-                                                    </div>
-                                                    <div class="mc-description">
-                                                        <strong> Nombre:</strong>
-                                                        </br>
-                                                        <?php echo $value["nombres"]; ?>
-                                                        </br>
-                                                        <?php echo $value["apellido_paterno"] . " " . $value["apellido_materno"]; ?>
-                                                    </div>
-                                                </div>
-                                                <a class="mc-btn-action cool-background">
-                                                    <i class="fa fa-bars"></i>
-                                                </a>
-                                                <div class="mc-footer">
-                                                    <h4>
-                                                        Creación
-                                                    </h4>
-                                                    <?php echo $value["cve_fecha"]; ?>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
 
-                                                </div>
-                                            </article>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form class="form-inline" action="<?php echo base_url("admin/usuarios") ?>" accept-charset="UTF-8" method="get">
+                                        <div class="flex-fill mr-2">
+                                            <input type="text" name="txtBuscar" id="txtBuscar" value="" placeholder="Nombres, Usuario" class="form-control w-100" required>
                                         </div>
-                                <?php }
-                                } ?>
+                                        <button type="submit" class="btn btn-success"><i class="ti-search"></i></button>
+                                    </form>
+                                </div>
                             </div>
-                        </section>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="pb-20 pt-20">
+
+                    <div class="row pd-20">
+                        <?php if ($lista_usuarios) {
+                            foreach ($lista_usuarios as $key => $value) { ?>
+                                <div class="col-md-3 col-lg-3 col-sm-6 col-12">
+                                    <article class="material-card Red">
+                                        <h2>
+                                            <strong>
+                                                <a class="text-white enlaceUsuario" href="<?php echo base_url("admin/usuarios?id=" . $value["id"]) ?>"><i class="fa fa-edit"></i>
+                                                    <?php echo $value["usuario"]; ?></a>
+                                            </strong>
+                                        </h2>
+                                        <div class="mc-content">
+                                            <div class="img-container">
+                                                <img class="img-fluid w-100 h-100" src="<?php echo base_url("public/Admin/img/usuarios/" . $value["imagen"]); ?>">
+                                            </div>
+                                            <div class="mc-description">
+                                                <strong> Nombre:</strong>
+                                                </br>
+                                                <?php echo $value["nombres"]; ?>
+                                                </br>
+                                                <?php echo $value["apellido_paterno"] . " " . $value["apellido_materno"]; ?>
+                                            </div>
+                                        </div>
+                                        <a class="mc-btn-action cool-background">
+                                            <i class="fa fa-bars"></i>
+                                        </a>
+                                        <div class="mc-footer">
+                                            <h4>
+                                                Creación
+                                            </h4>
+                                            <?php echo $value["cve_fecha"]; ?>
+
+                                        </div>
+                                    </article>
+                                </div>
+                            <?php }
+                        } else { ?>
+
+
+                            <div class="col-12 text-center">
+                                <p class="dataTables_empty">No hay resultados para mostrar</p>
+
+                            </div>
+
+
+
+                        <?php  } ?>
                     </div>
 
 
+                </div>
+
+                <div class="paginadordiv mt-30">
+                    <?php
+                    if ($pager) {
+                        echo $pager;
+                    }
+                    ?>
                 </div>
 
             </div>
@@ -83,7 +120,7 @@
 
 
     <div class="modal fade" id="modal_usuarios" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Registrar usuario</h5>
@@ -166,7 +203,7 @@
                             </div>
                         </div>
 
-                        
+
                         <div class="form-group row">
                             <label class="col-sm-12 col-md-2 col-form-label">Sucursal: *</label>
                             <div class="col-sm-12 col-md-10">

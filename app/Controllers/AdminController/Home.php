@@ -65,7 +65,18 @@ class Home extends Controller
 
   public function categorias()
   {
-    $lista['lista_categorias'] = $this->Categorias_modelo->findAll();
+    $paginas = 10;
+    
+    $search = null;
+		if ($this->request->getVar('txtBuscar') != null) {
+			$search = $this->request->getVar('txtBuscar');
+		}
+    if ($search == null) {
+			$lista['lista_categorias'] = $this->Categorias_modelo->paginate($paginas);
+		} else {
+			$lista['lista_categorias'] = $this->Categorias_modelo->like("categoria",$this->request->getVar('txtBuscar'))->paginate();
+		}
+
     //$lista['lista_colum'] = $this->Categorias_modelo->getLastQuery();
     $lista['lista_status'] = $this->status_modelo->findAll();
 
@@ -73,6 +84,8 @@ class Home extends Controller
     if ($this->request->getVar('id')) {
       $lista['lista_edit_categorias'] = $this->Categorias_modelo->where("id", $this->request->getVar('id'))->findAll();
     }
+
+    $lista["pager"] = $this->Categorias_modelo->pager->links();
 
     echo view($this->rutaHeader, $this->datamenu);
     echo view($this->rutaModulo . 'categorias', $lista);
