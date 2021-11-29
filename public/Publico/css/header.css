@@ -1,0 +1,124 @@
+.headerPage {
+    background: white;
+}
+
+.width-auto {
+    width: auto;
+}
+
+.text-lg {
+    font-size: 2rem;
+}
+
+.carousel-indicators li {
+    border: none;
+    background: #ccc;
+}
+
+.carousel-indicators li.active {
+    background: #28a745;
+}
+
+.carouse-main {
+    display: grid;
+    place-items: center;
+    min-height: 45vh;
+}
+
+@media screen and (max-width: 992px) {
+    .headerPage {
+        background: #222831;
+    }
+    #navbarSupportedContent .nav-item.active>.nav-link {
+        color: rgb(244, 111, 48);
+    }
+    #navbarSupportedContent .nav-item>.nav-link {
+        color: white;
+    }
+}
+
+#header .navbar-light .navbar-nav .nav-link:focus,
+#header .navbar-light .navbar-nav .nav-link:hover {
+    color: #ef4211;
+}
+
+#header nav {
+    padding: 15px 0px;
+}
+
+#header .navbar-light .navbar-nav .nav-link {
+    color: #5a5a5a;
+    font-size: 20px;
+}
+
+#header {
+    border-bottom: 1px solid #ddd;
+    background-color: #fff;
+    width: 100%;
+}
+
+#header li.nav-item {
+    margin: 0px 10px;
+}
+
+#header .navbar-light .navbar-nav .active>.nav-link,
+#header .navbar-light .navbar-nav .nav-link.active,
+#header .navbar-light .navbar-nav .nav-link.show,
+#header .navbar-light .navbar-nav .show>.nav-link {
+    color: #ef4211;
+}
+
+#header .dropdown-menu.show {
+    border: none;
+}
+
+.topbar {
+    background-color: #ffbe338f;
+    color: black;
+    padding: 4px 0px;
+}
+
+.topbar ul {
+    margin: 0px;
+    padding: 0px;
+}
+
+.topbar ul li {
+    float: left;
+    list-style: none;
+    margin: 3px 7px;
+    font-size: 15px;
+}
+
+.topbar ul li a {
+    color: #fff;
+}
+
+.topbar ul li i {
+    font-size: 18px;
+    margin-right: 3px;
+}
+
+.topbar ul li.followus-label {
+    font-weight: bold;
+}
+
+#header .social-icon {
+    float: right;
+}
+
+
+/*=============Responsive css==================*/
+
+@media (max-width: 991px) {
+    .topbar ul li {
+        margin: 3px 3px;
+        font-size: 12px;
+    }
+    #header ul.navbar-nav {
+        position: static;
+        width: 100%;
+        border-top: 1px solid #ddd;
+        margin: 15px 0px 0px;
+    }
+}

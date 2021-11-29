@@ -129,25 +129,18 @@ class ProductoController extends Controller
     $total = null;
     $id_tipo_tamanio = null;
 
-    if ($this->request->getVar('txtClasificacion') != "1") {
-      $total = $this->request->getVar('txtTotal');
-      $id_tipo_tamanio = $this->request->getVar('txtTamanio');
-    } else {
-      $total = "0";
-      $id_tipo_tamanio = "0";
-    }
-
+    
     $datos_producto = [
       'nombre' =>  $this->request->getVar('txtNombre'),
       'descripcion' =>  $this->request->getVar('txtDescripcion'),
       'precio' =>  $this->request->getVar('txtPrecio'),
-      'total' =>  $total,
+      'total' =>  $this->request->getVar('txtTotal'),
       'status' =>  $this->request->getVar('txtStatus'),
       'id_masa' =>  $this->request->getVar('txtMasa'),
       'id_categoria' =>  $this->request->getVar('txtCategoria'),
       'id_menu' =>  $this->request->getVar('txtMenu'),
       'id_clasificacion' =>  $this->request->getVar('txtClasificacion'),
-      'id_tamanio' => $id_tipo_tamanio,
+      'id_tamanio' => $this->request->getVar('txtTamanio'),
       'id_sucursal' => session()->get('id_sucursal'),
       'cve_usuario' =>  "1"
     ];

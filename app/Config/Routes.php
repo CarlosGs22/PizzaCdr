@@ -30,8 +30,8 @@ $routes->setAutoRoute(true);
  */
 
 
-
-$routes->get('/', 'AdminController/Home::principal',['filter' => 'auth']);
+/* ++++++++++++++++++++++++++++++++++++ AMDMIN ++++++++++++++++++++++++++++++++ */
+$routes->get('/admin/inicio', 'AdminController/Home::principal',['filter' => 'auth']);
 $routes->get('/admin/index', 'AdminController/Home::index',['filter' => 'auth']);
 
 
@@ -118,6 +118,21 @@ $routes->post('/admin/accion_micuenta', 'AdminController/UsuariosController::acc
 //inventario
 $routes->get('/admin/inventario', 'AdminController/InventarioController::inventario',['filter' => 'auth']);
 $routes->post('/admin/accion_inventario', 'AdminController/InventarioController::accion_inventario');
+
+
+
+
+
+
+
+
+
+/* ++++++++++++++++++++++++++++++++++ PUBLICO ++++++++++++++++++++++++++++++++++++++++++++++ */
+
+
+$routes->get('/', 'PublicoController/Home::principal');
+$routes->post('/buscar_cobertura', 'PublicoController/Home::buscar_cobertura');
+$routes->post('/contacto', 'PublicoController/Home::contacto');
 
 
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {

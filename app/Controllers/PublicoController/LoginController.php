@@ -2,7 +2,9 @@
 
 namespace App\Controllers\PublicoController;
 
+use App\Models\Admin\Especiales_modelo;
 use App\Models\Admin\Permisos_modelo;
+use App\Models\Admin\Sucursal_modelo;
 use App\Models\Admin\Usuarios_modelo;
 use CodeIgniter\Controller;
 
@@ -15,16 +17,20 @@ class LoginController extends Controller
 
   protected $permisos_modelo;
 
+  protected $sucursales_modelo;
+
 
   public function initController(\CodeIgniter\HTTP\RequestInterface $request, \CodeIgniter\HTTP\ResponseInterface $response, \Psr\Log\LoggerInterface $logger)
   {
     parent::initController($request, $response, $logger);
 
+    $this->sucursales_modelo = new Sucursal_modelo();
+    $this->especiales = new Especiales_modelo();
+
     $this->session = \Config\Services::session();
 
     $this->usuarios_modelo = new Usuarios_modelo();
     $this->permisos_modelo = new Permisos_modelo();
-
   }
 
   public $rutaHeader = 'Admin/Marcos/header.php';
@@ -33,7 +39,25 @@ class LoginController extends Controller
 
   public function login()
   {
-    echo view($this->rutaModulo . 'login');
+
+    $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
+    $lista["listas_especiales"] = $this->especiales->findAll();
+
+
+    $idSucursal = null;
+
+    if (session()->get('sucursal_cobertura') != null) {
+      $idSucursal = session()->get('sucursal_cobertura');
+    } else {
+      $idSucursal = 4;
+    }
+
+    $lista["lista_sucursal_info"] = $this->sucursales_modelo->select("municipio.nombre as nombre_municipio,estado.nombre as nombre_estado,sucursal.*")
+      ->join("localidad", "localidad.id =  sucursal.id_localidad", "left")
+      ->join("municipio", "municipio.id = localidad.municipio_id", "left")
+      ->join("estado", "estado.id = municipio.estado_id")->where("sucursal.id", $idSucursal)->findAll();
+
+    echo view($this->rutaModulo . 'login', $lista);
   }
 
   public function accion_login()
@@ -93,6 +117,4 @@ class LoginController extends Controller
     $this->session->destroy();
     return redirect()->to(base_url("login"));
   }
-
-  
 }

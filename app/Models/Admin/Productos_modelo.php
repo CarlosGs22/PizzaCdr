@@ -44,7 +44,7 @@ class Productos_modelo extends Model
         categoria.id as idCategoria, categoria.categoria,menu.id as idMenu,menu.nombre as nombreMenu,
         imagen.id,imagen.imagen,
         clasificacion.id as idClasificacion,clasificacion.nombre as nombreClasificacion,total,
-        tipo.id as idTipo,tipo.tipo,tamanio.id as idTamanio,tamanio.tamanio
+        tipo.id as idTipo,tipo.tipo,tamanio.id as idTamanio,tamanio.tamanio,tipo_tamanio.id as id_tipo_tamanio
        
         FROM producto
         
@@ -70,7 +70,7 @@ class Productos_modelo extends Model
         categoria.id as idCategoria, categoria.categoria,menu.id as idMenu,menu.nombre as nombreMenu,
         imagen.id,imagen.imagen,
         clasificacion.id as idClasificacion,clasificacion.nombre as nombreClasificacion,total,
-        tipo.id as idTipo,tipo.tipo,tamanio.id as idTamanio,tamanio.tamanio')
+        tipo.id as idTipo,tipo.tipo,tamanio.id as idTamanio,tamanio.tamanio,tipo_tamanio.id as id_tipo_tamanio')
             ->join('masa', 'masa.id = producto.id_masa')
             ->join('categoria', 'categoria.id = producto.id_categoria')
             ->join('clasificacion', 'clasificacion.id = producto.id_clasificacion')

@@ -176,7 +176,7 @@
                         $id_menu = $value['idMenu'];
                         $id_clasificacion = $value['idClasificacion'];
                         $total = $value['total'];
-                        $id_tipo_tamanio = $value['idTamanio'];
+                        $id_tipo_tamanio = $value['id_tipo_tamanio'];
 
                         break;
                     }
@@ -292,8 +292,8 @@
                             </select>
                         </div>
 
-                        <label class="col-sm-12 col-md-2 col-form-label panelProm">Tamaño: </label>
-                        <div class="col-sm-12 col-md-3 panelProm">
+                        <label class="col-sm-12 col-md-2 col-form-label">Tamaño: </label>
+                        <div class="col-sm-12 col-md-3">
                             <select name="txtTamanio" id="txtTamanio" class=" form-control height-auto tamaño">
 
                                 <option value="0"></option>

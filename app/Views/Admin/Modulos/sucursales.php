@@ -1,3 +1,8 @@
+<style>
+    .panelMasInfo {
+        display: none;
+    }
+</style>
 <div class="xs-pd-20-10 pd-ltr-20">
     <div class="page-header">
         <div class="row">
@@ -35,16 +40,15 @@
                         <?php if ($lista_sucursales) {
                             foreach ($lista_sucursales as $key => $value) { ?>
 
-                                <div class="col-6 col-lg-3 col-md-4 col-sm-12 mb-30">
+                                <div class="col-6 col-lg-4 col-md-4 col-sm-12 mb-30">
                                     <div class="da-card">
                                         <div class="da-card-photo">
-                                            <img style="max-height: 330px;" src="<?php echo base_url("public/Admin/img/sucursales/" . $value['imagen']) ?>" alt="Sucursal">
+                                            <img style="height: 345px;" src="<?php echo base_url("public/Admin/img/sucursales/" . $value['imagen']) ?>" alt="Sucursal">
                                             <div class="da-overlay">
                                                 <div class="da-social">
                                                     <ul class="clearfix">
                                                         <li><a href="<?php echo base_url("admin/sucursales?id=" . $value['id']) ?>"><i class="icon-copy fa fa-edit" aria-hidden="true"></i></a></li>
                                                         <li><a href="<?php echo base_url("admin/sucursales?idSucursal=" . $value['id']) ?>"><span class="icon-copy ti-location-pin"></span></a></li>
-
                                                     </ul>
                                                 </div>
                                             </div>
@@ -109,6 +113,8 @@
                                 $frame = $value['src_frame'];
                                 $link = $value['facebook_link'];
                                 $correo = $value['correo'];
+                                $horario = $value['horario'];
+                                $presentacion = $value['presentacion'];
                                 $id_localidad = $value['loca_id'];
                                 $id_municipio = $value['muni_id'];
                                 $id_estado = $value['esta_id'];
@@ -256,6 +262,27 @@
                         </div>
 
                         <div class="row">
+                            <div class="col-12">
+                                <a class="btn btn-link togglemas">Más información</a>
+                            </div>
+                        </div>
+
+                        <div class="row panelMasInfo">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="Horario">Horario</label>
+                                    <input class="form-control horario" type="text" id="txtHorario" value="<?php echo ($horario) ? $horario : ''; ?>" name="txtHorario">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="Presentacion">Presentación</label>
+                                    <textarea class="form-control presentacion" name="txtPresentacion" rows="10" cols="50"><?php echo ($presentacion) ? $presentacion : ''; ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col text-center">
                                 <input type="hidden" name="txtId" id="txtId" value="<?php echo $id_sucursal; ?>">
                                 <button type="submit" class="btn " data-bgcolor="#00b489" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(0, 180, 137);"><i class="fa fa-save"></i> Guardar</button>
@@ -379,7 +406,6 @@
                     </div>
 
 
-
                 </div>
             </div>
         </div>
@@ -388,11 +414,9 @@
 
 
 
+
 <script>
     $(function() {
-
-
-
 
 
         var idSucursal = <?php echo ($mostrar_modal == 1) ? $mostrar_modal : '"0"'; ?>;
@@ -420,7 +444,9 @@
 
             if (validacionInput("frm_sucursal")) {
                 if (validacionSelect("frm_sucursal")) {
-                    valid = true;
+                    if (validacionTextArea("frm_sucursal")) {
+                        valid = true;
+                    }
                 }
             }
 
@@ -571,6 +597,12 @@
                     alert(error);
                     $(".loader").fadeOut(1000);
                 }
+            });
+        });
+
+        $(".togglemas").click(function() {
+            $(".panelMasInfo").animate({
+                width: "toggle"
             });
         });
 

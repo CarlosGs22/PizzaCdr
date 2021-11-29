@@ -214,7 +214,6 @@
                                             <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] ==  $id_sucursal) ? ' selected="selected"' : ''; ?>><?php echo $value['nombre']; ?></option>
                                     <?php }
                                     } ?>
-
                                 </select>
 
                             </div>

@@ -28,6 +28,23 @@ var validacionInput = function(form) {
     return res;
 };
 
+var validacionTextArea = function(form) {
+    var res = true;
+    $('#' + form + ' textarea:visible').each(function() {
+        if ($(this).val().trim().length === 0 || $(this).val() === null) {
+            Swal.fire({
+                icon: 'error',
+                title: '',
+                text: '' + $(this).attr('class').split(' ').pop() + ' no puede estar vacio',
+            });
+            res = false;
+            return res;
+        }
+    });
+    return res;
+};
+
+
 
 
 var validacionSelect = function(form) {

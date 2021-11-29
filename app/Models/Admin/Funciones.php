@@ -16,7 +16,7 @@ class Funciones
                     $respuesta = array('0' => "Error registro duplicado", '1' => "error");
                 } else if ($codigo['code'] !== null && $codigo['code'] === '23000') {
                     $respuesta = array('0' => "Error registro duplicado", '1' => "error");
-                } else{
+                } else {
                     $respuesta = array('0' => "Ocurrió un error interno " . str_replace("'", "", $codigo['message']), '1' => "error");
                 }
             } else {
@@ -50,8 +50,28 @@ class Funciones
         return $arreglo;
     }
 
-    public function array_push_assoc($array, $key, $value){
+    public function array_push_assoc($array, $key, $value)
+    {
         $array[$key] = $value;
         return $array;
-     }
+    }
+
+    public function _sendMail($to, $subject, $message,$title)
+    {
+
+        $email = \Config\Services::email();
+
+        $email->setTo('carlosgs.trejo@gmail.com');
+        $email->setFrom($to, $title);
+
+        $email->setSubject($subject);
+        $email->setMessage($message);
+
+        if ($email->send()) {
+            return true;
+        } else {
+            $data = $email->printDebugger(['headers']);
+            return $data;
+        }
+    }
 }
