@@ -80,9 +80,7 @@ class Productos_modelo extends Model
         " . $condicion . "
        
     GROUP BY
-        inventario.id
-    HAVING
-        cantidad > 0;";
+        inventario.id limit 1";
 
         $query = $this->query($sql);
         return $query->getResultArray();

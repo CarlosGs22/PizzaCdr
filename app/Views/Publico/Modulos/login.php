@@ -27,8 +27,8 @@
     <script src="<?php echo base_url("public/Admin/src/plugins/sweetalert2/sweetalert2.all.js"); ?>"></script>
     <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/header.css") ?>">
 
-    
-<style>
+
+    <style>
         .input-group {
             margin-bottom: 9px !important;
         }
@@ -57,7 +57,7 @@
             margin: 5px auto;
         }
     </style>
-  
+
 </head>
 
 
@@ -176,13 +176,13 @@
                         </div>
                         <form id="frmLogin" method="POST" action="<?php echo base_url("accion_login") ?>">
                             <div class="input-group custom">
-                                <input type="text" class="form-control form-control-lg" value="" name="txtUsuario" placeholder="Usuario">
+                                <input type="text" class="form-control form-control-lg Usuario" id="txtUsuarioLog" value="" name="txtUsuario" placeholder="Usuario">
                                 <div class="input-group-append custom">
                                     <span class="input-group-text"><i class="icon-copy dw dw-user1"></i></span>
                                 </div>
                             </div>
                             <div class="input-group custom">
-                                <input type="password" class="form-control form-control-lg" name="txtContrasenia" value="" placeholder="**********">
+                                <input type="password" class="form-control form-control-lg Contraseña" id="txtContraseniaLog" name="txtContrasenia" value="" placeholder="**********">
                                 <div class="input-group-append custom">
                                     <span class="input-group-text"><i class="dw dw-padlock1"></i></span>
                                 </div>
@@ -217,33 +217,33 @@
                         <form id="frmRegistro" method="POST" action="<?php echo base_url("admin/accion_usuarios_clientes") ?>">
 
                             <div class="input-group custom">
-                                <input type="text" class="form-control form-control-lg" value="" name="txtNombre" placeholder="Nombres">
+                                <input type="text" class="form-control form-control-lg Nombres" value="" name="txtNombre" placeholder="Nombres">
                                 <div class="input-group-append custom">
                                     <span class="input-group-text"><i class="icon-copy dw dw-user1"></i></span>
                                 </div>
                             </div>
 
                             <div class="input-group custom">
-                                <input type="text" class="form-control form-control-lg" value="" name="txtApe1" placeholder="Apellido paterno">
+                                <input type="text" class="form-control form-control-lg Apellido-Paterno" value="" name="txtApe1" placeholder="Apellido paterno">
                                 <div class="input-group-append custom">
                                     <span class="input-group-text"><i class="icon-copy dw dw-user1"></i></span>
                                 </div>
                             </div>
 
                             <div class="input-group custom">
-                                <input type="text" class="form-control form-control-lg" value="" name="txtApe2" placeholder="Apellido materno">
+                                <input type="text" class="form-control form-control-lg Apellido-Materno" value="" name="txtApe2" placeholder="Apellido materno">
                                 <div class="input-group-append custom">
                                     <span class="input-group-text"><i class="icon-copy dw dw-user1"></i></span>
                                 </div>
                             </div>
                             <div class="input-group custom">
-                                <input type="text" class="form-control form-control-lg" value="" name="txtUsuario" placeholder="Usuario">
+                                <input type="text" class="form-control form-control-lg Usuario" id="txtUsuarioReg" value="" name="txtUsuario" placeholder="Usuario">
                                 <div class="input-group-append custom">
                                     <span class="input-group-text"><i class="icon-copy dw dw-user1"></i></span>
                                 </div>
                             </div>
                             <div class="input-group custom">
-                                <input type="password" class="form-control form-control-lg" name="txtContrasenia" value="" placeholder="**********">
+                                <input type="password" class="form-control form-control-lg Contraseña" id="txtContraseniaReg" name="txtContrasenia" value="" placeholder="**********">
                                 <div class="input-group-append custom">
                                     <span class="input-group-text"><i class="dw dw-padlock1"></i></span>
                                 </div>
@@ -283,23 +283,24 @@
 
                                 <div class="col-6 border-right">
 
-                                    <form class="form-inline" action="<?php echo base_url("/buscar_cobertura") ?>" accept-charset="UTF-8" method="post">
+                                    <form id="frmSearch" class="form-inline" action="<?php echo base_url("/buscar_cobertura") ?>" accept-charset="UTF-8" method="post">
                                         <div class="form-group">
                                             <h4>Entrega a domicilio</h4>
                                         </div>
                                         <div class="form-group mr-2">
-                                            <input type="text" class="form-control" name="txtCp" placeholder="CP" maxlength="5" required>
+                                            <input type="text" class="form-control Código-Postal" name="txtCp" placeholder="CP" maxlength="5">
                                         </div>
-                                        <button type="submit" id="btnBuscarLocalización" class="btn btn-primary mb-2">Buscar</button>
+                                        <input type="hidden" name="txtReg" value="32U3&#vUd">
+                                        <button type="submit" id="btnBuscarLocalización" class="btn btnForm mb-2">Buscar</button>
                                     </form>
                                 </div>
                                 <div class="col-6">
-                                    <form class="form-inline" action="<?php echo base_url("/buscar_cobertura") ?>" accept-charset="UTF-8" method="post">
+                                    <form class="form-inline" id="frmChoose" action="<?php echo base_url("/buscar_cobertura") ?>" accept-charset="UTF-8" method="post">
                                         <div class="form-group">
                                             <h4>Recoje en sucursal</h4>
                                         </div>
                                         <div class="form-group mr-2">
-                                            <select name="txtSucursal" id="txtSucursal" class="form-control">
+                                            <select name="txtSucursal" id="txtSucursal" class="form-control Sucursal">
                                                 <option value="0"></option>
                                                 <?php if ($lista_sucursales) { ?>
                                                     <?php foreach ($lista_sucursales as $key => $value) { ?>
@@ -308,39 +309,111 @@
                                                 } ?>
                                             </select>
                                         </div>
-                                        <button type="submit" id="btnSeleccionarSucursal" class="btn btn-primary mb-2">Seleccionar</button>
+                                        <input type="hidden" name="txtReg" value="ZM8ByFx#">
+                                        <button type="submit" id="btnSeleccionarSucursal" class="btn btnForm mb-2">Seleccionar</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                 </div>
-
             </div>
         </div>
-    </div>
 
-    <script src="<?php echo base_url("public/Admin/vendors/scripts/script.min.js"); ?>"></script>
-    <script src="<?php echo base_url("public/Admin/vendors/scripts/core.js") ?>"></script>
-    <script src="<?php echo base_url("public/Admin/vendors/scripts/process.js"); ?>"></script>
-    <script src="<?php echo base_url("public/Admin/vendors/scripts/layout-settings.js"); ?>"></script>
-    <script src="<?php echo base_url("public/Publico/js/bootstrap.js") ?>"></script>
+        <script src="<?php echo base_url("public/Admin/vendors/scripts/script.min.js"); ?>"></script>
+        <script src="<?php echo base_url("public/Admin/vendors/scripts/core.js") ?>"></script>
+        <script src="<?php echo base_url("public/Admin/vendors/scripts/process.js"); ?>"></script>
+        <script src="<?php echo base_url("public/Admin/vendors/scripts/layout-settings.js"); ?>"></script>
+        <script src="<?php echo base_url("public/Publico/js/bootstrap.js") ?>"></script>
+        <script src="<?php echo base_url("public/Admin/src/scripts/own.js"); ?>"></script>
+
+        <script>
+            $(function() {
+                $('.register-panel').hide(); // hide it initially
+
+                $(".btnPaneles").click(function() {
+
+                    $(".register-panel, .login-panel").toggle();
+                });
 
 
-
-    <script>
-        $(function() {
-            $('.register-panel').hide(); // hide it initially
-
-            $(".btnPaneles").click(function() {
-
-                $(".register-panel, .login-panel").toggle();
             });
 
+            $("#frmLogin").submit(function(e) {
+                e.preventDefault();
 
-        });
-    </script>
+                var valid = false;
+
+                if (validacionInput("frmLogin")) {
+                    if (validacionSelect("frmLogin")) {
+                        if (validarEmail($('#txtUsuarioLog').val())) {
+                            valid = true;
+                        }
+                    }
+                }
+
+                if (valid) this.submit();
+            });
+
+            $("#frmRegistro").submit(function(e) {
+                e.preventDefault();
+
+                var valid = false;
+
+                if (validacionInput("frmRegistro")) {
+                    if (validacionSelect("frmRegistro")) {
+                        if ($("#txtContraseniaReg").length > 8) {
+                            if (validarEmail($('#txtUsuarioLog').val())) {
+                                valid = true;
+                            }
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '',
+                                text: 'La contraseña debe de tener mas 7 caracteres',
+                            });
+                        }
+                    }
+                }
+
+                if (valid) this.submit();
+            });
+        </script>
+
+        <script>
+            $(function() {
+                $("#frmChoose").submit(function(e) {
+                    e.preventDefault();
+
+                    var valid = false;
+
+                    if (validacionInput("frmChoose")) {
+                        if (validacionSelect("frmChoose")) {
+                            valid = true;
+                        }
+                    }
+
+                    if (valid) this.submit();
+                });
+
+                $("#frmSearch").submit(function(e) {
+                    e.preventDefault();
+
+                    var valid = false;
+
+                    if (validacionInput("frmSearch")) {
+                        if (validacionSelect("frmSearch")) {
+                            valid = true;
+                        }
+                    }
+
+                    if (valid) this.submit();
+                });
+
+            });
+        </script>
 
 
 </body>

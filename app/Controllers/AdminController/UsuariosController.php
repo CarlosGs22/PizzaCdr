@@ -53,17 +53,16 @@ class UsuariosController extends Controller
     $paginas = 10;
 
     $search = null;
-		if ($this->request->getVar('txtBuscar') != null) {
-			$search = $this->request->getVar('txtBuscar');
-		}
+    if ($this->request->getVar('txtBuscar') != null) {
+      $search = $this->request->getVar('txtBuscar');
+    }
     if ($search == null) {
       $lista['lista_usuarios'] = $this->usuarios_modelo->where("tipo", "1")->paginate($paginas);
-		} else {
-			$lista['lista_usuarios'] = $this->usuarios_modelo->where("tipo", "1")->
-      like("nombres", $search)->orlike("usuario", $search)->paginate($paginas);
-		}
+    } else {
+      $lista['lista_usuarios'] = $this->usuarios_modelo->where("tipo", "1")->like("nombres", $search)->orlike("usuario", $search)->paginate($paginas);
+    }
 
-   
+
     $lista['lista_status'] = $this->status_modelo->findAll();
 
     $lista['lista_sucursales'] = $this->sucursales_modelo->findAll();
@@ -73,7 +72,7 @@ class UsuariosController extends Controller
       $lista['lista_edit_usuarios'] = $this->usuarios_modelo->where("id", $this->request->getVar('id'))->findAll();
     }
 
-    
+
     $lista["pager"] = $this->usuarios_modelo->pager->links();
 
     echo view($this->rutaHeader, $this->datamenu);
@@ -149,63 +148,76 @@ class UsuariosController extends Controller
   public function accion_usuarios_clientes()
   {
 
-    $idUsuario = $this->request->getVar("txtId");
-    $hash = password_hash($this->request->getVar('txtContrasenia'), PASSWORD_DEFAULT);
+    if (
+      $this->request->getVar('txtNombre') != null && $this->request->getVar('txtApe1') != null
+      &&  $this->request->getVar('txtApe2') != null && $this->request->getVar('txtContrasenia') != null
+      && $this->request->getVar('txtUsuario') != null
+    ) {
 
-    $datos_usuario = [
-      'nombres' =>  $this->request->getVar('txtNombre'),
-      'apellido_paterno' =>  $this->request->getVar('txtApe1'),
-      'apellido_materno' =>  $this->request->getVar('txtApe2'),
-      'tipo' => "2",
-      'usuario' =>  $this->request->getVar('txtUsuario'),
-      'contrasenia' =>  $hash,
-      'status' => "1",
-      'cve_usuario' =>  "1"
-    ];
 
-    if ($idUsuario != null) {
-      array_merge($datos_usuario, array("id" => $idUsuario));
-    }
-    $datos_usuario = $this->funciones->_GuardarImagen(
-      $this->request->getFile('imgUsuario'),
-      './public/Admin/img/usuarios',
-      $datos_usuario,
-      "imagen"
-    );
+      $idUsuario = $this->request->getVar("txtId");
+      $hash = password_hash($this->request->getVar('txtContrasenia'), PASSWORD_DEFAULT);
 
-    $contras = $this->usuarios_modelo->_validarContraseniaHash($this->request->getVar('txtUsuario'));
-    if ($contras == $this->request->getVar('txtContrasenia')) {
-      $datos_usuario['contrasenia'] = $contras;
-    } else {
-      $datos_usuario['contrasenia'] = $hash;
-    }
-
-    $respuesta = null;
-    try {
-      if ($idUsuario != null) {
-        $respuesta = $this->usuarios_modelo->update($idUsuario, $datos_usuario);
-      } else {
-        $respuesta = $this->usuarios_modelo->save($datos_usuario);
-      }
-    } catch (\Throwable $th) {
-      $respuesta = $this->usuarios_modelo->error();
-    }
-
-    $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->usuarios_modelo->errors());
-    $session = session();
-    if ($respuesta[1] == 'success' && $idUsuario == null) {
-      $newdata = [
-        'nombre'     => $this->request->getVar('txtNombre'),
-        'usuario' => $this->request->getVar('txtUsuario'),
-        'imagen' => ""
+      $datos_usuario = [
+        'nombres' =>  $this->request->getVar('txtNombre'),
+        'apellido_paterno' =>  $this->request->getVar('txtApe1'),
+        'apellido_materno' =>  $this->request->getVar('txtApe2'),
+        'tipo' => "2",
+        'usuario' =>  $this->request->getVar('txtUsuario'),
+        'contrasenia' =>  $hash,
+        'status' => "1",
+        'cve_usuario' =>  "1"
       ];
-      $session->set($newdata);
-      return redirect()->to(base_url("inicio"));
-    } else if ($respuesta == "1" && $idUsuario != null) {
-      $this->session->setFlashdata('respuesta', $respuesta);
-      return redirect()->to(base_url("mi_cuenta"));
+
+      if ($idUsuario != null) {
+        array_merge($datos_usuario, array("id" => $idUsuario));
+      }
+      $datos_usuario = $this->funciones->_GuardarImagen(
+        $this->request->getFile('imgUsuario'),
+        './public/Admin/img/usuarios',
+        $datos_usuario,
+        "imagen"
+      );
+
+      $contras = $this->usuarios_modelo->_validarContraseniaHash($this->request->getVar('txtUsuario'));
+      if ($contras == $this->request->getVar('txtContrasenia')) {
+        $datos_usuario['contrasenia'] = $contras;
+      } else {
+        $datos_usuario['contrasenia'] = $hash;
+      }
+
+      $respuesta = null;
+      try {
+        if ($idUsuario != null) {
+          $respuesta = $this->usuarios_modelo->update($idUsuario, $datos_usuario);
+        } else {
+          $respuesta = $this->usuarios_modelo->save($datos_usuario);
+        }
+      } catch (\Throwable $th) {
+        $respuesta = $this->usuarios_modelo->error();
+      }
+
+      $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->usuarios_modelo->errors());
+      $session = session();
+      if ($respuesta[1] == 'success' && $idUsuario == null) {
+        $newdata = [
+          'nombre'     => $this->request->getVar('txtNombre'),
+          'usuario' => $this->request->getVar('txtUsuario'),
+          'imagen' => ""
+        ];
+        $session->set($newdata);
+        return redirect()->to(base_url("inicio"));
+      } else if ($respuesta == "1" && $idUsuario != null) {
+        $this->session->setFlashdata('respuesta', $respuesta);
+        return redirect()->to(base_url("mi_cuenta"));
+      } else {
+        $_SESSION['error'] = $respuesta;
+        $this->session->setFlashdata('respuesta', $respuesta);
+        return redirect()->to(base_url("login"));
+      }
     } else {
-      $_SESSION['error'] = $respuesta;
+      $_SESSION['error'] = "Datos inválidos";
+      $respuesta = array('0' => "Ocurrió un error interno ", '1' => "error");
       $this->session->setFlashdata('respuesta', $respuesta);
       return redirect()->to(base_url("login"));
     }

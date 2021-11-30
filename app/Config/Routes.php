@@ -134,6 +134,9 @@ $routes->get('/', 'PublicoController/Home::principal');
 $routes->post('/buscar_cobertura', 'PublicoController/Home::buscar_cobertura');
 $routes->post('/contacto', 'PublicoController/Home::contacto');
 
+$routes->get('/detalle/(:any)', 'PublicoController\Home::detalle/$1');
+
+
 
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
 	require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';

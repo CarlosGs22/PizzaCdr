@@ -8,18 +8,20 @@
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <link rel="shortcut icon" href="" type="">
+  <link rel="shortcut icon" href="<?php echo base_url("public/Admin/img/especiales/logo1.png") ?>" type="">
 
   <title> <?php echo $listas_especiales[0]["img3"] != null ? $listas_especiales[0]["img3"] : "Tienda" ?></title>
 
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/bootstrap.css") ?>">
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/header.css") ?>">
+  <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Admin/vendors/styles/icon-font.min.css") ?>">
 
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/font-awesome.min.css") ?>">
 
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/style.css") ?>">
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/responsive.css") ?>">
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/propios.css") ?>">
+  <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/detail.css") ?>">
 
   <script src="<?php echo base_url("public/Admin/vendors/scripts/jquery-3.6.0.min.js") ?>"></script>
 
@@ -54,8 +56,12 @@
                   <li><i class="fa fa-volume-control-phone" aria-hidden="true"></i> <?= $value["telefono"]; ?></li>
                   <li>|</li>
                   <li><i class="fa fa-clock-o" aria-hidden="true"></i> <?= $value["horario"]; ?></li>
-                  <li>|</li>
-                  <li><i class="fa fa-volume-control-phone" aria-hidden="true"></i> <?= $value["telefono"]; ?></li>
+                  <?php
+                  if ($_SESSION["tipo_orden"] != null) { ?>
+
+                    <li>|</li>
+                    <li><i class="icon-copy ti-location-pin" aria-hidden="true"></i>Tipo de orden: <?= $_SESSION["tipo_orden"] ?> </li>
+                  <?php } ?>
                 </ul>
               </div>
             </div>
@@ -101,59 +107,8 @@
         </ul>
         <div class="user_option">
 
-          <a class="cart_link" href="#">
-            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-              <g>
-                <g>
-                  <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                   c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"></path>
-                </g>
-              </g>
-              <g>
-                <g>
-                  <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                   C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                   c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                   C457.728,97.71,450.56,86.958,439.296,84.91z"></path>
-                </g>
-              </g>
-              <g>
-                <g>
-                  <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                   c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"></path>
-                </g>
-              </g>
-              <g>
-              </g>
-              <g>
-              </g>
-              <g>
-              </g>
-              <g>
-              </g>
-              <g>
-              </g>
-              <g>
-              </g>
-              <g>
-              </g>
-              <g>
-              </g>
-              <g>
-              </g>
-              <g>
-              </g>
-              <g>
-              </g>
-              <g>
-              </g>
-              <g>
-              </g>
-              <g>
-              </g>
-              <g>
-              </g>
-            </svg>
+          <a href="<?php echo base_url("carrito") ?>" class="user_link">
+            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
           </a>
           <a href="<?php echo base_url("login") ?>" class="user_link">
             <i class="fa fa-user" aria-hidden="true"></i>
@@ -182,23 +137,24 @@
 
                 <div class="col-6 border-right">
 
-                  <form class="form-inline" action="<?php echo base_url("/buscar_cobertura") ?>" accept-charset="UTF-8" method="post">
+                  <form id="frmSearch" class="form-inline" action="<?php echo base_url("/buscar_cobertura") ?>" accept-charset="UTF-8" method="post">
                     <div class="form-group">
                       <h4>Entrega a domicilio</h4>
                     </div>
                     <div class="form-group mr-2">
-                      <input type="text" class="form-control" name="txtCp" placeholder="CP" maxlength="5" required>
+                      <input type="text" class="form-control Código-Postal" name="txtCp" placeholder="CP" maxlength="5">
                     </div>
-                    <button type="submit" id="btnBuscarLocalización" class="btn btn-primary mb-2">Buscar</button>
+                    <input type="hidden" name="txtReg" value="32U3&#vUd">
+                    <button type="submit" id="btnBuscarLocalización" class="btn btnForm mb-2">Buscar</button>
                   </form>
                 </div>
                 <div class="col-6">
-                  <form class="form-inline" action="<?php echo base_url("/buscar_cobertura") ?>" accept-charset="UTF-8" method="post">
+                  <form class="form-inline" id="frmChoose" action="<?php echo base_url("/buscar_cobertura") ?>" accept-charset="UTF-8" method="post">
                     <div class="form-group">
                       <h4>Recoje en sucursal</h4>
                     </div>
                     <div class="form-group mr-2">
-                      <select name="txtSucursal" id="txtSucursal" class="form-control">
+                      <select name="txtSucursal" id="txtSucursal" class="form-control Sucursal">
                         <option value="0"></option>
                         <?php if ($lista_sucursales) { ?>
                           <?php foreach ($lista_sucursales as $key => $value) { ?>
@@ -207,7 +163,8 @@
                         } ?>
                       </select>
                     </div>
-                    <button type="submit" id="btnSeleccionarSucursal" class="btn btn-primary mb-2">Seleccionar</button>
+                    <input type="hidden" name="txtReg" value="ZM8ByFx#">
+                    <button type="submit" id="btnSeleccionarSucursal" class="btn btnForm mb-2">Seleccionar</button>
                   </form>
                 </div>
               </div>
@@ -246,4 +203,36 @@
       </div>
     </div>
   </div>
-  
+
+  <script>
+    $(function() {
+      $("#frmChoose").submit(function(e) {
+        e.preventDefault();
+
+        var valid = false;
+
+        if (validacionInput("frmChoose")) {
+          if (validacionSelect("frmChoose")) {
+            valid = true;
+          }
+        }
+
+        if (valid) this.submit();
+      });
+
+      $("#frmSearch").submit(function(e) {
+        e.preventDefault();
+
+        var valid = false;
+
+        if (validacionInput("frmSearch")) {
+          if (validacionSelect("frmSearch")) {
+            valid = true;
+          }
+        }
+
+        if (valid) this.submit();
+      });
+
+    });
+  </script>

@@ -621,7 +621,7 @@ a:focus {
 
 .about_section .img-box img {
     width: 100%;
-    max-width: 350px;
+    max-width: 40vh;
     position: relative;
     z-index: 2;
 }
@@ -993,7 +993,7 @@ a:focus {
         padding: 90px 0;
     }
     .panel_section {
-        height: 69vh;
+        height: 60vh;
     }
 }
 

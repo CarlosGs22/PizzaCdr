@@ -122,3 +122,20 @@ $(function() {
     });
 
 });
+
+function validarEmail(email) {
+    var res = true;
+    var regex = /[\w-\.]{2,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/;
+
+    if (!regex.test(email)) {
+        Swal.fire({
+            icon: 'error',
+            title: '',
+            text: 'Debe de ingresar un correo válido',
+        });
+        res = false;
+        return res;
+    }
+
+    return res;
+}

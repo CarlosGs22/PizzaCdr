@@ -1,3 +1,7 @@
+<?php
+$encrypter = \Config\Services::encrypter();
+?>
+
 <div class="hero_are">
 
   <div class="shadow rounded carouse-main">
@@ -11,9 +15,9 @@
 
             if ($value["slider"] == "1") {
         ?>
-              <div class="carousel-item <?php echo $key == 0 ? 'active' : '' ?>" >
+              <div class="carousel-item <?php echo $key == 0 ? 'active' : '' ?>">
                 <div class="media">
-                  <section class="about_section layout_padding w-100 panel_section" >
+                  <section class="about_section layout_padding w-100 panel_section">
                     <div class="container  ">
 
                       <div class="row">
@@ -32,7 +36,13 @@
                             <p>
                               <?= $value["descripcion"] ?>
                             </p>
-                            <a href="">
+
+                            <?php
+                            $regex = $value["idProducto"];
+                            $encodedMsg = base64_encode($encrypter->encrypt($regex));
+                            $link = str_replace(array("/", " "), "", $encodedMsg);
+                            ?>
+                            <a href="<?php echo base_url("detalle/" .  $link."l6ra3qT5cKOVq") ?>">
                               Ver Más
                             </a>
                           </div>
@@ -96,9 +106,17 @@
                     <h6>
                       <?= $value["precio_producto"]; ?>
                     </h6>
-                    <a href="<?= base_url("detalleProducto" . $value["nombre_producto"]) ?>" class="iconCart">
+                    <?php
+                    $regex = $value["idProducto"];
+                    $encodedMsg = base64_encode($encrypter->encrypt($regex));
+                    $link = str_replace(array("/", " "), "", $encodedMsg);
+
+                    ?>
+                    <a class="iconCart" href="<?php echo base_url("detalle/" .  $link."l6ra3qT5cKOVq") ?>">
                       <i class="icon-copy fa fa-shopping-cart" aria-hidden="true"></i>
                     </a>
+
+
                   </div>
                 </div>
               </div>
@@ -143,18 +161,24 @@
                       <div class="img-box">
                         <img src="<?php echo base_url("public/Admin/img/productos/" . $value["imagen_producto"]) ?>" alt="">
                       </div>
-                      <div class="detail-box txtDescripcion">
+                      <div class="detail-box">
                         <h5>
                           <?= $value["nombre_producto"]; ?>
                         </h5>
-                        <p>
+                        <p class="txtDescripcion">
                           <?= $value["descripcion"]; ?>
                         </p>
                         <div class="options">
                           <h6>
                             <?= $value["precio_producto"]; ?>
                           </h6>
-                          <a href="<?= base_url("detalleProducto" . $value["nombre_producto"]) ?>" class="iconCart">
+                          <?php
+                          $regex = $value["idProducto"];
+                          $encodedMsg = base64_encode($encrypter->encrypt($regex));
+                          $link = str_replace(array("/", " "), "", $encodedMsg);
+
+                          ?>
+                          <a class="iconCart" href="<?php echo base_url("detalle/" . $link."l6ra3qT5cKOVq") ?>">
                             <i class="icon-copy fa fa-shopping-cart" aria-hidden="true"></i>
                           </a>
                         </div>

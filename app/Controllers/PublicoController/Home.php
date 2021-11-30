@@ -24,6 +24,7 @@ class Home extends Controller
   protected $datamenu;
   protected $especiales;
   protected $contacto_modelo;
+  protected $encrypter;
 
 
 
@@ -35,14 +36,17 @@ class Home extends Controller
     $this->sucursales_modelo = new Sucursal_modelo();
     $this->productos_modelo = new Productos_modelo();
 
+
     $this->especiales = new Especiales_modelo();
     //$this->datamenu['listas_especiales'] = $especiales->findAll();
 
     $this->sucursales_localidad_modelo = new Sucursal_Localidad_modelo();
     $this->contacto_modelo = new Contacto_modelo();
 
-
     $this->session = \Config\Services::session();
+
+    $this->encrypter = \Config\Services::encrypter();
+
 
     parent::initController($request, $response, $logger);
   }
@@ -55,6 +59,8 @@ class Home extends Controller
 
   public function principal()
   {
+
+
     $idSucursal = null;
 
     $lista["listas_especiales"] = $this->especiales->findAll();
@@ -67,7 +73,6 @@ class Home extends Controller
       $idSucursal = 4;
     }
 
-
     $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal);
 
     $lista["lista_sucursal_info"] = $this->sucursales_modelo->select("municipio.nombre as nombre_municipio,estado.nombre as nombre_estado,sucursal.*")
@@ -75,6 +80,7 @@ class Home extends Controller
       ->join("municipio", "municipio.id = localidad.municipio_id", "left")
       ->join("estado", "estado.id = municipio.estado_id")->where("sucursal.id", $idSucursal)->findAll();
 
+    //$lista["lista_productos"] = $thi
 
     echo view($this->rutaHeader, $lista);
     //echo view($this->rutaSelect_Sucursal, $lista);
@@ -86,27 +92,33 @@ class Home extends Controller
   public function buscar_cobertura()
   {
 
-    if ($this->request->getVar('txtCp') != null || $this->request->getVar('txtSucursal') != null) {
-      $lista["lista_cobertura"] = $this->request->getVar('txtCp') != null
-        ? $this->sucursales_localidad_modelo->_obtenerCobertura($this->request->getVar('txtCp'))
-        : $this->sucursales_modelo->select("id as id_sucursal,nombre as nombre_sucursal")->where("status", "1")->where("id", $this->request->getVar('txtSucursal'))->findAll();
+    if ($this->request->getVar('txtReg') == "ZM8ByFx#" || $this->request->getVar('txtReg') == "32U3&#vUd") {
+      if ($this->request->getVar('txtCp') != null || $this->request->getVar('txtSucursal') != null) {
+        $lista["lista_cobertura"] = $this->request->getVar('txtCp') != null
+          ? $this->sucursales_localidad_modelo->_obtenerCobertura($this->request->getVar('txtCp'))
+          : $this->sucursales_modelo->select("id as id_sucursal,nombre as nombre_sucursal")->where("status", "1")->where("id", $this->request->getVar('txtSucursal'))->findAll();
 
 
-      if ($lista["lista_cobertura"][0]["id_sucursal"] != null) {
-        $cobertura = [
-          'sucursal_cobertura' => $lista["lista_cobertura"][0]["id_sucursal"],
-          'nombre_cobertura' => $lista["lista_cobertura"][0]["nombre_sucursal"]
-        ];
+        if ($lista["lista_cobertura"][0]["id_sucursal"] != null) {
+          $cobertura = [
+            'sucursal_cobertura' => $lista["lista_cobertura"][0]["id_sucursal"],
+            'nombre_cobertura' => $lista["lista_cobertura"][0]["nombre_sucursal"],
+            'tipo_orden' => $this->request->getVar('txtReg') == "ZM8ByFx#" ? "En sucursal" : "A Domicilio"
 
-        if ($this->session->get("sucursal_cobertura") != null &&  $this->session->get("nombre_cobertura")) {
-          $this->session->remove("sucursal_cobertura");
-          $this->session->remove("nombre_cobertura");
+          ];
+
+          if ($this->session->get("sucursal_cobertura") != null &&  $this->session->get("nombre_cobertura")) {
+            $this->session->remove("sucursal_cobertura");
+            $this->session->remove("nombre_cobertura");
+          }
+
+          $session = session();
+          $session->set($cobertura);
+
+          $respuesta = array('0' => "Si hay cobertura para esta zona", '1' => "success");
+        } else {
+          $respuesta = array('0' => "No hay cobertura para esta zona", '1' => "error");
         }
-
-        $session = session();
-        $session->set($cobertura);
-
-        $respuesta = array('0' => "Si hay cobertura para esta zona", '1' => "success");
       } else {
         $respuesta = array('0' => "No hay cobertura para esta zona", '1' => "error");
       }
@@ -144,5 +156,28 @@ class Home extends Controller
 
     $this->session->setFlashdata('respuesta', $respuesta);
     return redirect()->to(base_url(""));
+  }
+
+  public function detalle($id)
+  {
+
+    if (session()->get('sucursal_cobertura') != null) {
+      $idSucursal = session()->get('sucursal_cobertura');
+    } else {
+      $idSucursal = 4;
+    }
+    $lista["listas_especiales"] = $this->especiales->findAll();
+    $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
+    $lista["lista_sucursal_info"] = $this->sucursales_modelo->select("municipio.nombre as nombre_municipio,estado.nombre as nombre_estado,sucursal.*")
+      ->join("localidad", "localidad.id =  sucursal.id_localidad", "left")
+      ->join("municipio", "municipio.id = localidad.municipio_id", "left")
+      ->join("estado", "estado.id = municipio.estado_id")->where("sucursal.id", $idSucursal)->findAll();
+
+      $txt = $encrypter->decrypt(base64_decode($id));
+
+
+    echo view($this->rutaHeader, $lista);
+    echo view($this->rutaModulo . 'detalle', $lista);
+    echo view($this->rutaFooter, $lista);
   }
 }
