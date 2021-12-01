@@ -47,6 +47,8 @@ class Home extends Controller
 
     $this->encrypter = \Config\Services::encrypter();
 
+    $this->encrypter->create_key(32);
+
 
     parent::initController($request, $response, $logger);
   }
@@ -173,7 +175,8 @@ class Home extends Controller
       ->join("municipio", "municipio.id = localidad.municipio_id", "left")
       ->join("estado", "estado.id = municipio.estado_id")->where("sucursal.id", $idSucursal)->findAll();
 
-      $txt = $encrypter->decrypt(base64_decode($id));
+      $decrypted_data = $this->encrypter->decrypt(base64_decode(str_replace("-","/",$id)));
+      echo $decrypted_data;
 
 
     echo view($this->rutaHeader, $lista);

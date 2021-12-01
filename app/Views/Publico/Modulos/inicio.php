@@ -40,9 +40,10 @@ $encrypter = \Config\Services::encrypter();
                             <?php
                             $regex = $value["idProducto"];
                             $encodedMsg = base64_encode($encrypter->encrypt($regex));
-                            $link = str_replace(array("/", " "), "", $encodedMsg);
+                            $link = str_replace("/", "-", $encodedMsg);
+                            
                             ?>
-                            <a href="<?php echo base_url("detalle/" .  $link."l6ra3qT5cKOVq") ?>">
+                            <a href="<?php echo base_url("detalle/" .  $link) ?>">
                               Ver Más
                             </a>
                           </div>
@@ -109,10 +110,10 @@ $encrypter = \Config\Services::encrypter();
                     <?php
                     $regex = $value["idProducto"];
                     $encodedMsg = base64_encode($encrypter->encrypt($regex));
-                    $link = str_replace(array("/", " "), "", $encodedMsg);
+                    $link = $encodedMsg;
 
                     ?>
-                    <a class="iconCart" href="<?php echo base_url("detalle/" .  $link."l6ra3qT5cKOVq") ?>">
+                    <a class="iconCart" href="<?php echo base_url("detalle/" .  $link) ?>">
                       <i class="icon-copy fa fa-shopping-cart" aria-hidden="true"></i>
                     </a>
 
@@ -175,10 +176,9 @@ $encrypter = \Config\Services::encrypter();
                           <?php
                           $regex = $value["idProducto"];
                           $encodedMsg = base64_encode($encrypter->encrypt($regex));
-                          $link = str_replace(array("/", " "), "", $encodedMsg);
-
+                          $link = $encodedMsg;
                           ?>
-                          <a class="iconCart" href="<?php echo base_url("detalle/" . $link."l6ra3qT5cKOVq") ?>">
+                          <a class="iconCart" href="<?php echo base_url("detalle/" . $link) ?>">
                             <i class="icon-copy fa fa-shopping-cart" aria-hidden="true"></i>
                           </a>
                         </div>
