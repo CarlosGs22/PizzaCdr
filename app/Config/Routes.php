@@ -135,6 +135,7 @@ $routes->post('/buscar_cobertura', 'PublicoController/Home::buscar_cobertura');
 $routes->post('/contacto', 'PublicoController/Home::contacto');
 
 $routes->get('/detalle/(:any)', 'PublicoController\Home::detalle/$1');
+$routes->get('/menu/(:any)', 'PublicoController\Home::menu/$1');
 
 
 

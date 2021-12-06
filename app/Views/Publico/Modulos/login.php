@@ -364,8 +364,8 @@
 
                 if (validacionInput("frmRegistro")) {
                     if (validacionSelect("frmRegistro")) {
-                        if ($("#txtContraseniaReg").length > 8) {
-                            if (validarEmail($('#txtUsuarioLog').val())) {
+                        if ($("#txtContraseniaReg").val().length > 8) {
+                            if (validarEmail($('#txtUsuarioReg').val())) {
                                 valid = true;
                             }
                         } else {

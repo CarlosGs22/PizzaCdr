@@ -22,6 +22,12 @@
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/responsive.css") ?>">
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/propios.css") ?>">
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/detail.css") ?>">
+  <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Admin/vendors/styles/productos.css") ?>">
+
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+
+
 
   <script src="<?php echo base_url("public/Admin/vendors/scripts/jquery-3.6.0.min.js") ?>"></script>
 
@@ -80,7 +86,7 @@
     <nav class="navbar navbar-expand-lg custom_nav-container ">
       <a class="navbar-brand" href="<?php echo base_url() ?>">
         <?php if ($listas_especiales) { ?>
-          <img style="width: 120px; height:100px;" src="<?php echo base_url("public/Admin/img/especiales/" . $listas_especiales[0]["img1"]) ?>" alt="">
+          <img id="imgNavBar" src="<?php echo base_url("public/Admin/img/especiales/" . $listas_especiales[0]["img1"]) ?>" alt="">
         <?php } ?>
       </a>
 

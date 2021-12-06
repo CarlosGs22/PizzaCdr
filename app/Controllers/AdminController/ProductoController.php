@@ -134,7 +134,7 @@ class ProductoController extends Controller
       'nombre' =>  $this->request->getVar('txtNombre'),
       'descripcion' =>  $this->request->getVar('txtDescripcion'),
       'precio' =>  $this->request->getVar('txtPrecio'),
-      'total' =>  $this->request->getVar('txtTotal'),
+      'total' =>  $this->request->getVar('txtClasificacion') == 1 ? "1" : $this->request->getVar('txtTotal'),
       'status' =>  $this->request->getVar('txtStatus'),
       'id_masa' =>  $this->request->getVar('txtMasa'),
       'id_categoria' =>  $this->request->getVar('txtCategoria'),

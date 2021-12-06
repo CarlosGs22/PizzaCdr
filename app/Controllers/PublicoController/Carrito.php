@@ -12,7 +12,7 @@ use App\Models\Admin\Sucursal_modelo;
 use App\Models\Publico\Productos_modelo;
 use CodeIgniter\Controller;
 
-class Home extends Controller
+class Carrito extends Controller
 {
 
   protected $helpers = [];
@@ -70,7 +70,7 @@ class Home extends Controller
   public $rutaModulo = 'Publico/Modulos/';
   public $rutaFooter = 'Publico/Marcos/footer.php';
 
-  public function principal()
+  public function carrito()
   {
 
     $idSucursal = null;
@@ -86,19 +86,15 @@ class Home extends Controller
       $idSucursal = 4;
     }
 
-    $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal, $pagina, null, null);
- 
-  
+
     $lista["lista_sucursal_info"] = $this->sucursales_modelo->select("municipio.nombre as nombre_municipio,estado.nombre as nombre_estado,sucursal.*")
       ->join("localidad", "localidad.id =  sucursal.id_localidad", "left")
       ->join("municipio", "municipio.id = localidad.municipio_id", "left")
       ->join("estado", "estado.id = municipio.estado_id")->where("sucursal.id", $idSucursal)->findAll();
 
-    //$lista["lista_productos"] = $thi
 
     echo view($this->rutaHeader, $lista);
-    //echo view($this->rutaSelect_Sucursal, $lista);
-    echo view($this->rutaModulo . 'inicio', $lista);
+    echo view($this->rutaModulo . 'carrito', $lista);
     echo view($this->rutaContact, $lista);
     echo view($this->rutaFooter, $lista);
   }
@@ -175,44 +171,35 @@ class Home extends Controller
   public function detalle($id)
   {
 
-    $decrypted_data = $this->encrypter->decrypt(hex2bin($id));
-    $lista["detalle_producto"] = $this->productos_modelo->_obtenerProductospUBL($decrypted_data);
-
-    if (!empty($lista["detalle_producto"])) {
-
-      try {
-
-        if (session()->get('sucursal_cobertura') != null) {
-          $idSucursal = session()->get('sucursal_cobertura');
-        } else {
-          $idSucursal = 4;
-        }
-        $lista["listas_especiales"] = $this->especiales->findAll();
-        $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
-        $lista["lista_sucursal_info"] = $this->sucursales_modelo->select("municipio.nombre as nombre_municipio,estado.nombre as nombre_estado,sucursal.*")
-          ->join("localidad", "localidad.id =  sucursal.id_localidad", "left")
-          ->join("municipio", "municipio.id = localidad.municipio_id", "left")
-          ->join("estado", "estado.id = municipio.estado_id")->where("sucursal.id", $idSucursal)->findAll();
-
-
-        $lista["listas_producto_existente"] = $this->productos_modelo->_getProductosPublic($idSucursal, "50", "2", $lista["detalle_producto"][0]["idTipoTamanio"]);
-
-
-        $lista["lista_imagenes"] = $this->imagen_modelo->where("id_producto", $decrypted_data)->findAll();
-        if (!empty($lista["detalle_producto"])) {
-          $lista['lista_menu_ingrediente'] = $this->menu_modelo->_obtenerIngredienteMenu($lista["detalle_producto"][0]["idMenu"]);
-        }
-
-        echo view($this->rutaHeader, $lista);
-        echo view($this->rutaModulo . 'detalle', $lista);
-        echo view($this->rutaFooter, $lista);
-      } catch (\Throwable $th) {
+    try {
+      if (session()->get('sucursal_cobertura') != null) {
+        $idSucursal = session()->get('sucursal_cobertura');
+      } else {
+        $idSucursal = 4;
       }
-    } else {
-      $this->session->setFlashdata('respuesta', array("0" => "No se encontró el producto", "1" => "error"));
+      $lista["listas_especiales"] = $this->especiales->findAll();
+      $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
+      $lista["lista_sucursal_info"] = $this->sucursales_modelo->select("municipio.nombre as nombre_municipio,estado.nombre as nombre_estado,sucursal.*")
+        ->join("localidad", "localidad.id =  sucursal.id_localidad", "left")
+        ->join("municipio", "municipio.id = localidad.municipio_id", "left")
+        ->join("estado", "estado.id = municipio.estado_id")->where("sucursal.id", $idSucursal)->findAll();
+
+      $decrypted_data = $this->encrypter->decrypt(hex2bin($id));
+      $lista["detalle_producto"] = $this->productos_modelo->_obtenerProductospUBL($decrypted_data);
+
+      $lista["lista_imagenes"] = $this->imagen_modelo->where("id_producto", $decrypted_data)->findAll();
+      if (!empty($lista["detalle_producto"])) {
+        $lista['lista_menu_ingrediente'] = $this->menu_modelo->_obtenerIngredienteMenu($lista["detalle_producto"][0]["idMenu"]);
+      }
+
+      echo view($this->rutaHeader, $lista);
+      echo view($this->rutaModulo . 'detalle', $lista);
+      echo view($this->rutaFooter, $lista);
+    } catch (\Throwable $th) {
       return redirect()->to(base_url(""));
     }
   }
+
   public function menu($name)
   {
 
@@ -234,7 +221,7 @@ class Home extends Controller
         $idSucursal = 4;
       }
 
-      $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal, $pagina, $clasificacion, null);
+      $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal, $pagina, $clasificacion);
 
       $lista["lista_sucursal_info"] = $this->sucursales_modelo->select("municipio.nombre as nombre_municipio,estado.nombre as nombre_estado,sucursal.*")
         ->join("localidad", "localidad.id =  sucursal.id_localidad", "left")

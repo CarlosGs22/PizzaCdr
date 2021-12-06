@@ -175,7 +175,7 @@
                         $id_masa = $value['idMasa'];
                         $id_menu = $value['idMenu'];
                         $id_clasificacion = $value['idClasificacion'];
-                        $total = $value['total'];
+                        $total = (int)$value['total'];
                         $id_tipo_tamanio = $value['id_tipo_tamanio'];
 
                         break;

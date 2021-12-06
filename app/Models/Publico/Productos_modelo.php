@@ -34,7 +34,7 @@ class Productos_modelo extends Model
     {
         $condicion = null;
         if ($idProducto != null) {
-            $condicion = "WHERE  producto.id = " . $idProducto;
+            $condicion = "WHERE producto.id = " . $idProducto;
         } else {
             $condicion = "";
         }
@@ -51,6 +51,7 @@ class Productos_modelo extends Model
         producto.nombre as nombre_producto,
         producto.descripcion,
         producto.precio as precio_producto,
+        producto.total as total_productol,
         imagen.id as idImagen,
         imagen.imagen as imagen_producto,
         masa.id as idMasa,
@@ -86,8 +87,17 @@ class Productos_modelo extends Model
         return $query->getResultArray();
     }
 
-    public function _getProductosPublic($idSucursal)
+    public function _getProductosPublic($idSucursal, $pagina, $idClasificacion,$idTipoTamanio)
     {
+        $condicion = null;
+        if ($idClasificacion != null) {
+            $condicion = "AND clasificacion.id = " . $idClasificacion;
+        } else if($idTipoTamanio != null) {
+            $condicion = "AND tipo_tamanio.id = " . $idTipoTamanio;
+        }else{
+            $condicion = "";
+        }
+
         $this->table('ingrediente');
         $this->select(
             'ingrediente.id as idIngrediente,
@@ -102,6 +112,7 @@ class Productos_modelo extends Model
         producto.descripcion,
         producto.slider,
         producto.precio as precio_producto,
+        producto.total as total_productol,
         imagen.id as idImagen,
         imagen.imagen as imagen_producto,
         masa.id as idMasa,
@@ -132,11 +143,11 @@ class Productos_modelo extends Model
             ->join('tipo', 'tipo.id = tipo_tamanio.id_tipo', 'LEFT')
             ->join('tamanio', 'tamanio.id = tipo_tamanio.id_tamanio', 'LEFT')
             ->join('imagen', 'imagen.id_producto = producto.id', 'LEFT')
-
+          
             ->groupBy("inventario.id")
-            ->having('cantidad > 0');
+            ->having('cantidad > 0 ' . $condicion);
 
 
-        return $this->where("inventario.id_sucursal", $idSucursal)->paginate(10);
+        return $this->where("inventario.id_sucursal", $idSucursal)->paginate($pagina);
     }
 }
