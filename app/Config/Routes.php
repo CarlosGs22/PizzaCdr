@@ -130,12 +130,23 @@ $routes->post('/admin/accion_inventario', 'AdminController/InventarioController:
 /* ++++++++++++++++++++++++++++++++++ PUBLICO ++++++++++++++++++++++++++++++++++++++++++++++ */
 
 
-$routes->get('/', 'PublicoController/Home::principal');
+$routes->get('/', 'PublicoController/Home::principal',['filter' => 'sessionsucursal']);
 $routes->post('/buscar_cobertura', 'PublicoController/Home::buscar_cobertura');
 $routes->post('/contacto', 'PublicoController/Home::contacto');
 
-$routes->get('/detalle/(:any)', 'PublicoController\Home::detalle/$1');
-$routes->get('/menu/(:any)', 'PublicoController\Home::menu/$1');
+$routes->get('/detalle/(:any)', 'PublicoController\Home::detalle/$1',['filter' => 'sessionsucursal']);
+$routes->get('/menu/(:any)', 'PublicoController\Home::menu/$1',['filter' => 'sessionsucursal']);
+
+
+//carritooo
+
+$routes->get('/carrito', 'PublicoController/Carrito::carrito',['filter' => 'sessionsucursal']);
+$routes->post('/accion_carrito', 'PublicoController/Carrito::accion_carrito');
+$routes->get('/limpiar_carrito', 'PublicoController/Carrito::limpiar_carrito');
+$routes->get('/accion_cantidad', 'PublicoController/Carrito::accion_cantidad');
+
+
+$routes->get('/nosotros', 'PublicoController/Home::nosotros');
 
 
 

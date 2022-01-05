@@ -122,3 +122,27 @@
         margin: 15px 0px 0px;
     }
 }
+
+.newsletter-subscribe {
+    color: #313437;
+    background-color: #ffffff;
+    margin: 30px;
+}
+
+.newsletter-subscribe .intro {
+    font-size: 16px;
+    max-width: 500px;
+    margin: 0 auto 25px
+}
+
+.newsletter-subscribe .intro p {
+    margin-bottom: 35px
+}
+
+.newsletter-subscribe form {
+    justify-content: center
+}
+
+.newsletter {
+    color: #0062cc !important
+}

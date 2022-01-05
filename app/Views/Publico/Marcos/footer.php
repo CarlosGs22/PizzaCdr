@@ -75,11 +75,11 @@
 
 <script src="<?php echo base_url("public/Publico/js/jquery-3.4.1.min.js") ?>"></script>
 <script src="<?php echo base_url("public/Publico/js/bootstrap.js") ?>"></script>
+<script src="<?php echo base_url("public/Publico/js/propios.js") ?>"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+<script src="<?php echo base_url("public/Publico/js/carousel.min.js") ?>"></script>
+<script src="<?php echo base_url("public/Publico/js/popper.min.js") ?>" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="<?php echo base_url("public/Publico/js/owl-carousel.min.js") ?>"></script>
 
 </body>
 

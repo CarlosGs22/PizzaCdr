@@ -13,6 +13,7 @@ if ($detalle_producto) {
         $precioProducto = $value["precioProducto"];
         $descripcion = $value["descripcion"];
         $total = $value["total_productol"];
+        $idClasificacion = $value["idClasificacion"];
     }
 }
 
@@ -29,7 +30,7 @@ if ($detalle_producto) {
                         foreach ($lista_imagenes as $key => $valueI) {
                     ?>
                             <div class="item text-center">
-                                <img style="width: max-content; display:inline-block; justify-align:center;" src="<?= base_url("public/Admin/img/productos/" . $valueI["imagen"]) ?>" />
+                                <img class="imgDetail" src="<?= base_url("public/Admin/img/productos/" . $valueI["imagen"]) ?>" />
                             </div>
                     <?php }
                     } ?>
@@ -50,88 +51,95 @@ if ($detalle_producto) {
             </div>
             <div class="col-md-6">
                 <div class="product-dtl">
-                    <div class="product-info">
-                        <div class="heading_container head_detail">
+                    <form action="<?= base_url("accion_carrito") ?>" method="POST">
 
-                            <h2>
-                                <?= $nombreProducto ?>
-                            </h2>
-                        </div>
-                        <div class="reviews-counter">
-                            <div class="rate">
-                                <input type="radio" id="star5" name="rate" value="5" checked />
-                                <label for="star5" title="text">5 stars</label>
-                                <input type="radio" id="star4" name="rate" value="4" checked />
-                                <label for="star4" title="text">4 stars</label>
-                                <input type="radio" id="star3" name="rate" value="3" checked />
-                                <label for="star3" title="text">3 stars</label>
-                                <input type="radio" id="star2" name="rate" value="2" />
-                                <label for="star2" title="text">2 stars</label>
-                                <input type="radio" id="star1" name="rate" value="1" />
-                                <label for="star1" title="text">1 star</label>
+                        <div class="product-info">
+                            <div class="heading_container head_detail">
+
+                                <h2>
+                                    <?= $nombreProducto ?>
+                                </h2>
                             </div>
-                            <!--<span>3 Reviews</span>-->
-                        </div>
-                        <div class="product-price-discount"><span>$<?= $precioProducto != null ? $precioProducto : "0" ?></span>
-                            <!--<span class="line-through">$29.00</span>-->
-                        </div>
-                    </div>
-                    <p><?= $descripcion != null ? $descripcion : "" ?></p>
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            <h6><strong>Ingredientes</strong></h6>
-                            <ul class="list-group ingredienteLista">
-                                <?php
-                                if ($lista_menu_ingrediente) {
-
-                                    foreach ($lista_menu_ingrediente as $key => $valueIn) {
-                                ?>
-                                        <li class="list-item"><i class="icon-copy fa fa-caret-right mx-2"></i><?= $valueIn["ingredienteNombre"] ?></li>
-
-                                <?php }
-                                } ?>
-
-                            </ul>
-                        </div>
-
-                        <?php if ($total > 1) { ?>
-
-                            <div class="col-12 col-md-6">
-                                <h6><strong>Personaliza tu orden</strong></h6>
-                                <div class="row">
-                                    <?php for ($i = 0; $i < $total; $i++) {   ?>
-                                       <div class="col-6">
-                                       <select name="prod_exis" class="form-control">
-                                            <?php if ($listas_producto_existente) { ?>
-                                                <?php foreach ($listas_producto_existente as $key => $value) { ?>
-                                                    <option value="<?= $value["idProducto"] ?>"><?= $value["nombre_menu"] ?></option>
-                                            <?php }
-                                            } ?>
-                                        </select>
-                                       </div>
-
-                                    <?php } ?>
+                            <div class="reviews-counter">
+                                <div class="rate">
+                                    <input type="radio" id="star5" name="rate" value="5" checked />
+                                    <label for="star5" title="text">5 stars</label>
+                                    <input type="radio" id="star4" name="rate" value="4" checked />
+                                    <label for="star4" title="text">4 stars</label>
+                                    <input type="radio" id="star3" name="rate" value="3" checked />
+                                    <label for="star3" title="text">3 stars</label>
+                                    <input type="radio" id="star2" name="rate" value="2" />
+                                    <label for="star2" title="text">2 stars</label>
+                                    <input type="radio" id="star1" name="rate" value="1" />
+                                    <label for="star1" title="text">1 star</label>
                                 </div>
+                                <!--<span>3 Reviews</span>-->
                             </div>
-                        <?php } ?>
-                    </div>
-                    <div class="product-count">
-                        <label for="size">Cantidad</label>
+                            <div class="product-price-discount"><span>$<?= $precioProducto != null ? $precioProducto : "0" ?></span>
+                                <!--<span class="line-through">$29.00</span>-->
+                            </div>
+                        </div>
+                        <p><?= $descripcion != null ? $descripcion : "" ?></p>
                         <div class="row">
-                            <form action="<?= base_url("carrito") ?>" method="POST">
+                           <?php if($idClasificacion == 1){?>
+                            <div class="col-12 col-md-6">
+                                <h6><strong>Ingredientes</strong></h6>
+                                <ul class="list-group ingredienteLista">
+                                    <?php
+                                    if ($lista_menu_ingrediente) {
+
+                                        foreach ($lista_menu_ingrediente as $key => $valueIn) {
+                                    ?>
+                                            <li class="list-item"><i class="icon-copy fa fa-caret-right mx-2"></i><?= $valueIn["ingredienteNombre"] ?></li>
+
+                                    <?php }
+                                    } ?>
+
+                                </ul>
+                            </div>
+                        <?php }?>
+
+                            <?php if ($total > 1) { ?>
+
+                                <div class="col-12 col-md-6">
+                                    <h6><strong>Personaliza tu orden</strong></h6>
+                                    <div class="row">
+                                        <?php for ($i = 0; $i < $total; $i++) {   ?>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label for="">Pizza <?= ($i + 1) ?></label>
+                                                    <select name="prod_exis<?= ($i + 1) ?>" class="form-control">
+                                                        <?php if ($listas_producto_existente) {
+                                                        ?>
+                                                            <?php foreach ($listas_producto_existente as $key => $value) {
+                                                                $idValueProd = bin2hex($encrypter->encrypt($value["idProducto"])); ?>
+                                                                <option value="<?= $idValueProd ?>"><?= $value["nombre_menu"] ?></option>
+                                                        <?php }
+                                                        } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        </div>
+                        <div class="product-count">
+                            <label for="size">Cantidad</label>
+                            <div class="row">
                                 <div class="col-12 display-flex">
                                     <div class="qtyminus">-</div>
                                     <?php
-                                    $idValueProduct = bin2hex($encrypter->encrypt($value["idProducto"]));
+                                    $idValueProduct = bin2hex($encrypter->encrypt($idProducto));
                                     ?>
-                                    <input type="hidden" value="<?= $idValueProduct;  ?>">
+                                    <input type="hidden" name="idProducto" value="<?= $idValueProduct;  ?>">
                                     <input type="text" name="qty" value="1" class="qty">
                                     <div class="qtyplus">+</div>
                                 </div>
                                 <input type="submit" class="round-black-btn" style="background: #ffbe33; border:none;" value="Añadir al pedido">
-                            </form>
+                            </div>
                         </div>
-                    </div>
+                    </form>
 
                 </div>
             </div>

@@ -77,3 +77,16 @@
         height: 98px;
     }
 }
+
+.generalColor {
+    color: #ffbe33 !important;
+}
+
+.secundaryColor {
+    color: #222831;
+}
+
+.generalBackgroundColor {
+    background-color: #ffbe33 !important;
+    color: white;
+}

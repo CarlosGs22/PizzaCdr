@@ -43,14 +43,7 @@ class LoginController extends Controller
     $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
     $lista["listas_especiales"] = $this->especiales->findAll();
 
-
-    $idSucursal = null;
-
-    if (session()->get('sucursal_cobertura') != null) {
-      $idSucursal = session()->get('sucursal_cobertura');
-    } else {
-      $idSucursal = 4;
-    }
+    $idSucursal = session()->get('sucursal_cobertura');
 
     $lista["lista_sucursal_info"] = $this->sucursales_modelo->select("municipio.nombre as nombre_municipio,estado.nombre as nombre_estado,sucursal.*")
       ->join("localidad", "localidad.id =  sucursal.id_localidad", "left")

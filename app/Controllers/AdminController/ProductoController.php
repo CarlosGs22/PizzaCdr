@@ -126,14 +126,13 @@ class ProductoController extends Controller
   {
 
     $idProducto = $this->request->getVar("txtId");
-    $total = null;
-    $id_tipo_tamanio = null;
 
-    
+    $idPrecioTotal = $this->tipo_tamanio_modelo->where("id",$this->request->getVar('txtTamanio'))->findAll();
+  
     $datos_producto = [
       'nombre' =>  $this->request->getVar('txtNombre'),
       'descripcion' =>  $this->request->getVar('txtDescripcion'),
-      'precio' =>  $this->request->getVar('txtPrecio'),
+      'precio' =>  $this->request->getVar('txtPrecio') == 0 ? $idPrecioTotal[0]["precio"] : $this->request->getVar('txtPrecio'),
       'total' =>  $this->request->getVar('txtClasificacion') == 1 ? "1" : $this->request->getVar('txtTotal'),
       'status' =>  $this->request->getVar('txtStatus'),
       'id_masa' =>  $this->request->getVar('txtMasa'),
@@ -142,7 +141,7 @@ class ProductoController extends Controller
       'id_clasificacion' =>  $this->request->getVar('txtClasificacion'),
       'id_tamanio' => $this->request->getVar('txtTamanio'),
       'id_sucursal' => session()->get('id_sucursal'),
-      'cve_usuario' =>  "1"
+      'cve_usuario' =>  session()->get('id')
     ];
 
     if ($idProducto != null) {

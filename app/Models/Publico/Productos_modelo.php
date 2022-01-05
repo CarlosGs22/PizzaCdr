@@ -50,7 +50,7 @@ class Productos_modelo extends Model
         producto.id as idProducto,
         producto.nombre as nombre_producto,
         producto.descripcion,
-        producto.precio as precio_producto,
+        producto.precio as precioProducto,
         producto.total as total_productol,
         imagen.id as idImagen,
         imagen.imagen as imagen_producto,
@@ -87,14 +87,14 @@ class Productos_modelo extends Model
         return $query->getResultArray();
     }
 
-    public function _getProductosPublic($idSucursal, $pagina, $idClasificacion,$idTipoTamanio)
+    public function _getProductosPublic($idSucursal, $pagina, $idClasificacion, $idTipoTamanio)
     {
         $condicion = null;
         if ($idClasificacion != null) {
             $condicion = "AND clasificacion.id = " . $idClasificacion;
-        } else if($idTipoTamanio != null) {
+        } else if ($idTipoTamanio != null) {
             $condicion = "AND tipo_tamanio.id = " . $idTipoTamanio;
-        }else{
+        } else {
             $condicion = "";
         }
 
@@ -111,7 +111,7 @@ class Productos_modelo extends Model
         producto.nombre as nombre_producto,
         producto.descripcion,
         producto.slider,
-        producto.precio as precio_producto,
+        producto.precio as precioProducto,
         producto.total as total_productol,
         imagen.id as idImagen,
         imagen.imagen as imagen_producto,
@@ -143,9 +143,17 @@ class Productos_modelo extends Model
             ->join('tipo', 'tipo.id = tipo_tamanio.id_tipo', 'LEFT')
             ->join('tamanio', 'tamanio.id = tipo_tamanio.id_tamanio', 'LEFT')
             ->join('imagen', 'imagen.id_producto = producto.id', 'LEFT')
-          
-            ->groupBy("inventario.id")
-            ->having('cantidad > 0 ' . $condicion);
+
+            ->groupBy("producto.id")
+            ->having('cantidad > 0 and menu.id in (SELECT menu.id
+            FROM
+             producto
+                INNER JOIN menu on menu.id = producto.id_menu
+                INNER JOIN menu_ingredientes ON menu_ingredientes.id_menu = menu.id
+                INNER JOIN ingrediente ON ingrediente.id = menu_ingredientes.id_ingrediente
+                INNER JOIN inventario on inventario.id_ingrediente_producto = menu_ingredientes.id_ingrediente
+                WHERE cantidad > 0
+                GROUP BY inventario.id HAVING cantidad > 0) ' . $condicion);
 
 
         return $this->where("inventario.id_sucursal", $idSucursal)->paginate($pagina);

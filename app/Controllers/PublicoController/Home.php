@@ -19,7 +19,6 @@ class Home extends Controller
   protected $session;
   protected $funciones;
 
-
   protected $sucursales_modelo;
   protected $sucursales_localidad_modelo;
   protected $productos_modelo;
@@ -41,7 +40,6 @@ class Home extends Controller
 
     $this->sucursales_modelo = new Sucursal_modelo();
     $this->productos_modelo = new Productos_modelo();
-
 
     $this->especiales = new Especiales_modelo();
     //$this->datamenu['listas_especiales'] = $especiales->findAll();
@@ -73,22 +71,17 @@ class Home extends Controller
   public function principal()
   {
 
-    $idSucursal = null;
     $pagina = 12;
 
     $lista["listas_especiales"] = $this->especiales->findAll();
 
     $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
 
-    if (session()->get('sucursal_cobertura') != null) {
-      $idSucursal = session()->get('sucursal_cobertura');
-    } else {
-      $idSucursal = 4;
-    }
+    $idSucursal = session()->get('sucursal_cobertura');
 
     $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal, $pagina, null, null);
- 
-  
+
+
     $lista["lista_sucursal_info"] = $this->sucursales_modelo->select("municipio.nombre as nombre_municipio,estado.nombre as nombre_estado,sucursal.*")
       ->join("localidad", "localidad.id =  sucursal.id_localidad", "left")
       ->join("municipio", "municipio.id = localidad.municipio_id", "left")
@@ -118,7 +111,6 @@ class Home extends Controller
             'sucursal_cobertura' => $lista["lista_cobertura"][0]["id_sucursal"],
             'nombre_cobertura' => $lista["lista_cobertura"][0]["nombre_sucursal"],
             'tipo_orden' => $this->request->getVar('txtReg') == "ZM8ByFx#" ? "En sucursal" : "A Domicilio"
-
           ];
 
           if ($this->session->get("sucursal_cobertura") != null &&  $this->session->get("nombre_cobertura")) {
@@ -181,12 +173,8 @@ class Home extends Controller
     if (!empty($lista["detalle_producto"])) {
 
       try {
+        $idSucursal = session()->get('sucursal_cobertura');
 
-        if (session()->get('sucursal_cobertura') != null) {
-          $idSucursal = session()->get('sucursal_cobertura');
-        } else {
-          $idSucursal = 4;
-        }
         $lista["listas_especiales"] = $this->especiales->findAll();
         $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
         $lista["lista_sucursal_info"] = $this->sucursales_modelo->select("municipio.nombre as nombre_municipio,estado.nombre as nombre_estado,sucursal.*")
@@ -195,10 +183,9 @@ class Home extends Controller
           ->join("estado", "estado.id = municipio.estado_id")->where("sucursal.id", $idSucursal)->findAll();
 
 
-        $lista["listas_producto_existente"] = $this->productos_modelo->_getProductosPublic($idSucursal, "50", "2", $lista["detalle_producto"][0]["idTipoTamanio"]);
-
-
+        $lista["listas_producto_existente"] = $this->productos_modelo->_getProductosPublic($idSucursal, "50", null, $lista["detalle_producto"][0]["idTipoTamanio"]);
         $lista["lista_imagenes"] = $this->imagen_modelo->where("id_producto", $decrypted_data)->findAll();
+
         if (!empty($lista["detalle_producto"])) {
           $lista['lista_menu_ingrediente'] = $this->menu_modelo->_obtenerIngredienteMenu($lista["detalle_producto"][0]["idMenu"]);
         }
@@ -221,18 +208,13 @@ class Home extends Controller
       $clasificacion = ($name == "promociones" ? "2" : "1");
       $lista['lista_name_titulo'] = array('nombre' => $name == "promociones" ? "Nuestras Promociones" : "Nuestro Menú");
 
-      $idSucursal = null;
       $pagina = 10;
 
       $lista["listas_especiales"] = $this->especiales->findAll();
 
       $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
 
-      if (session()->get('sucursal_cobertura') != null) {
-        $idSucursal = session()->get('sucursal_cobertura');
-      } else {
-        $idSucursal = 4;
-      }
+      $idSucursal = session()->get('sucursal_cobertura');
 
       $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal, $pagina, $clasificacion, null);
 
@@ -248,5 +230,31 @@ class Home extends Controller
       echo view($this->rutaContact, $lista);
       echo view($this->rutaFooter, $lista);
     }
+  }
+
+  public function nosotros()
+  {
+
+    $pagina = 12;
+
+    $lista["listas_especiales"] = $this->especiales->findAll();
+
+    $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
+
+    $idSucursal = session()->get('sucursal_cobertura');
+
+    $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal, $pagina, null, null);
+
+
+    $lista["lista_sucursal_info"] = $this->sucursales_modelo->select("municipio.nombre as nombre_municipio,estado.nombre as nombre_estado,sucursal.*")
+      ->join("localidad", "localidad.id =  sucursal.id_localidad", "left")
+      ->join("municipio", "municipio.id = localidad.municipio_id", "left")
+      ->join("estado", "estado.id = municipio.estado_id")->where("sucursal.id", $idSucursal)->findAll();
+
+
+    echo view($this->rutaHeader, $lista);
+    echo view($this->rutaModulo . 'nosotros', $lista);
+    echo view($this->rutaContact, $lista);
+    echo view($this->rutaFooter, $lista);
   }
 }

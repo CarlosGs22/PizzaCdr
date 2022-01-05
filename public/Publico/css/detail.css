@@ -313,3 +313,9 @@
 .ingredienteLista li {
     list-style: none;
 }
+
+.imgDetail {
+    width: 60% !important;
+    display: inline-block !important;
+    max-height: 460px;
+}
