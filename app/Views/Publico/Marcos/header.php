@@ -8,27 +8,33 @@
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <link rel="shortcut icon" href="<?php echo base_url("public/Admin/img/especiales/logo1.png") ?>" type="">
+  <link rel="shortcut icon" href="<?php echo base_url("public/Admin/img/especiales/1.png") ?>" type="">
 
   <title> <?php echo $listas_especiales[0]["img3"] != null ? $listas_especiales[0]["img3"] : "Tienda" ?></title>
 
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/bootstrap.css") ?>">
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/header.css") ?>">
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Admin/vendors/styles/icon-font.min.css") ?>">
-
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/font-awesome.min.css") ?>">
-
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/style.css") ?>">
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/responsive.css") ?>">
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/propios.css") ?>">
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/detail.css") ?>">
+  <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Admin/vendors/styles/productos.css") ?>">
+  <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/carrito.css") ?>">
+
+  <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/carousel.min.css") ?>">
+  <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/carousel-theme.min.css") ?>">
 
   <script src="<?php echo base_url("public/Admin/vendors/scripts/jquery-3.6.0.min.js") ?>"></script>
 
   <script src="<?php echo base_url("public/Admin/src/scripts/own.js") ?>"></script>
 
-
   <script src="<?php echo base_url("public/Admin/src/plugins/sweetalert2/sweetalert2.all.js"); ?>"></script>
+
+  <script src="<?php echo base_url("public/Publico/js/fontAwesome.js"); ?>"></script>
+
+
 
 </head>
 
@@ -58,9 +64,8 @@
                   <li><i class="fa fa-clock-o" aria-hidden="true"></i> <?= $value["horario"]; ?></li>
                   <?php
                   if ($_SESSION["tipo_orden"] != null) { ?>
-
                     <li>|</li>
-                    <li><i class="icon-copy ti-location-pin" aria-hidden="true"></i>Tipo de orden: <?= $_SESSION["tipo_orden"] ?> </li>
+                    <li><i class="icon-copy ti-location-pin" aria-hidden="true"></i>Tipo de orden: <?= $_SESSION["tipo_orden"] . " " .  ($_SESSION["nombre_cobertura"] != null ? "(" . $_SESSION["nombre_cobertura"] .")" : "")  ?> </li>
                   <?php } ?>
                 </ul>
               </div>
@@ -80,7 +85,7 @@
     <nav class="navbar navbar-expand-lg custom_nav-container ">
       <a class="navbar-brand" href="<?php echo base_url() ?>">
         <?php if ($listas_especiales) { ?>
-          <img style="width: 120px; height:100px;" src="<?php echo base_url("public/Admin/img/especiales/" . $listas_especiales[0]["img1"]) ?>" alt="">
+          <img id="imgNavBar" src="<?php echo base_url("public/Admin/img/especiales/" . $listas_especiales[0]["img1"]) ?>" alt="">
         <?php } ?>
       </a>
 
@@ -95,10 +100,13 @@
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="about.html">Nosotros</a>
+            <a class="nav-link" href="<?=base_url("/nosotros")?>">Nosotros</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="menu.html">Menu</a>
+            <a class="nav-link" href="<?=base_url("menu/individuales")?>">Menu</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="<?=base_url("menu/promociones")?>">Promociones</a>
           </li>
 
           <li class="nav-item" data-toggle="modal" data-target="#modal_tipos_dir">
@@ -170,36 +178,7 @@
               </div>
             </div>
           </div>
-
-          <style>
-            .newsletter-subscribe {
-              color: #313437;
-              background-color: #ffffff;
-              margin: 30px;
-            }
-
-            .newsletter-subscribe .intro {
-              font-size: 16px;
-              max-width: 500px;
-              margin: 0 auto 25px
-            }
-
-            .newsletter-subscribe .intro p {
-              margin-bottom: 35px
-            }
-
-            .newsletter-subscribe form {
-              justify-content: center
-            }
-
-
-            .newsletter {
-              color: #0062cc !important
-            }
-          </style>
-
         </div>
-
       </div>
     </div>
   </div>

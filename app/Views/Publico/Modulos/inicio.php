@@ -38,10 +38,8 @@ $encrypter = \Config\Services::encrypter();
                             </p>
 
                             <?php
-                            $regex = $value["idProducto"];
-                            $encodedMsg = base64_encode($encrypter->encrypt($regex));
-                            $link = str_replace("/", "-", $encodedMsg);
-                            
+                            $link = bin2hex($encrypter->encrypt($value["idProducto"]));
+
                             ?>
                             <a href="<?php echo base_url("detalle/" .  $link) ?>">
                               Ver Más
@@ -108,9 +106,8 @@ $encrypter = \Config\Services::encrypter();
                       <?= $value["precio_producto"]; ?>
                     </h6>
                     <?php
-                    $regex = $value["idProducto"];
-                    $encodedMsg = base64_encode($encrypter->encrypt($regex));
-                    $link = $encodedMsg;
+                    $link = bin2hex($encrypter->encrypt($value["idProducto"]));
+
 
                     ?>
                     <a class="iconCart" href="<?php echo base_url("detalle/" .  $link) ?>">
@@ -127,6 +124,17 @@ $encrypter = \Config\Services::encrypter();
         }
         ?>
       </div>
+
+      <div class="food_section row" style="justify-content: center;">
+        <div class="btn-box">
+          <a href="<?php echo base_url("menu/promociones") ?>">
+            Ver Mas
+          </a>
+        </div>
+
+      </div>
+
+
     </div>
   </div>
 </section>
@@ -174,9 +182,8 @@ $encrypter = \Config\Services::encrypter();
                             <?= $value["precio_producto"]; ?>
                           </h6>
                           <?php
-                          $regex = $value["idProducto"];
-                          $encodedMsg = base64_encode($encrypter->encrypt($regex));
-                          $link = $encodedMsg;
+                          $link = bin2hex($encrypter->encrypt($value["idProducto"]));
+
                           ?>
                           <a class="iconCart" href="<?php echo base_url("detalle/" . $link) ?>">
                             <i class="icon-copy fa fa-shopping-cart" aria-hidden="true"></i>
@@ -195,8 +202,8 @@ $encrypter = \Config\Services::encrypter();
       </div>
     </div>
     <div class="btn-box">
-      <a href="<?php echo base_url("menu") ?>">
-        Ver Más
+      <a href="<?php echo base_url("menu/individuales") ?>">
+        Ver Mas
       </a>
     </div>
   </div>

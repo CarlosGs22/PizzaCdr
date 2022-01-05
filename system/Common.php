@@ -156,6 +156,11 @@ if (! function_exists('config'))
 	}
 }
 
+function cart(bool $getShared = true)
+{
+    return \Config\Services::cart($getShared);
+}
+
 if (! function_exists('csrf_token'))
 {
 	/**
@@ -934,6 +939,7 @@ if (! function_exists('session'))
 		return $session;
 	}
 }
+
 
 if (! function_exists('service'))
 {

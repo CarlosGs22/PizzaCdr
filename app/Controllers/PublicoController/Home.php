@@ -5,6 +5,8 @@ namespace App\Controllers\PublicoController;
 use App\Models\Publico\Contacto_modelo;
 use App\Models\Admin\Especiales_modelo;
 use App\Models\Admin\Funciones;
+use App\Models\Admin\Imagenes_modelo;
+use App\Models\Admin\Menu_Modelo;
 use App\Models\Publico\Sucursal_Localidad_modelo;
 use App\Models\Admin\Sucursal_modelo;
 use App\Models\Publico\Productos_modelo;
@@ -17,14 +19,17 @@ class Home extends Controller
   protected $session;
   protected $funciones;
 
-
   protected $sucursales_modelo;
   protected $sucursales_localidad_modelo;
   protected $productos_modelo;
   protected $datamenu;
   protected $especiales;
   protected $contacto_modelo;
+  protected $imagen_modelo;
+  protected $menu_modelo;
   protected $encrypter;
+  protected $encryption;
+
 
 
 
@@ -36,19 +41,23 @@ class Home extends Controller
     $this->sucursales_modelo = new Sucursal_modelo();
     $this->productos_modelo = new Productos_modelo();
 
-
     $this->especiales = new Especiales_modelo();
     //$this->datamenu['listas_especiales'] = $especiales->findAll();
 
     $this->sucursales_localidad_modelo = new Sucursal_Localidad_modelo();
     $this->contacto_modelo = new Contacto_modelo();
+    $this->imagen_modelo = new Imagenes_modelo();
+    $this->menu_modelo = new Menu_Modelo();
+
 
     $this->session = \Config\Services::session();
 
+    $this->encryption         = new \Config\Encryption();
+
+    $key = bin2hex(\CodeIgniter\Encryption\Encryption::createKey(32));
+
+    $this->encryption->key = $key;
     $this->encrypter = \Config\Services::encrypter();
-
-    $this->encrypter->create_key(32);
-
 
     parent::initController($request, $response, $logger);
   }
@@ -62,20 +71,16 @@ class Home extends Controller
   public function principal()
   {
 
-
-    $idSucursal = null;
+    $pagina = 12;
 
     $lista["listas_especiales"] = $this->especiales->findAll();
 
     $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
 
-    if (session()->get('sucursal_cobertura') != null) {
-      $idSucursal = session()->get('sucursal_cobertura');
-    } else {
-      $idSucursal = 4;
-    }
+    $idSucursal = session()->get('sucursal_cobertura');
 
-    $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal);
+    $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal, $pagina, null, null);
+
 
     $lista["lista_sucursal_info"] = $this->sucursales_modelo->select("municipio.nombre as nombre_municipio,estado.nombre as nombre_estado,sucursal.*")
       ->join("localidad", "localidad.id =  sucursal.id_localidad", "left")
@@ -106,7 +111,6 @@ class Home extends Controller
             'sucursal_cobertura' => $lista["lista_cobertura"][0]["id_sucursal"],
             'nombre_cobertura' => $lista["lista_cobertura"][0]["nombre_sucursal"],
             'tipo_orden' => $this->request->getVar('txtReg') == "ZM8ByFx#" ? "En sucursal" : "A Domicilio"
-
           ];
 
           if ($this->session->get("sucursal_cobertura") != null &&  $this->session->get("nombre_cobertura")) {
@@ -163,24 +167,94 @@ class Home extends Controller
   public function detalle($id)
   {
 
-    if (session()->get('sucursal_cobertura') != null) {
-      $idSucursal = session()->get('sucursal_cobertura');
+    $decrypted_data = $this->encrypter->decrypt(hex2bin($id));
+    $lista["detalle_producto"] = $this->productos_modelo->_obtenerProductospUBL($decrypted_data);
+
+    if (!empty($lista["detalle_producto"])) {
+
+      try {
+        $idSucursal = session()->get('sucursal_cobertura');
+
+        $lista["listas_especiales"] = $this->especiales->findAll();
+        $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
+        $lista["lista_sucursal_info"] = $this->sucursales_modelo->select("municipio.nombre as nombre_municipio,estado.nombre as nombre_estado,sucursal.*")
+          ->join("localidad", "localidad.id =  sucursal.id_localidad", "left")
+          ->join("municipio", "municipio.id = localidad.municipio_id", "left")
+          ->join("estado", "estado.id = municipio.estado_id")->where("sucursal.id", $idSucursal)->findAll();
+
+
+        $lista["listas_producto_existente"] = $this->productos_modelo->_getProductosPublic($idSucursal, "50", null, $lista["detalle_producto"][0]["idTipoTamanio"]);
+        $lista["lista_imagenes"] = $this->imagen_modelo->where("id_producto", $decrypted_data)->findAll();
+
+        if (!empty($lista["detalle_producto"])) {
+          $lista['lista_menu_ingrediente'] = $this->menu_modelo->_obtenerIngredienteMenu($lista["detalle_producto"][0]["idMenu"]);
+        }
+
+        echo view($this->rutaHeader, $lista);
+        echo view($this->rutaModulo . 'detalle', $lista);
+        echo view($this->rutaFooter, $lista);
+      } catch (\Throwable $th) {
+      }
     } else {
-      $idSucursal = 4;
+      $this->session->setFlashdata('respuesta', array("0" => "No se encontró el producto", "1" => "error"));
+      return redirect()->to(base_url(""));
     }
+  }
+  public function menu($name)
+  {
+
+    if ($name == "promociones"  || $name == "individuales") {
+
+      $clasificacion = ($name == "promociones" ? "2" : "1");
+      $lista['lista_name_titulo'] = array('nombre' => $name == "promociones" ? "Nuestras Promociones" : "Nuestro Menú");
+
+      $pagina = 10;
+
+      $lista["listas_especiales"] = $this->especiales->findAll();
+
+      $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
+
+      $idSucursal = session()->get('sucursal_cobertura');
+
+      $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal, $pagina, $clasificacion, null);
+
+      $lista["lista_sucursal_info"] = $this->sucursales_modelo->select("municipio.nombre as nombre_municipio,estado.nombre as nombre_estado,sucursal.*")
+        ->join("localidad", "localidad.id =  sucursal.id_localidad", "left")
+        ->join("municipio", "municipio.id = localidad.municipio_id", "left")
+        ->join("estado", "estado.id = municipio.estado_id")->where("sucursal.id", $idSucursal)->findAll();
+
+      $lista["pagina"] = $this->productos_modelo->pager->links();
+
+      echo view($this->rutaHeader, $lista);
+      echo view($this->rutaModulo . 'menu', $lista);
+      echo view($this->rutaContact, $lista);
+      echo view($this->rutaFooter, $lista);
+    }
+  }
+
+  public function nosotros()
+  {
+
+    $pagina = 12;
+
     $lista["listas_especiales"] = $this->especiales->findAll();
+
     $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
+
+    $idSucursal = session()->get('sucursal_cobertura');
+
+    $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal, $pagina, null, null);
+
+
     $lista["lista_sucursal_info"] = $this->sucursales_modelo->select("municipio.nombre as nombre_municipio,estado.nombre as nombre_estado,sucursal.*")
       ->join("localidad", "localidad.id =  sucursal.id_localidad", "left")
       ->join("municipio", "municipio.id = localidad.municipio_id", "left")
       ->join("estado", "estado.id = municipio.estado_id")->where("sucursal.id", $idSucursal)->findAll();
 
-      $decrypted_data = $this->encrypter->decrypt(base64_decode(str_replace("-","/",$id)));
-      echo $decrypted_data;
-
 
     echo view($this->rutaHeader, $lista);
-    echo view($this->rutaModulo . 'detalle', $lista);
+    echo view($this->rutaModulo . 'nosotros', $lista);
+    echo view($this->rutaContact, $lista);
     echo view($this->rutaFooter, $lista);
   }
 }

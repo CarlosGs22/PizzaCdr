@@ -1,5 +1,3 @@
-
-
 <footer class="footer_section">
   <?php if ($lista_sucursal_info) {
     foreach ($lista_sucursal_info as $key => $value) {
@@ -77,8 +75,11 @@
 
 <script src="<?php echo base_url("public/Publico/js/jquery-3.4.1.min.js") ?>"></script>
 <script src="<?php echo base_url("public/Publico/js/bootstrap.js") ?>"></script>
+<script src="<?php echo base_url("public/Publico/js/propios.js") ?>"></script>
 
-
+<script src="<?php echo base_url("public/Publico/js/carousel.min.js") ?>"></script>
+<script src="<?php echo base_url("public/Publico/js/popper.min.js") ?>" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="<?php echo base_url("public/Publico/js/owl-carousel.min.js") ?>"></script>
 
 </body>
 

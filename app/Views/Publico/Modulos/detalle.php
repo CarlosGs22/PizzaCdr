@@ -1,113 +1,151 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<?php
+$encrypter = \Config\Services::encrypter();
+?>
 
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+<?php
+
+if ($detalle_producto) {
+
+    foreach ($detalle_producto as $key => $value) {
+        $idProducto = $value["idProducto"];
+        $nombreProducto = $value["nombre_producto"];
+        $menu = $value["nombre_menu"];
+        $precioProducto = $value["precioProducto"];
+        $descripcion = $value["descripcion"];
+        $total = $value["total_productol"];
+        $idClasificacion = $value["idClasificacion"];
+    }
+}
+
+?>
+
 
 <div class="pd-wrap">
     <div class="container">
-    
         <div class="row">
             <div class="col-md-6">
                 <div id="slider" class="owl-carousel product-slider">
-                    <div class="item">
-                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" />
-                    </div>
-                    <div class="item">
-                        <img src="https://i.ytimg.com/vi/PJ_zomNMK_s/maxresdefault.jpg" />
-                    </div>
-                    <div class="item">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQI6nUmObt62eDkqNSmIvCN_KkQExtbpJmUbVx_eTh_Y3v3r-Jw" />
-                    </div>
-                    <div class="item">
-                        <img src="https://i.ytimg.com/vi/PJ_zomNMK_s/maxresdefault.jpg" />
-                    </div>
-                    <div class="item">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQI6nUmObt62eDkqNSmIvCN_KkQExtbpJmUbVx_eTh_Y3v3r-Jw" />
-                    </div>
-                    <div class="item">
-                        <img src="https://i.ytimg.com/vi/PJ_zomNMK_s/maxresdefault.jpg" />
-                    </div>
-                    <div class="item">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQI6nUmObt62eDkqNSmIvCN_KkQExtbpJmUbVx_eTh_Y3v3r-Jw" />
-                    </div>
+                    <?php
+                    if ($lista_imagenes) {
+                        foreach ($lista_imagenes as $key => $valueI) {
+                    ?>
+                            <div class="item text-center">
+                                <img class="imgDetail" src="<?= base_url("public/Admin/img/productos/" . $valueI["imagen"]) ?>" />
+                            </div>
+                    <?php }
+                    } ?>
+
                 </div>
                 <div id="thumb" class="owl-carousel product-thumb">
-                    <div class="item">
-                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" />
-                    </div>
-                    <div class="item">
-                        <img src="https://i.ytimg.com/vi/PJ_zomNMK_s/maxresdefault.jpg" />
-                    </div>
-                    <div class="item">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQI6nUmObt62eDkqNSmIvCN_KkQExtbpJmUbVx_eTh_Y3v3r-Jw" />
-                    </div>
-                    <div class="item">
-                        <img src="https://i.ytimg.com/vi/PJ_zomNMK_s/maxresdefault.jpg" />
-                    </div>
-                    <div class="item">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQI6nUmObt62eDkqNSmIvCN_KkQExtbpJmUbVx_eTh_Y3v3r-Jw" />
-                    </div>
-                    <div class="item">
-                        <img src="https://i.ytimg.com/vi/PJ_zomNMK_s/maxresdefault.jpg" />
-                    </div>
-                    <div class="item">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQI6nUmObt62eDkqNSmIvCN_KkQExtbpJmUbVx_eTh_Y3v3r-Jw" />
-                    </div>
+                    <?php
+                    if ($lista_imagenes) {
+                        foreach ($lista_imagenes as $key => $valueI) {
+                    ?>
+                            <div class="item">
+                                <img style="width: 70%;" src="<?= base_url("public/Admin/img/productos/" . $valueI["imagen"]) ?>" />
+                            </div>
+                    <?php }
+                    } ?>
+
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="product-dtl">
-                    <div class="product-info">
-                        <div class="heading_container head_detail">
-                            <h2>
-                                Nuestro Menú
-                            </h2>
-                        </div>
-                        <div class="reviews-counter">
-                            <div class="rate">
-                                <input type="radio" id="star5" name="rate" value="5" checked />
-                                <label for="star5" title="text">5 stars</label>
-                                <input type="radio" id="star4" name="rate" value="4" checked />
-                                <label for="star4" title="text">4 stars</label>
-                                <input type="radio" id="star3" name="rate" value="3" checked />
-                                <label for="star3" title="text">3 stars</label>
-                                <input type="radio" id="star2" name="rate" value="2" />
-                                <label for="star2" title="text">2 stars</label>
-                                <input type="radio" id="star1" name="rate" value="1" />
-                                <label for="star1" title="text">1 star</label>
+                    <form action="<?= base_url("accion_carrito") ?>" method="POST">
+
+                        <div class="product-info">
+                            <div class="heading_container head_detail">
+
+                                <h2>
+                                    <?= $nombreProducto ?>
+                                </h2>
                             </div>
-                            <!--<span>3 Reviews</span>-->
+                            <div class="reviews-counter">
+                                <div class="rate">
+                                    <input type="radio" id="star5" name="rate" value="5" checked />
+                                    <label for="star5" title="text">5 stars</label>
+                                    <input type="radio" id="star4" name="rate" value="4" checked />
+                                    <label for="star4" title="text">4 stars</label>
+                                    <input type="radio" id="star3" name="rate" value="3" checked />
+                                    <label for="star3" title="text">3 stars</label>
+                                    <input type="radio" id="star2" name="rate" value="2" />
+                                    <label for="star2" title="text">2 stars</label>
+                                    <input type="radio" id="star1" name="rate" value="1" />
+                                    <label for="star1" title="text">1 star</label>
+                                </div>
+                                <!--<span>3 Reviews</span>-->
+                            </div>
+                            <div class="product-price-discount"><span>$<?= $precioProducto != null ? $precioProducto : "0" ?></span>
+                                <!--<span class="line-through">$29.00</span>-->
+                            </div>
                         </div>
-                        <div class="product-price-discount"><span>$39.00</span>
-                            <!--<span class="line-through">$29.00</span>-->
+                        <p><?= $descripcion != null ? $descripcion : "" ?></p>
+                        <div class="row">
+                           <?php if($idClasificacion == 1){?>
+                            <div class="col-12 col-md-6">
+                                <h6><strong>Ingredientes</strong></h6>
+                                <ul class="list-group ingredienteLista">
+                                    <?php
+                                    if ($lista_menu_ingrediente) {
+
+                                        foreach ($lista_menu_ingrediente as $key => $valueIn) {
+                                    ?>
+                                            <li class="list-item"><i class="icon-copy fa fa-caret-right mx-2"></i><?= $valueIn["ingredienteNombre"] ?></li>
+
+                                    <?php }
+                                    } ?>
+
+                                </ul>
+                            </div>
+                        <?php }?>
+
+                            <?php if ($total > 1) { ?>
+
+                                <div class="col-12 col-md-6">
+                                    <h6><strong>Personaliza tu orden</strong></h6>
+                                    <div class="row">
+                                        <?php for ($i = 0; $i < $total; $i++) {   ?>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label for="">Pizza <?= ($i + 1) ?></label>
+                                                    <select name="prod_exis<?= ($i + 1) ?>" class="form-control">
+                                                        <?php if ($listas_producto_existente) {
+                                                        ?>
+                                                            <?php foreach ($listas_producto_existente as $key => $value) {
+                                                                $idValueProd = bin2hex($encrypter->encrypt($value["idProducto"])); ?>
+                                                                <option value="<?= $idValueProd ?>"><?= $value["nombre_menu"] ?></option>
+                                                        <?php }
+                                                        } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            <?php } ?>
                         </div>
-                    </div>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            <h6>Ingredientes</h6>
-                            <ul class="list-group ingredienteLista">
-                                <li class="list-item"><i class="fas fa-male text-info mx-2"></i>David Copperfield</li>
-                                <li class="list-item"><i class="fas fa-venus text-warning mx-2"></i>The Portrait of a Lady</li>
-                                <li class="list--item"><i class="fas fa-gavel text-danger mx-2"></i> The Trial</li>
-                            </ul>
+                        <div class="product-count">
+                            <label for="size">Cantidad</label>
+                            <div class="row">
+                                <div class="col-12 display-flex">
+                                    <div class="qtyminus">-</div>
+                                    <?php
+                                    $idValueProduct = bin2hex($encrypter->encrypt($idProducto));
+                                    ?>
+                                    <input type="hidden" name="idProducto" value="<?= $idValueProduct;  ?>">
+                                    <input type="text" name="qty" value="1" class="qty">
+                                    <div class="qtyplus">+</div>
+                                </div>
+                                <input type="submit" class="round-black-btn" style="background: #ffbe33; border:none;" value="Añadir al pedido">
+                            </div>
                         </div>
-                    </div>
-                    <div class="product-count">
-                        <label for="size">Cantidad</label>
-                        <form action="#" class="display-flex">
-                            <div class="qtyminus">-</div>
-                            <input type="text" name="quantity" value="1" class="qty">
-                            <div class="qtyplus">+</div>
-                        </form>
-                        <a href="#" class="round-black-btn">Añadir al carrito</a>
-                    </div>
+                    </form>
+
                 </div>
             </div>
         </div>
-        <div class="product-info-tabs">
+    </div>
+    <!--<div class="product-info-tabs">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" id="description-tab" data-toggle="tab" href="#description" role="tab" aria-controls="description" aria-selected="true">Description</a>
@@ -161,8 +199,8 @@
                     </form>
                 </div>
             </div>
-        </div>
-    </div>
+        </div>-->
+</div>
 </div>
 
 
@@ -240,16 +278,20 @@
             var now = $(".qty").val();
             if ($.isNumeric(now)) {
                 if (parseInt(now) - 1 > 0) {
-                    now--;
+                    $(".qty").val(parseInt(now) - 1);
+
                 }
-                $(".qty").val(now);
+
             }
-        })
+        });
+
         $(".qtyplus").on("click", function() {
             var now = $(".qty").val();
             if ($.isNumeric(now)) {
                 $(".qty").val(parseInt(now) + 1);
             }
         });
+
+
     });
 </script>

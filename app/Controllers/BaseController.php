@@ -45,13 +45,4 @@ class BaseController extends Controller
 		// $this->session = \Config\Services::session();
 	}
 
-	public function detalleIndicador($id_ind)
-	{
-		$detalle_consulta = new Detalle_Consulta();
-		$id_indicador = $this->request->getVar("id_ind");
-		$$data['listas'] = $detalle_consulta->where('idindicador', $id_indicador)->findAll();
-		echo view($this->rutaHeader);
-		echo view($this->rutaModulo . 'detalle_indicador', $data);
-		echo view($this->rutaFooter);
-	}
 }

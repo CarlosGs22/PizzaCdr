@@ -111,15 +111,18 @@ var validacionCheckbox = function(form) {
 };
 
 $(function() {
+    if ($('.tablaDatatable').length > 0) {
 
-    $('.tablaDatatable').dataTable({
-        searching: false,
-        paging: false,
-        info: false,
-        "oLanguage": {
-            "sEmptyTable": "No hay resultados para mostrar"
-        }
-    });
+        $('.tablaDatatable').dataTable({
+            searching: false,
+            paging: false,
+            info: false,
+            "oLanguage": {
+                "sEmptyTable": "No hay resultados para mostrar"
+            }
+        });
+
+    }
 
 });
 
