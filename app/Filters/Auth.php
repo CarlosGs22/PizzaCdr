@@ -53,7 +53,7 @@ class Auth implements FilterInterface
         }
       }else{
         $_SESSION['error'] = 'No tiene permisos asignados';
-        $session->markAsFlashdata('error');
+        session()->markAsFlashdata('error');
         return redirect()->to(base_url("login"));
       }
     }else{

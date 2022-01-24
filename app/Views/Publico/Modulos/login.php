@@ -73,33 +73,38 @@
     <?php unset($_SESSION['error']);
     endif; ?>
 
-    <?php if ($lista_sucursal_info) {
-
-        foreach ($lista_sucursal_info as $key => $value) {
-    ?>
-            <div id="header">
-                <div class="topbar">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                <ul>
-                                    <li><i class="fa fa-volume-control-phone" aria-hidden="true"></i> <?= $value["telefono"]; ?></li>
-                                    <li>|</li>
-                                    <li><i class="fa fa-clock-o" aria-hidden="true"></i> <?= $value["horario"]; ?></li>
-                                    <li>|</li>
-                                    <li><i class="fa fa-volume-control-phone" aria-hidden="true"></i> <?= $value["telefono"]; ?></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-    <?php
-        }
+<?php if ($lista_sucursal_info) {
+    
+     
+    $telefono = "";
+    
+    foreach ($lista_sucursal_info as  $value) {
+      $telefono = $value["telefono"];
     }
+  ?>
+      <div id="header">
+        <div class="topbar">
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                <ul>
+                  <li><i class="fa fa-volume-control-phone" aria-hidden="true"></i> <?= $telefono; ?></li>
+                  <?php
+                  if ($_SESSION["tipo_orden"] != null) { ?>
+                    <li>|</li>
+                    <li><i class="icon-copy ti-location-pin" aria-hidden="true"></i>Tipo de orden: <?= $_SESSION["tipo_orden"] . " " .  ($_SESSION["nombre_cobertura"] != null ? "(" . $_SESSION["nombre_cobertura"] .")" : "")  ?> </li>
+                  <?php } ?>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    ?>
+  <?php
+    }
+  ?>
+
 
     <header class="header_section headerPage">
 
@@ -121,10 +126,13 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="about.html">Nosotros</a>
+                        <a class="nav-link" href="<?=base_url("nosotros")?>">Nosotros</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="menu.html">Menu</a>
+                        <a class="nav-link" href="<?=base_url("menu/individuales")?>">Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?=base_url("menu/promociones")?>">Promociones</a>
                     </li>
 
                     <li class="nav-item" data-toggle="modal" data-target="#modal_tipos_dir">

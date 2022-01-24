@@ -145,7 +145,7 @@ class Productos_modelo extends Model
             ->join('imagen', 'imagen.id_producto = producto.id', 'LEFT')
 
             ->groupBy("producto.id")
-            ->having('cantidad > 0 and menu.id in (SELECT menu.id
+            ->having('cantidad > 0 and producto.precio > 0 and menu.id in (SELECT menu.id
             FROM
              producto
                 INNER JOIN menu on menu.id = producto.id_menu

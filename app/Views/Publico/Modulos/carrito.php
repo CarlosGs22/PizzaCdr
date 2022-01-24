@@ -2,15 +2,143 @@
 $cart = \Config\Services::cart();
 ?>
 
+<style>
+	body {
+		background: #f5f5f5
+	}
+
+	.rounded {
+		border-radius: 1rem
+	}
+
+	.nav-pills .nav-link {
+		color: #555
+	}
+
+	.nav-pills .nav-link.active {
+		color: white
+	}
+
+	input[type="radio"] {
+		margin-right: 5px
+	}
+
+	.bold {
+		font-weight: bold
+	}
+
+	body {
+		color: #000;
+		overflow-x: hidden;
+		height: 100%;
+		background-color: #f8f9fa;
+		background-repeat: no-repeat
+	}
+
+	.cardPasarela {
+		padding: 30px 25px 35px 50px;
+		border-radius: 30px;
+		box-shadow: 0px 4px 8px 0px #222831;
+		margin-top: 50px;
+		margin-bottom: 50px
+	}
+
+	.border-line {
+		border-right: 1px solid #BDBDBD
+	}
+
+	.text-sm {
+		font-size: 13px
+	}
+
+	.text-md {
+		font-size: 18px
+	}
+
+	::placeholder {
+		color: grey;
+		opacity: 1
+	}
+
+	:-ms-input-placeholder {
+		color: grey
+	}
+
+	::-ms-input-placeholder {
+		color: grey
+	}
+
+	input {
+		padding: 2px 0px;
+		border: none;
+		border-bottom: 1px solid lightgrey;
+		margin-bottom: 5px;
+		margin-top: 2px;
+		box-sizing: border-box;
+		color: #000;
+		font-size: 16px;
+		letter-spacing: 1px;
+		font-weight: 500
+	}
+
+	input:focus {
+		-moz-box-shadow: none !important;
+		-webkit-box-shadow: none !important;
+		box-shadow: none !important;
+		border-bottom: 1px solid #EF5350;
+		outline-width: 0
+	}
+
+	button:focus {
+		-moz-box-shadow: none !important;
+		-webkit-box-shadow: none !important;
+		box-shadow: none !important;
+		outline-width: 0
+	}
+
+	.btn-red {
+		background-color: #ffbe33;
+		color: #fff;
+		padding: 8px 25px;
+		border-radius: 50px;
+		font-size: 18px;
+		letter-spacing: 2px;
+		border: 2px solid #fff
+	}
+
+	.btn-red:hover {
+		box-shadow: 0 0 0 2px #222831
+	}
+
+	.btn-red:focus {
+		box-shadow: 0 0 0 2px #EF5350 !important
+	}
+
+	.custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+		background-color: #EF5350
+	}
+
+	@media screen and (max-width: 575px) {
+		.border-line {
+			border-right: none;
+			border-bottom: 1px solid #EEEEEE
+		}
+	}
+
+	#btnPasarela {
+		cursor: pointer;
+	}
+</style>
+
 <main class="page">
-	<section class="shopping-cart dark">
+	<section class="shopping-cart dark" id="seccion_cart">
 		<div class="container">
-			<div class="heading_container heading_center" style="padding:15px;">
-				<h2>
-					Carrito de compra
-				</h2>
-			</div>
-			<div class="content">
+			<div class="card cardPasarela">
+				<div class="heading_container heading_center" style="padding:15px;">
+					<h2>
+						Carrito de compra
+					</h2>
+				</div>
 				<div class="row">
 					<div class="col-md-12 col-lg-8">
 						<div class="items">
@@ -33,12 +161,11 @@ $cart = \Config\Services::cart();
 											<div class="col-md-8">
 												<div class="info">
 													<div class="row">
-														<div class="col-md-6 product-name">
+														<div class="col-md-5 product-name">
 															<div class="product-name">
 																<a class="secundaryColor" href="#"><?= $value["name"]; ?></a>
 																<div class="product-info">
 																	<div>
-
 																		<?php
 																		$nombres = "";
 
@@ -60,10 +187,16 @@ $cart = \Config\Services::cart();
 														</div>
 														<div class="col-md-3 quantity textQty">
 															<label for="quantity">Cantidad:</label>
-															<input id="quantity"  type="number" value="<?= $value["qty"] ?>" class="form-control quantity-input <?= $value["id"] ?>" onkeypress="return isNumberKey(event);" min="1" max="9">
+															<input id="quantity" type="number" value="<?= $value["qty"] ?>" class="form-control quantity-input <?= $value["id"] ?>" onkeypress="return isNumberKey(event);" min="1" max="9">
 														</div>
+
 														<div class="col-md-3 price">
 															<span>$<?= $value["price"] ?></span>
+														</div>
+
+														<div class="col-md-1">
+															<label for=""></label>
+															<a href="<?= base_url("eliminarItem/" . $value["rowid"]) ?>"><i class="fa fa-trash" style="color: red;"></i></a>
 														</div>
 													</div>
 												</div>
@@ -79,21 +212,29 @@ $cart = \Config\Services::cart();
 							<h3>Resúmen</h3>
 							<div class="summary-item"><span class="text">Subtotal</span><span class="price" id="labelSubPrice">$<?= $subTotal ?></span></div>
 							<div class="summary-item"><span class="text">Total</span><span class="price" id="labelTotalPrice">$<?= $totalPrice ?></span></div>
-							<a class="btn generalBackgroundColor btn-lg btn-block" href="<?php echo base_url("pasarela") ?>">Pasarela de Pago</a>
+							<a href="<?=base_url("pasarela")?>" class="btn generalBackgroundColor btn-lg btn-block">Pasarela de Pago</a>
 							<a class="btn btn-primary btn-lg btn-block" href="<?php echo base_url("") ?>">Seguir Comprando</a>
 							<a class="btn btn-link btn-lg btn-block" href="<?php echo base_url("limpiar_carrito") ?>">Vaciar Carrito</a>
-							
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</section>
+
+
 </main>
 
 
 <script>
 	$(function() {
+
+		$("#btnPasarela").click(function() {
+			$('html, body').animate({
+				scrollTop: $("#seccion_pasarela").offset().top
+			}, 2000);
+		});
+
 
 		$(".textQty").find("#quantity").blur(function() {
 			if (isNumeric($(this).val()) && parseInt(this.value) > 0) {
@@ -109,12 +250,12 @@ $cart = \Config\Services::cart();
 						if (data[0] == 200) {
 							$("#labelSubPrice").text("$" + data[1]);
 							$("#labelTotalPrice").text("$" + data[2]);
-						}else{
+						} else {
 							Swal.fire({
-							icon: 'error',
-							title: '',
-							text: 'Ocurrió un error interno'
-						});
+								icon: 'error',
+								title: '',
+								text: 'Ocurrió un error interno'
+							});
 						}
 					},
 					error: function(request, status, error) {
@@ -128,7 +269,7 @@ $cart = \Config\Services::cart();
 			}
 		});
 
-		$(".textQty").find("#quantity").on('change',function() {
+		$(".textQty").find("#quantity").on('change', function() {
 			if (isNumeric($(this).val()) && parseInt(this.value) > 0) {
 				$.ajax({
 					type: "GET",
@@ -142,12 +283,12 @@ $cart = \Config\Services::cart();
 						if (data[0] == 200) {
 							$("#labelSubPrice").text("$" + data[1]);
 							$("#labelTotalPrice").text("$" + data[2]);
-						}else{
+						} else {
 							Swal.fire({
-							icon: 'error',
-							title: '',
-							text: 'Ocurrió un error interno'
-						});
+								icon: 'error',
+								title: '',
+								text: 'Ocurrió un error interno'
+							});
 						}
 					},
 					error: function(request, status, error) {
@@ -163,3 +304,120 @@ $cart = \Config\Services::cart();
 
 	});
 </script>
+
+
+<script>
+	$(document).ready(function() {
+
+		//For Card Number formatted input
+		var cardNum = document.getElementById('txtNumero');
+		cardNum.onkeyup = function(e) {
+			if (this.value == this.lastValue) return;
+			var caretPosition = this.selectionStart;
+			var sanitizedValue = this.value.replace(/[^0-9]/gi, '');
+			var parts = [];
+
+			for (var i = 0, len = sanitizedValue.length; i < len; i += 4) {
+				parts.push(sanitizedValue.substring(i, i + 4));
+			}
+			for (var i = caretPosition - 1; i >= 0; i--) {
+				var c = this.value[i];
+				if (c < '0' || c > '9') {
+					caretPosition--;
+				}
+			}
+			caretPosition += Math.floor(caretPosition / 4);
+
+			this.value = this.lastValue = parts.join(' ');
+			this.selectionStart = this.selectionEnd = caretPosition;
+		}
+
+
+
+	});
+</script>
+
+
+
+<style>
+	.bg-gradient {
+		background: #C9D6FF;
+		background: -webkit-linear-gradient(to right, #E2E2E2, #C9D6FF);
+		background: linear-gradient(to right, #E2E2E2, #C9D6FF);
+	}
+
+	ul li {
+		margin-bottom: 1.4rem;
+	}
+
+	.pricing-divider {
+		border-radius: 20px;
+		background: #C64545;
+		padding: 1em 0 4em;
+		position: relative;
+	}
+
+	.blue .pricing-divider {
+		background: #2D5772;
+	}
+
+	.green .pricing-divider {
+		background: #1AA85C;
+	}
+
+	.red b {
+		color: #C64545
+	}
+
+	.blue b {
+		color: #2D5772
+	}
+
+	.green b {
+		color: #1AA85C
+	}
+
+	.pricing-divider-img {
+		position: absolute;
+		bottom: -2px;
+		left: 0;
+		width: 100%;
+		height: 80px;
+	}
+
+	.deco-layer {
+		-webkit-transition: -webkit-transform 0.5s;
+		transition: transform 0.5s;
+	}
+
+	.btn-custom {
+		background: #C64545;
+		color: #fff;
+		border-radius: 20px
+	}
+
+	.img-float {
+		width: 50px;
+		position: absolute;
+		top: -3.5rem;
+		right: 1rem
+	}
+
+	.princing-item {
+		transition: all 150ms ease-out;
+	}
+
+	.princing-item:hover {
+		transform: scale(1.05);
+	}
+
+	.princing-item:hover .deco-layer--1 {
+		-webkit-transform: translate3d(15px, 0, 0);
+		transform: translate3d(15px, 0, 0);
+	}
+
+	.princing-item:hover .deco-layer--2 {
+		-webkit-transform: translate3d(-15px, 0, 0);
+		transform: translate3d(-15px, 0, 0);
+	}
+</style>

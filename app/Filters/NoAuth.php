@@ -26,39 +26,26 @@ class Noauth implements FilterInterface
 
     $listas_submenu["listas_submenu"] = $submenu_model->_obtenerSubmenu_web(session()->get('id'));
 
-   $res = null;
+    $res = null;
 
+    
     if (session()->get('id') != null) {
-
-      if($listas_submenu){
-
-        foreach ($listas_submenu as $key => $value){
-
-          foreach ($value as $key3 => $value2){
+      if ($listas_submenu) {
+        foreach ($listas_submenu as $key => $value) {
+          foreach ($value as $key3 => $value2) {
             $res = $value2["url_submenu_web"];
             break;
           }
-
         }
         return redirect()->to(base_url($res));
-      }else{
-
+      } else {
         $_SESSION['error'] = 'No tiene permisos asignados';
-
-        $session->markAsFlashdata('error');
-
-        return redirect()->to(base_url("login"));
-
+        session()->markAsFlashdata('error');
+        return redirect()->to(base_url("pp"));
       }
-
-    }else{
-
-       redirect()->to(site_url('login'));
-
+    } else if (session()->get('nombre_cliente') != null && session()->get('usuario_cliente') != null) {
+      return redirect()->to(base_url("micuenta"));
     }
-
-
-
   }
 
 
@@ -70,6 +57,4 @@ class Noauth implements FilterInterface
     // Do something here
 
   }
-
 }
-

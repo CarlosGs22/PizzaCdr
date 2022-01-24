@@ -56,7 +56,7 @@ class Funciones
         return $array;
     }
 
-    public function _sendMail($to, $subject, $message,$title)
+    public function _sendMail($to, $subject, $message, $title)
     {
 
         $email = \Config\Services::email();
@@ -74,4 +74,30 @@ class Funciones
             return $data;
         }
     }
+
+    public function cleanSanitize($type, $value)
+    {
+        $clean = null;
+        switch ($type) {
+            case 'INT':
+                $clean = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+                break;
+            case 'STRING':
+                $clean = filter_var($value, FILTER_SANITIZE_STRING);
+                break;
+            case 'EMAIL':
+                $clean = filter_var($value, FILTER_SANITIZE_EMAIL);
+                break;
+            default:
+                $clean = $value;
+                break;
+        }
+        $cleanStep2 = htmlentities($clean);
+
+        $cleanStep3 = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $cleanStep2);
+
+        return $cleanStep3;
+    }
+
+
 }

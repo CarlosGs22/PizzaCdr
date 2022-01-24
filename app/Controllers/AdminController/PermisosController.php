@@ -91,12 +91,11 @@ class PermisosController extends Controller
     $idsubmenu = $this->request->getVar('idsubmenu');
     $idusuario = $this->request->getVar('idusuario');
 
-
     $permiso_model = new Permisos_modelo();
 
     $data = [
-      'id_submenu' =>  $idsubmenu,
-      'id_usuario' => $idusuario
+      'id_submenu' =>  $this->funciones->cleanSanitize("INT",$idsubmenu),
+      'id_usuario' => $this->funciones->cleanSanitize("INT",$idusuario)
     ];
 
     if ($opcion == "1") {

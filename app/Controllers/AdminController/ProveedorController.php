@@ -81,19 +81,19 @@ class ProveedorController extends Controller
     $idProveedor = $this->request->getVar("txtId");
 
     $datos_proveedor = [
-      'nombre' =>  $this->request->getVar('txtNombre'),
-      'apellido_paterno' =>  $this->request->getVar('txtApe1'),
-      'apellido_materno' =>  $this->request->getVar('txtApe2'),
-      'razon_social' =>  $this->request->getVar('txtRazon'),
-      'telefono' =>  $this->request->getVar('txtTelefono'),
-      'direccion' =>  $this->request->getVar('txtDireccion'),
-      'correo' =>  $this->request->getVar('txtDireccion'),
-      'status' =>  $this->request->getVar('txtStatus'),
-      'cve_usuario' =>  1
+      'nombre' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtNombre')),
+      'apellido_paterno' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtApe1')),
+      'apellido_materno' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtApe2')),
+      'razon_social' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtRazon')),
+      'telefono' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtTelefono')),
+      'direccion' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtDireccion')),
+      'correo' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtDireccion')),
+      'status' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('txtStatus')),
+      'cve_usuario' =>  $this->session->get("id")
     ];
 
     if ($idProveedor != null) {
-      array_merge($datos_proveedor, array("id" => $idProveedor));
+      array_merge($datos_proveedor, array("id" => $this->funciones->cleanSanitize("INT",$idProveedor)));
     }
 
 

@@ -109,9 +109,9 @@ class IngredienteController extends Controller
         $idIngrediente = $this->request->getVar("txtId");
 
         $datos_ingrediente = [
-            'ingrediente' =>  $this->request->getVar('txtIngrediente'),
-            'status' =>  $this->request->getVar('txtStatus'),
-            'cve_usuario' =>  "1"
+            'ingrediente' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtIngrediente')),
+            'status' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('txtStatus')),
+            'cve_usuario' =>  $this->session->get("id")
         ];
 
         if ($idIngrediente != null) {
@@ -142,13 +142,13 @@ class IngredienteController extends Controller
         $idMenu = $this->request->getVar("txtId");
 
         $datos_menu = [
-            'nombre' =>  $this->request->getVar('txtNombre'),
-            'status' =>  $this->request->getVar('txtStatus'),
-            'cve_usuario' =>  "1"
+            'nombre' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtNombre')),
+            'status' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('txtStatus')),
+            'cve_usuario' =>  $this->session->get("id")
         ];
 
         if ($idMenu != null) {
-            array_merge($datos_menu, array("id" => $idMenu));
+            array_merge($datos_menu, array("id" => $this->funciones->cleanSanitize("INT",$idMenu)));
         }
 
 
@@ -174,9 +174,9 @@ class IngredienteController extends Controller
         $opcion = $this->request->getVar('opcion');
 
         $datos_ingrediente_menu = [
-            'id_ingrediente' =>  $this->request->getVar('id_ingrediente'),
-            'id_menu' =>  $this->request->getVar('id_menu'),
-            'cve_usuario' =>  "1"
+            'id_ingrediente' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('id_ingrediente')),
+            'id_menu' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('id_menu')),
+            'cve_usuario' =>  $this->session->get("id")
         ];
 
         $idIngrediente = $this->request->getVar('id_ingrediente');

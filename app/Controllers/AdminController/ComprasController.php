@@ -128,7 +128,7 @@ class ComprasController extends Controller
 
           if ($valueInve["cantidad"] > 0) {
             $datos_inventario = [
-              "cantidad" => ($valueInve["cantidad"] - $valueCom["cantidad"])
+              "cantidad" => ($this->funciones->cleanSanitize("STRING",$valueInve["cantidad"]) - $this->funciones->cleanSanitize("STRING",$valueCom["cantidad"]))
             ];
 
             $respuestaInvetario_Actualizar = $this->inventario_modelo->update($valueInve["id"], $datos_inventario);
@@ -250,11 +250,11 @@ class ComprasController extends Controller
             echo $value['id'];
 
             $datos_detalle = [
-              'cantidad' =>  $this->request->getVar("txtResCant-" . $value['id']),
-              'precio' =>  $this->request->getVar("txtResPrec-" . $value['id']),
-              'subtotal' => ($this->request->getVar("txtResPrec-" . $value['id']) * $this->request->getVar("txtResCant-" . $value['id'])),
-              'id_compra' =>  $id_compra,
-              'id_articulo_ingrediente' =>  $this->request->getVar("txtResProd-" . $value['id'])
+              'cantidad' => $this->funciones->cleanSanitize("STRING", $this->request->getVar("txtResCant-" . $value['id'])),
+              'precio' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar("txtResPrec-" . $value['id'])),
+              'subtotal' => ($this->funciones->cleanSanitize("STRING",$this->request->getVar("txtResPrec-" . $value['id'])) * $this->funciones->cleanSanitize("STRING",$this->request->getVar("txtResCant-" . $value['id']))),
+              'id_compra' =>  $this->funciones->cleanSanitize("INT",$id_compra),
+              'id_articulo_ingrediente' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar("txtResProd-" . $value['id']))
             ];
 
             try {
@@ -265,7 +265,7 @@ class ComprasController extends Controller
                 if (!empty($lista['lista_inventario'])) {
 
                   $datos_inventario_actualizar = [
-                    'cantidad' => ($this->request->getVar("txtResCant-" . $value['id']) + $lista['lista_inventario']["cantidad"]),
+                    'cantidad' => ($this->funciones->cleanSanitize("STRING",$this->request->getVar("txtResCant-" . $value['id'])) + $this->funciones->cleanSanitize("STRING",$lista['lista_inventario']["cantidad"])),
                   ];
 
                   $respuestaInvetario_Actualizar = $this->inventario_modelo->update($lista['lista_inventario']["id"], $datos_inventario_actualizar);
@@ -281,9 +281,9 @@ class ComprasController extends Controller
                 } else {
 
                   $datos_inventario = [
-                    'cantidad' =>  $this->request->getVar("txtResCant-" . $value['id']),
-                    'id_ingrediente_producto' =>  $this->request->getVar("txtResProd-" . $value['id']),
-                    'id_sucursal' => session()->get('id_sucursal')
+                    'cantidad' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar("txtResCant-" . $value['id'])),
+                    'id_ingrediente_producto' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar("txtResProd-" . $value['id'])),
+                    'id_sucursal' => $this->funciones->cleanSanitize("INT",session()->get('id_sucursal'))
                   ];
 
                   try {

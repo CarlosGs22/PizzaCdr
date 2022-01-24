@@ -5,6 +5,7 @@ namespace App\Controllers\AdminController;
 use App\Models\Admin\Especiales_modelo;
 use App\Models\Admin\Estados_modelo;
 use App\Models\Admin\Funciones;
+use App\Models\Admin\Horario_modelo;
 use App\Models\Admin\Localidades_modelo;
 use App\Models\Admin\Municipios_modelo;
 use App\Models\Admin\Permiso_menu_modelo;
@@ -12,6 +13,8 @@ use App\Models\Admin\Status_modelo;
 use App\Models\Admin\Sucursal_Localidad_modelo;
 use App\Models\Admin\Sucursal_modelo;
 use CodeIgniter\Controller;
+
+
 
 class SucursalController extends Controller
 {
@@ -24,18 +27,21 @@ class SucursalController extends Controller
   protected $municipios_modelo;
   protected $estados_modelo;
   protected $sucursales_localidades_modelo;
+  protected $horarios;
   protected $status_modelo;
+  
+  protected $encrypter;
+  protected $encryption;
+
   protected $funciones;
 
   public function initController(\CodeIgniter\HTTP\RequestInterface $request, \CodeIgniter\HTTP\ResponseInterface $response, \Psr\Log\LoggerInterface $logger)
   {
-    parent::initController($request, $response, $logger);
-
     $this->session = \Config\Services::session();
 
     $submenu_web = new Permiso_menu_modelo();
     $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(session()->get('id'));
-    
+
     $this->sucursales_modelo = new Sucursal_modelo();
     $this->status_modelo = new Status_modelo();
     $this->localidades_modelo = new Localidades_modelo();
@@ -44,11 +50,22 @@ class SucursalController extends Controller
     $this->municipios_modelo = new Municipios_modelo();
     $this->localidades_modelo = new Localidades_modelo();
     $this->sucursales_localidades_modelo = new Sucursal_Localidad_modelo();
+    $this->horarios = new Horario_modelo();
+
     $this->funciones = new Funciones();
     $this->session = session();
 
     $especiales = new Especiales_modelo();
     $this->datamenu['listas_especiales'] = $especiales->findAll();
+
+    $this->encryption = new \Config\Encryption();
+
+    $key = bin2hex(\CodeIgniter\Encryption\Encryption::createKey(32));
+
+    $this->encryption->key = $key;
+    $this->encrypter = \Config\Services::encrypter();
+
+    parent::initController($request, $response, $logger);
   }
 
   public $rutaHeader = 'Admin/Marcos/header.php';
@@ -78,6 +95,11 @@ class SucursalController extends Controller
       $lista['lista_localidades_registradas'] = $this->localidades_modelo->_obtenerLocalidadesRegistradas($this->request->getVar('idSucursal'));
     }
 
+    if ($this->request->getVar('idSucursalHorario')) {
+      $lista['idSucursal_Horario'] = array('idSucursal' => $this->request->getVar('idSucursalHorario'));
+      $lista['lista_horarios'] = $this->horarios->where("id_sucursal", $this->request->getVar('idSucursalHorario'))->findAll();
+    }
+
     echo view($this->rutaHeader, $this->datamenu);
     echo view($this->rutaModulo . 'sucursales', $lista);
     echo view($this->rutaFooter);
@@ -104,20 +126,20 @@ class SucursalController extends Controller
     $idSucursal = $this->request->getVar("txtId");
 
     $datos_sucursal = [
-      'nombre' =>  $this->request->getVar('txtNombre'),
-      'telefono' =>  $this->request->getVar('txtTelefono'),
-      'calle' =>  $this->request->getVar('txtCalle'),
-      'numero' =>  $this->request->getVar('txtNumero'),
-      'colonia' =>  $this->request->getVar('txtColonia'),
-      'cp' =>  $this->request->getVar('txtCp'),
-      'status' =>  $this->request->getVar('txtStatus'),
-      'src_frame' =>  $this->request->getVar('txtFrame'),
-      'facebook_link' =>  $this->request->getVar('txtLink'),
-      'correo' =>  $this->request->getVar('txtCorreo'),
-      'horario' =>  $this->request->getVar('txtHorario'),
-      'presentacion' =>  $this->request->getVar('txtPresentacion'),
-      'cve_usuario' =>  "1",
-      'id_localidad' =>  $this->request->getVar('txtLocalidad')
+      'nombre' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtNombre')),
+      'telefono' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtTelefono')),
+      'calle' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtCalle')),
+      'numero' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtNumero')),
+      'colonia' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtColonia')),
+      'cp' =>   $this->funciones->cleanSanitize("INT", $this->request->getVar('txtCp')),
+      'status' =>   $this->funciones->cleanSanitize("INT", $this->request->getVar('txtStatus')),
+      'src_frame' =>   $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtFrame')),
+      'facebook_link' =>   $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtLink')),
+      'correo' =>   $this->funciones->cleanSanitize("EMAIL", $this->request->getVar('txtCorreo')),
+      'horario' =>   $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtHorario')),
+      'presentacion' =>   $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtPresentacion')),
+      'cve_usuario' =>   $this->funciones->cleanSanitize("STRING", $this->session->get("id")),
+      'id_localidad' =>   $this->funciones->cleanSanitize("INT", $this->request->getVar('txtLocalidad'))
     ];
 
     if ($idSucursal != null) {
@@ -153,8 +175,8 @@ class SucursalController extends Controller
     $opcion = $this->request->getVar('opcion');
 
     $datos_sucursal_localidad = [
-      'id_sucursal' =>  $this->request->getVar('idSucursal'),
-      'id_localidad' =>  $this->request->getVar('idLocalidad'),
+      'id_sucursal' =>   $this->funciones->cleanSanitize("INT", $this->request->getVar('idSucursal')),
+      'id_localidad' =>   $this->funciones->cleanSanitize("INT", $this->request->getVar('idLocalidad')),
     ];
 
     $respuesta = null;
@@ -183,7 +205,7 @@ class SucursalController extends Controller
 
     $respuesta = null;
     try {
-      $respuesta = $this->sucursales_localidades_modelo->update($this->request->getVar('idSucursal_localidad'), $datos_registro);
+      $respuesta = $this->sucursales_localidades_modelo->update($this->funciones->cleanSanitize("INT", $this->request->getVar('idSucursal_localidad')), $datos_registro);
     } catch (\Throwable $th) {
       $respuesta = $this->sucursales_localidades_modelo->error();
     }
@@ -191,5 +213,45 @@ class SucursalController extends Controller
     $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->sucursales_localidades_modelo->errors());
 
     echo json_encode($respuesta);
+  }
+
+  public function accion_horarios()
+  {
+
+    $idHorario = $this->request->getVar("txtId");
+    $idSucursal = $this->encrypter->decrypt(hex2bin($this->request->getVar("idSucursalHex")));
+    
+    
+    $datos_horario = [
+      'dia' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtDia')),
+      'horade' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtDeHora')),
+      'horademns' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtDeHoraMns')),
+      'horahasta' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtHastaHora')),
+      'horahastamns' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtHastaHoraMns')),
+      'status' =>  $this->funciones->cleanSanitize("INT", $this->request->getVar('txtStatus')),
+      'id_sucursal' =>  $this->funciones->cleanSanitize("INT", $idSucursal),
+      'cve_usuario' => $this->session->get("id")
+    ];
+
+    if ($idHorario != null) {
+      $idHorario = $this->encrypter->decrypt(hex2bin($this->request->getVar("txtId")));
+      array_merge($datos_horario, array("id" => $idHorario));
+    }
+
+    $respuesta = null;
+    try {
+      if ($idHorario != null) {
+        $respuesta = $this->horarios->update($idHorario, $datos_horario);
+      } else {
+        $respuesta = $this->horarios->save($datos_horario);
+      }
+    } catch (\Throwable $th) {
+      $respuesta = $this->horarios->error();
+    }
+
+    $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->horarios->errors());
+
+    $this->session->setFlashdata('respuesta', $respuesta);
+    return redirect()->to(base_url("admin/sucursales?idSucursalHorario=".$idSucursal));
   }
 }

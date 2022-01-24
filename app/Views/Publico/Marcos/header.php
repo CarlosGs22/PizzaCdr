@@ -25,6 +25,10 @@
 
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/carousel.min.css") ?>">
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/carousel-theme.min.css") ?>">
+  <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/nosotros.css") ?>">
+  <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/micuenta.css") ?>">
+  <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/pasarela.css") ?>">
+
 
   <script src="<?php echo base_url("public/Admin/vendors/scripts/jquery-3.6.0.min.js") ?>"></script>
 
@@ -34,6 +38,8 @@
 
   <script src="<?php echo base_url("public/Publico/js/fontAwesome.js"); ?>"></script>
 
+  <script src="https://js.stripe.com/v2/"></script>
+  <script src="<?php echo base_url("public/Publico/js/stripe.js"); ?>"></script>
 
 
 </head>
@@ -51,33 +57,34 @@
   <?php endif; ?>
   <?php if ($lista_sucursal_info) {
 
-    foreach ($lista_sucursal_info as $key => $value) {
+
+    $telefono = "";
+
+    foreach ($lista_sucursal_info as  $value) {
+      $telefono = $value["telefono"];
+    }
   ?>
-      <div id="header">
-        <div class="topbar">
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                <ul>
-                  <li><i class="fa fa-volume-control-phone" aria-hidden="true"></i> <?= $value["telefono"]; ?></li>
+    <div id="header">
+      <div class="topbar">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+              <ul>
+                <li><i class="fa fa-volume-control-phone" aria-hidden="true"></i> <?= $telefono; ?></li>
+                <?php
+                if ($_SESSION["tipo_orden"] != null) { ?>
                   <li>|</li>
-                  <li><i class="fa fa-clock-o" aria-hidden="true"></i> <?= $value["horario"]; ?></li>
-                  <?php
-                  if ($_SESSION["tipo_orden"] != null) { ?>
-                    <li>|</li>
-                    <li><i class="icon-copy ti-location-pin" aria-hidden="true"></i>Tipo de orden: <?= $_SESSION["tipo_orden"] . " " .  ($_SESSION["nombre_cobertura"] != null ? "(" . $_SESSION["nombre_cobertura"] .")" : "")  ?> </li>
-                  <?php } ?>
-                </ul>
-              </div>
+                  <li><i class="icon-copy ti-location-pin" aria-hidden="true"></i>Tipo de orden: <?= $_SESSION["tipo_orden"] . " " .  ($_SESSION["nombre_cobertura"] != null ? "(" . $_SESSION["nombre_cobertura"] . ")" : "")  ?> </li>
+                <?php } ?>
+              </ul>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
   <?php
-    }
   }
-
   ?>
 
   <header class="header_section headerPage">
@@ -100,13 +107,13 @@
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="<?=base_url("/nosotros")?>">Nosotros</a>
+            <a class="nav-link" href="<?= base_url("/nosotros") ?>">Nosotros</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="<?=base_url("menu/individuales")?>">Menu</a>
+            <a class="nav-link" href="<?= base_url("menu/individuales") ?>">Menu</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="<?=base_url("menu/promociones")?>">Promociones</a>
+            <a class="nav-link" href="<?= base_url("menu/promociones") ?>">Promociones</a>
           </li>
 
           <li class="nav-item" data-toggle="modal" data-target="#modal_tipos_dir">
@@ -118,9 +125,15 @@
           <a href="<?php echo base_url("carrito") ?>" class="user_link">
             <i class="fa fa-shopping-cart" aria-hidden="true"></i>
           </a>
+
           <a href="<?php echo base_url("login") ?>" class="user_link">
-            <i class="fa fa-user" aria-hidden="true"></i>
+            <i class="<?php echo session()->get("usuario_cliente") != null ? "fa fa-cog" : "fa fa-user" ?>" aria-hidden="true"></i>
           </a>
+          <?php if (session()->get("usuario_cliente") != null) { ?>
+            <a href="<?php echo base_url("salir") ?>" class="user_link">
+              <i class="fa fa-user-times" aria-hidden="true"></i>
+            </a>
+          <?php } ?>
           <!--<a href="" class="order_online">
             Order Online
           </a>-->

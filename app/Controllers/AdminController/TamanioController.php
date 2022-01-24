@@ -4,9 +4,6 @@ namespace App\Controllers\AdminController;
 
 use App\Models\Admin\Especiales_modelo;
 use App\Models\Admin\Funciones;
-use App\Models\Admin\Ingredientes_modelo;
-use App\Models\Admin\Marcas_modelo;
-use App\Models\Admin\Motivos_modelo;
 use App\Models\Admin\Permiso_menu_modelo;
 use App\Models\Admin\Status_modelo;
 use App\Models\Admin\Tamanios_Ingredientes_modelo;
@@ -107,9 +104,9 @@ class TamanioController extends Controller
     $idTamanio = $this->request->getVar("txtId");
 
     $datos_tamanio = [
-      'tamanio' =>  $this->request->getVar('txtNombre'),
-      'status' =>  $this->request->getVar('txtStatus'),
-      'cve_usuario' =>  "1"
+      'tamanio' =>   $this->funciones->cleanSantize("STRING",$this->request->getVar('txtNombre')),
+      'status' =>   $this->funciones->cleanSantize("INT",$this->request->getVar('txtStatus')),
+      'cve_usuario' =>  $this->session->get("id")
     ];
 
     if ($idTamanio != null) {
@@ -147,14 +144,14 @@ class TamanioController extends Controller
    
 
     $datos_tipo_tamanio = [
-      'id_tipo' =>  $this->request->getVar('txtTipo'),
-      'id_tamanio' =>  $this->request->getVar('txtTamanio'),
-      'precio' =>  $this->request->getVar('txtPrecio'),
-      'cve_usuario' => "1"
+      'id_tipo' =>   $this->funciones->cleanSantize("STRING",$this->request->getVar('txtTipo')),
+      'id_tamanio' =>   $this->funciones->cleanSantize("STRING",$this->request->getVar('txtTamanio')),
+      'precio' =>   $this->funciones->cleanSantize("STRING",$this->request->getVar('txtPrecio')),
+      'cve_usuario' => $this->session->get("id")
     ];
 
     if ($idTipo_Tamanio != null) {
-      array_merge($datos_tipo_tamanio, array("id" => $idTipo_Tamanio));
+      array_merge($datos_tipo_tamanio, array("id" =>  $this->funciones->cleanSantize("INT",$idTipo_Tamanio)));
     }
 
     $respuesta = null;
@@ -182,14 +179,14 @@ class TamanioController extends Controller
     $txtIdTamanioIngrediente2 =  $this->request->getVar('txtIdTamanioIngrediente');
   
     $datos_ingrediente_tamanio = [
-      'id_ingrediente' =>  $this->request->getVar('txtIngrediente'),
-      'id_tipo_tamanio' =>  $this->request->getVar('txtIdTamanioIngrediente'),
-      'porcion' =>  $this->request->getVar('txtPorcion'),
-      'cve_usuario' => "1"
+      'id_ingrediente' =>   $this->funciones->cleanSantize("INT",$this->request->getVar('txtIngrediente')),
+      'id_tipo_tamanio' =>   $this->funciones->cleanSantize("INT",$this->request->getVar('txtIdTamanioIngrediente')),
+      'porcion' =>   $this->funciones->cleanSantize("STRING",$this->request->getVar('txtPorcion')),
+      'cve_usuario' => $this->session->get("id")
     ];
 
     if ($id_Tamanio_ingrediente != null) {
-      array_merge($datos_ingrediente_tamanio, array("id" => $id_Tamanio_ingrediente));
+      array_merge($datos_ingrediente_tamanio, array("id" =>  $this->funciones->cleanSantize("INT",$id_Tamanio_ingrediente)));
     }
 
     $respuesta = null;

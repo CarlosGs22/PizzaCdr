@@ -130,18 +130,18 @@ class ProductoController extends Controller
     $idPrecioTotal = $this->tipo_tamanio_modelo->where("id",$this->request->getVar('txtTamanio'))->findAll();
   
     $datos_producto = [
-      'nombre' =>  $this->request->getVar('txtNombre'),
-      'descripcion' =>  $this->request->getVar('txtDescripcion'),
-      'precio' =>  $this->request->getVar('txtPrecio') == 0 ? $idPrecioTotal[0]["precio"] : $this->request->getVar('txtPrecio'),
-      'total' =>  $this->request->getVar('txtClasificacion') == 1 ? "1" : $this->request->getVar('txtTotal'),
-      'status' =>  $this->request->getVar('txtStatus'),
-      'id_masa' =>  $this->request->getVar('txtMasa'),
-      'id_categoria' =>  $this->request->getVar('txtCategoria'),
-      'id_menu' =>  $this->request->getVar('txtMenu'),
-      'id_clasificacion' =>  $this->request->getVar('txtClasificacion'),
-      'id_tamanio' => $this->request->getVar('txtTamanio'),
-      'id_sucursal' => session()->get('id_sucursal'),
-      'cve_usuario' =>  session()->get('id')
+      'nombre' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtNombre')),
+      'descripcion' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtDescripcion')),
+      'precio' =>  $this->request->getVar('txtPrecio') == 0 ? $idPrecioTotal[0]["precio"] : $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtPrecio')),
+      'total' =>  $this->request->getVar('txtClasificacion') == 1 ? "1" : $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtTotal')),
+      'status' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('txtStatus')),
+      'id_masa' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('txtMasa')),
+      'id_categoria' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('txtCategoria')),
+      'id_menu' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('txtMenu')),
+      'id_clasificacion' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('txtClasificacion')),
+      'id_tamanio' => $this->funciones->cleanSanitize("INT",$this->request->getVar('txtTamanio')),
+      'id_sucursal' => $this->funciones->cleanSanitize("INT",session()->get('id_sucursal')),
+      'cve_usuario' =>  $this->funciones->cleanSanitize("INT",session()->get('id'))
     ];
 
     if ($idProducto != null) {
@@ -366,9 +366,9 @@ class ProductoController extends Controller
     $idImagen = $this->request->getVar("txtIdImagen");
 
     $datos_imagen = [
-      'id_producto' =>  $this->request->getVar('txtIdProducto'),
-      'status' =>  $this->request->getVar('txtStatus'),
-      'cve_usuario' =>  "1"
+      'id_producto' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('txtIdProducto')),
+      'status' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('txtStatus')),
+      'cve_usuario' =>  $this->session->get("id")
     ];
 
     if ($idImagen != null) {

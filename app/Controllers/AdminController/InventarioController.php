@@ -78,49 +78,6 @@ class InventarioController extends Controller
   }
 
  
-  public function accion_sucursales()
-  {
 
-    $idSucursal = $this->request->getVar("txtId");
-
-    $datos_sucursal = [
-      'nombre' =>  $this->request->getVar('txtNombre'),
-      'telefono' =>  $this->request->getVar('txtTelefono'),
-      'calle' =>  $this->request->getVar('txtCalle'),
-      'numero' =>  $this->request->getVar('txtNumero'),
-      'colonia' =>  $this->request->getVar('txtColonia'),
-      'cp' =>  $this->request->getVar('txtCp'),
-      'status' =>  $this->request->getVar('txtStatus'),
-      'cve_usuario' =>  "1",
-      'id_localidad' =>  $this->request->getVar('txtLocalidad')
-    ];
-
-    if ($idSucursal != null) {
-      array_merge($datos_sucursal, array("id" => $idSucursal));
-    }
-
-    $datos_sucursal = $this->funciones->_GuardarImagen(
-      $this->request->getFile('imgSucursal'),
-      './public/Admin/img/sucursales',
-      $datos_sucursal,
-      "imagen"
-    );
-
-    $respuesta = null;
-    try {
-      if ($idSucursal != null) {
-        $respuesta = $this->sucursales_modelo->update($idSucursal, $datos_sucursal);
-      } else {
-        $respuesta = $this->sucursales_modelo->save($datos_sucursal);
-      }
-    } catch (\Throwable $th) {
-      $respuesta = $this->sucursales_modelo->error();
-    }
-
-    $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->sucursales_modelo->errors());
-
-    $this->session->setFlashdata('respuesta', $respuesta);
-    return redirect()->to(base_url("admin/sucursales"));
-  }
 
 }

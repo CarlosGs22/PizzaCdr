@@ -1,3 +1,20 @@
+<?php
+$encrypter = \Config\Services::encrypter();
+
+$datos_dias = [
+    'lunes' => "Monday",
+    'martes' => "Tuesday",
+    'miercoles' => "Wednesday",
+    'jueves' => "Thursday",
+    'viernes' => "Friday",
+    'sabado' => "Saturday",
+    'domingo' => "Sunday"
+];
+
+
+?>
+
+
 <style>
     .panelMasInfo {
         display: none;
@@ -49,6 +66,8 @@
                                                     <ul class="clearfix">
                                                         <li><a href="<?php echo base_url("admin/sucursales?id=" . $value['id']) ?>"><i class="icon-copy fa fa-edit" aria-hidden="true"></i></a></li>
                                                         <li><a href="<?php echo base_url("admin/sucursales?idSucursal=" . $value['id']) ?>"><span class="icon-copy ti-location-pin"></span></a></li>
+                                                        <li><a href="<?php echo base_url("admin/sucursales?idSucursalHorario=" . $value['id']) ?>"><span class="icon-copy ti-alarm-clock"></span></a></li>
+
                                                     </ul>
                                                 </div>
                                             </div>
@@ -410,6 +429,355 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modal_horarios" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Registrar Horario</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <?php
+                    $idSucursalHex = null;
+
+                    if ($idSucursal_Horario) {
+                        $mostrar_modal_horario = 1;
+
+                        $idSucursalHex =  bin2hex($encrypter->encrypt($idSucursal_Horario["idSucursal"]));
+                    }
+                    ?>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 col-sm-12 mb-30">
+                            <div class="card card-box">
+                                <div class="text-center">
+                                    <img class="card-img-top" src="<?= base_url("public/Admin/img/generales/iconPlus.png") ?>" alt="Card image cap" style="max-width: 50%; margin:15px;">
+                                </div>
+                                <div class="card-body">
+                                    <form method="post" action="<?php echo base_url("admin/accion_horarios") ?>" enctype="multipart/form-data" id="frm_horario">
+
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label>Día:</label>
+                                                    <select name="txtDia" class="form-control Día">
+                                                        <option value="0" selected></option>
+                                                        <?php
+
+                                                        foreach ($datos_dias as $keydias => $valuedias) { ?>
+                                                            <option value="<?= $valuedias ?>"><?= $keydias ?></option>
+                                                        <?php } ?>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label>De Hora:</label>
+                                                    <select name="txtDeHora" class="form-control De-Hora">
+                                                        <option value="0"></option>
+                                                        <?php
+                                                        for ($i = 0; $i < 23; $i++) {
+                                                            $value1 = 0;
+                                                            if ($i < 10) {
+                                                                $value1 = str_pad($i, 2, "0", STR_PAD_LEFT);
+                                                            } else {
+                                                                $value1 = $i;
+                                                            }
+                                                        ?>
+                                                            <option value="<?= $value1 ?>"><?= $value1 ?></option>
+                                                        <?php } ?>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label>Mns:</label>
+                                                    <select name="txtDeHoraMns" class="form-control De-Hora-Mns">
+                                                        <?php
+
+                                                        for ($i = 0; $i < 60; $i++) {
+                                                            $value2 = 0;
+                                                            if ($i < 10) {
+                                                                $value2 = str_pad($i, 2, "0", STR_PAD_LEFT);
+                                                            } else {
+                                                                $value2 = $i;
+                                                            }
+                                                        ?>
+                                                            <option value="<?= $value2 ?>"><?= $value2 ?></option>
+                                                        <?php } ?>
+
+                                                    </select>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label>Hasta Hora:</label>
+                                                    <select name="txtHastaHora" class="form-control Hora-Hasta">
+                                                        <?php
+
+                                                        for ($i = 0; $i < 24; $i++) {
+                                                            $value3 = 0;
+                                                            if ($i < 10) {
+                                                                $value3 = str_pad($i, 2, "0", STR_PAD_LEFT);
+                                                            } else {
+                                                                $value3 = $i;
+                                                            }
+                                                        ?>
+                                                            <option value="<?= $value3 ?>"><?= $value3 ?></option>
+                                                        <?php } ?>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label>Mns:</label>
+                                                    <select name="txtHastaHoraMns" class="form-control Hora-Hasta-Mns">
+                                                        <?php
+
+                                                        for ($i = 0; $i < 60; $i++) {
+                                                            $value4 = 0;
+                                                            if ($i < 10) {
+                                                                $value4 = str_pad($i, 2, "0", STR_PAD_LEFT);
+                                                            } else {
+                                                                $value4 = $i;
+                                                            }
+                                                        ?>
+                                                            <option value="<?= $value4 ?>"><?= $value4 ?></option>
+                                                        <?php } ?>
+
+                                                    </select>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label>Status:</label>
+                                                    <select name="txtStatus" class="form-control status">
+                                                        <option value="0"></option>
+                                                        <?php if ($lista_status) { ?>
+                                                            <?php foreach ($lista_status as $key => $value5) { ?>
+                                                                <option value="<?php echo $value5['id']; ?>"><?php echo $value5['status']; ?></option>
+                                                        <?php }
+                                                        } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-12 text-center">
+                                                <div class="form-group">
+                                                    <input type="hidden" value="<?= $idSucursalHex ?>" name="idSucursalHex">
+                                                    <button type="submit" class="btn" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);"><i class="fa fa-save"></i>Guardar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <?php
+
+
+                        if ($idSucursal_Horario) {
+                            $mostrar_modal_horario = 1;
+
+
+                            $idSucursalHex =  bin2hex($encrypter->encrypt($idSucursal_Horario["idSucursal"]));
+
+
+                            if ($lista_horarios) {  ?>
+
+                                <?php
+
+                                foreach ($lista_horarios as $key => $value) {
+                                    $dia = $value['dia'];
+                                    $horade = $value['horade'];
+                                    $horademns = $value['horademns'];
+                                    $horahasta = $value['horahasta'];
+                                    $horahastams = $value['horahastamns'];
+                                    $status = $value['status'];
+                                    $idHorario = bin2hex($encrypter->encrypt($value["id"]));
+
+
+                                ?>
+
+                                    <div class="col-lg-3 col-md-6 col-sm-12 mb-30">
+                                        <div class="card card-box">
+                                            <div class="text-center">
+                                                <img class="card-img-top" src="<?= base_url("public/Admin/img/sucursales/clock.png") ?>" alt="Card image cap" style="max-width: 50%; margin:15px;">
+                                            </div>
+                                            <div class="card-body">
+                                                <form method="post" action="<?php echo base_url("admin/accion_horarios") ?>" enctype="multipart/form-data" id="frm_horarios">
+
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <label>Día:</label>
+                                                                <select name="txtDia" class="form-control Día">
+                                                                    <option value="0"></option>
+                                                                    <?php
+
+                                                                    foreach ($datos_dias as $keydias => $valuedias) { ?>
+                                                                        <option value="<?= $valuedias ?>" <?php echo ($valuedias == $dia) ? ' selected="selected"' : ''; ?>><?= $keydias ?></option>
+                                                                    <?php } ?>
+
+
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>De Hora:</label>
+                                                                <select name="txtDeHora" class="form-control De-Hora">
+                                                                    <option value="0"></option>
+                                                                    <?php
+                                                                    for ($i = 0; $i < 23; $i++) {
+                                                                        $value1 = 0;
+                                                                        if ($i < 10) {
+                                                                            $value1 = str_pad($i, 2, "0", STR_PAD_LEFT);
+                                                                        } else {
+                                                                            $value1 = $i;
+                                                                        }
+                                                                    ?>
+                                                                        <option value="<?= $value1 ?>" <?php echo ($value1 ==  $horade) ? ' selected="selected"' : ''; ?>><?= $value1 ?></option>
+                                                                    <?php } ?>
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Mns:</label>
+                                                                <select name="txtDeHoraMns" class="form-control De-Hora-Mns">
+                                                                    <?php
+
+                                                                    for ($i = 0; $i < 60; $i++) {
+                                                                        $value = 0;
+                                                                        if ($i < 10) {
+                                                                            $value = str_pad($i, 2, "0", STR_PAD_LEFT);
+                                                                        } else {
+                                                                            $value = $i;
+                                                                        }
+                                                                    ?>
+                                                                        <option value="<?= $value ?>" <?php echo ($value ==  $horademns) ? ' selected="selected"' : ''; ?>><?= $value ?></option>
+                                                                    <?php } ?>
+
+                                                                </select>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Hasta Hora:</label>
+                                                                <select name="txtHastaHora" class="form-control Hasta-Hora">
+                                                                    <?php
+
+                                                                    for ($i = 0; $i < 24; $i++) {
+                                                                        $value1 = 0;
+                                                                        if ($i < 10) {
+                                                                            $value1 = str_pad($i, 2, "0", STR_PAD_LEFT);
+                                                                        } else {
+                                                                            $value1 = $i;
+                                                                        }
+
+
+                                                                    ?>
+                                                                        <option value="<?= $value1 ?>" <?php echo ($value1 ==  $horahasta) ? ' selected="selected"' : ''; ?>><?= $value1 ?></option>
+                                                                    <?php } ?>
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Mns:</label>
+                                                                <select name="txtHastaHoraMns" class="form-control Hasta-Hora-Mns">
+                                                                    <?php
+
+                                                                    for ($i = 0; $i < 60; $i++) {
+                                                                        $value = 0;
+                                                                        if ($i < 10) {
+                                                                            $value = str_pad($i, 2, "0", STR_PAD_LEFT);
+                                                                        } else {
+                                                                            $value = $i;
+                                                                        }
+                                                                    ?>
+                                                                        <option value="<?= $value ?>" <?php echo ($value ==  $horahastams) ? ' selected="selected"' : ''; ?>><?= $value ?></option>
+                                                                    <?php } ?>
+
+                                                                </select>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <label>Status:</label>
+                                                                <select name="txtStatus" class="form-control Status">
+                                                                    <option value="0"></option>
+                                                                    <?php if ($lista_status) { ?>
+                                                                        <?php foreach ($lista_status as $key => $value) { ?>
+                                                                            <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] ==  $status) ? ' selected="selected"' : ''; ?>><?php echo $value['status']; ?></option>
+                                                                    <?php }
+                                                                    } ?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-12 text-center">
+                                                            <div class="form-group">
+                                                                <input type="hidden" value="<?= $idSucursalHex ?>" name="idSucursalHex">
+                                                                <input type="hidden" value="<?= $idHorario ?>" name="txtId">
+                                                                <button type="submit" class="btn" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);"><i class="fa fa-save"></i>Guardar</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                            <?php }
+                            } ?>
+
+                        <?php } ?>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -428,6 +796,11 @@
         var idSucursal_localidad = <?php echo ($mostrar_modal_localidad == 1) ? $mostrar_modal_localidad : '"0"'; ?>;
         if (idSucursal_localidad == '1') {
             $("#modal_localidades").modal('show');
+        }
+
+        var idSucursal_horario = <?php echo ($mostrar_modal_horario == 1) ? $mostrar_modal_horario : '"0"'; ?>;
+        if (idSucursal_horario == '1') {
+            $("#modal_horarios").modal('show');
         }
 
         $(".btn_add_sucursal").click(function() {
@@ -604,6 +977,33 @@
             $(".panelMasInfo").animate({
                 width: "toggle"
             });
+        });
+
+
+        $("#frm_horario").submit(function(e) {
+            e.preventDefault();
+
+            var valid = false;
+
+            if (validacionInput("frm_horario")) {
+                if (validacionSelect("frm_horario")) {
+                    valid = true;
+                }
+            }
+            if (valid) this.submit();
+        });
+
+        $("#frm_horarios").submit(function(e) {
+            e.preventDefault();
+
+            var valid = false;
+
+            if (validacionInput("frm_horarios")) {
+                if (validacionSelect("frm_horarios")) {
+                    valid = true;
+                }
+            }
+            if (valid) this.submit();
         });
 
     });

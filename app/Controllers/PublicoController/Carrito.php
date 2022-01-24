@@ -86,12 +86,7 @@ class Carrito extends Controller
       $idSucursal = session()->get('sucursal_cobertura');
     
 
-
-      $lista["lista_sucursal_info"] = $this->sucursales_modelo->select("municipio.nombre as nombre_municipio,estado.nombre as nombre_estado,sucursal.*")
-        ->join("localidad", "localidad.id =  sucursal.id_localidad", "left")
-        ->join("municipio", "municipio.id = localidad.municipio_id", "left")
-        ->join("estado", "estado.id = municipio.estado_id")->where("sucursal.id", $idSucursal)->findAll();
-
+      $lista["lista_sucursal_info"] = $this->sucursales_localidad_modelo->_obtenerHorarios($this->session->get("sucursal_cobertura"));
       $lista["listas_producto_existente"] = [];
 
       $lista["listas_producto_existente_options"] = [];
@@ -154,7 +149,7 @@ class Carrito extends Controller
   public function accion_carrito()
   {
   
-    //try {
+    try {
       $idProducto = $this->encrypter->decrypt(hex2bin($this->request->getVar("idProducto")));
 
       $idProductoEncript = $this->request->getVar("idProducto");
@@ -240,11 +235,11 @@ class Carrito extends Controller
         $this->session->setFlashdata('respuesta', array("0" => "bOcurrió un error interno", "1" => "error"));
         return redirect()->to(base_url(""));
       }
-    /*} catch (\Throwable $th) {
+    } catch (\Throwable $th) {
 
       $this->session->setFlashdata('respuesta', array("0" => "cOcurrió un error interno", "1" => "error"));
       return redirect()->to(base_url(""));
-    }*/
+    }
   }
 
   public function limpiar_carrito()
@@ -303,5 +298,12 @@ class Carrito extends Controller
 
     header('Content-Type: application/json');
     echo json_encode($respuesta);
+  }
+
+  public function eliminarItem($item)
+  {
+    $this->cart->remove($item);
+    $this->session->setFlashdata('respuesta', array("0" => "Producto eliminado exitosamente", "1" => "success"));
+    return redirect()->to(base_url("carrito"));
   }
 }

@@ -60,9 +60,6 @@ class Home extends Controller
     echo view($this->rutaFooter);
   }
 
-
-  //usuarios
-
   public function categorias()
   {
     $paginas = 10;
@@ -99,9 +96,9 @@ class Home extends Controller
     $idCategoria = $this->request->getVar("txtId");
 
     $datos_categoria = [
-      'categoria' =>  $this->request->getVar('txtNombre'),
-      'status' =>  $this->request->getVar('txtStatus'),
-      'cve_usuario' =>  "1"
+      'categoria' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtNombre')),
+      'status' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('txtStatus')),
+      'cve_usuario' =>  $this->session->get("id")
     ];
 
     if ($idCategoria != null) {
