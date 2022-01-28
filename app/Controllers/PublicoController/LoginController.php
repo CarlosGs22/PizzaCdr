@@ -79,9 +79,10 @@ class LoginController extends Controller
       if ($tipo_usuario[0]["tipo"] == "2") {
 
         $datos_usuario = [
-          'nombre_cliente' =>  $this->funciones->cleanSanitize("STRING", $tipo_usuario[0]["nombres"]),
+          'nombre_cliente' =>  $this->funciones->cleanSanitize("STRING", $tipo_usuario[0]["nombres"] . " " .  $tipo_usuario[0]["apellido_paterno"]),
           'usuario_cliente' =>  $this->funciones->cleanSanitize("EMAIL", $tipo_usuario[0]["usuario"]),
-          'imagen_cliente' => $tipo_usuario[0]["imagen"]
+          'imagen_cliente' => $tipo_usuario[0]["imagen"],
+          'telefono_cliente' => $tipo_usuario[0]["telefono"]
       ];
 
         $session->set($datos_usuario);
@@ -105,6 +106,7 @@ class LoginController extends Controller
                 'id'  => $value->id,
                 'nombre'     => $value->nombres,
                 'usuario' => $value->usuario,
+                'telefono' => $value->telefono,
                 'imagen' => $value->imagen,
                 'status' => $value->status,
                 'id_sucursal' => $value->id_sucursal,

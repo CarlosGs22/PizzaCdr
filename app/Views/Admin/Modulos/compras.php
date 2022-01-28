@@ -219,9 +219,7 @@
                                                 <div class="col-2">
                                                     <p>Cantidad</p>
                                                 </div>
-                                                <div class="col-3">
-                                                    <p>Unidad</p>
-                                                </div>
+                                               
                                             </div>
                                         </li>
 
@@ -249,7 +247,7 @@
                                                     </select>
                                                 </div>
 
-                                                <div class="col-3">
+                                                <!--<div class="col-3">
                                                     <select name="txtResUni" class="form-control txtResUni unidad">
 
                                                         <?php if ($lista_unidades) { ?>
@@ -258,7 +256,7 @@
                                                         <?php }
                                                         } ?>
                                                     </select>
-                                                </div>
+                                                </div>-->
 
                                                 <div class="col-3">
                                                     <small class="text-muted txtResLabelPrecio"></small>
@@ -408,7 +406,7 @@
                 $(this).attr("name", "txtResProd-" + $(this).val());
                 $(this).closest(".row").find(".txtResCant").attr("name", "txtResCant-" + $(this).val());
                 $(this).closest(".row").find(".txtResPrec").attr("name", "txtResPrec-" + $(this).val());
-                $(this).closest(".row").find(".txtResUni").attr("name", "txtResUni-" + $(this).val());
+                //$(this).closest(".row").find(".txtResUni").attr("name", "txtResUni-" + $(this).val());
 
 
 
@@ -416,7 +414,7 @@
                 $(this).attr("name", "txtResProd");
                 $(this).closest(".row").find(".txtResCant").attr("name", "txtResCant");
                 $(this).closest(".row").find(".txtResPrec").attr("name", "txtResPrec");
-                $(this).closest(".row").find(".txtResUni").attr("name", "txtResUni");
+                //$(this).closest(".row").find(".txtResUni").attr("name", "txtResUni");
 
             }
         });

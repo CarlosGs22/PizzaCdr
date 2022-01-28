@@ -10,6 +10,7 @@ use App\Models\Admin\Municipios_modelo;
 use App\Models\Admin\Status_modelo;
 use App\Models\Admin\Sucursal_modelo;
 use App\Models\Admin\Usuarios_modelo;
+use App\Models\Publico\Detalle_Venta_modelo;
 use App\Models\Publico\Direccion_modelo;
 use App\Models\Publico\Productos_modelo as PublicoProductos_modelo;
 use App\Models\Publico\Sucursal_Localidad_modelo;
@@ -36,6 +37,7 @@ class PasarelaController extends Controller
 
     protected $venta_modelo;
     protected $productos_modelo;
+    protected $detalle_venta_modelo;
 
     protected $encrypter;
     protected $encryption;
@@ -58,6 +60,7 @@ class PasarelaController extends Controller
         $this->direccion_modelo = new Direccion_modelo();
 
         $this->venta_modelo = new Venta_modelo();
+        $this->detalle_venta_modelo = new Detalle_Venta_modelo();
 
         $this->sucursales_modelo = new Sucursal_modelo();
 
@@ -98,13 +101,17 @@ class PasarelaController extends Controller
                 if ($this->session->get("sucursal_cobertura") != null) {
                     $lista["lista_sucursal_info"] = $this->sucursales_localidad_modelo->_obtenerHorarios($this->session->get("sucursal_cobertura"));
                 }
-                
+
                 if (!empty($lista["lista_usuario"])) {
-                    $lista["lista_direccion"] = $this->direccion_modelo->where("id_usuario",  $lista["lista_usuario"][0]["id"])->findAll();
+                    $lista["lista_direccion"] = $this->direccion_modelo->select("direccion.id as idDireccion,calle,numero,direccion.codigo_postal as cp,localidad.nombre as nombreLocalidad")->join("localidad", "localidad.id = direccion.id_localidad")->where("id_usuario",  $lista["lista_usuario"][0]["id"])->findAll();
                 }
 
                 $lista["lista_colonias"] = $this->sucursales_localidad_modelo->_obtenerColonia($this->session->get("sucursal_cobertura"));
-                
+
+                if (session()->get("cp") != null && session()->get("tipo_orden") == "A Domicilio") {
+                    $lista["lista_cobertura"] =  $this->sucursales_localidad_modelo->_obtenerCobertura($this->funciones->cleanSanitize("INT", session()->get("cp")));
+                }
+
                 echo view($this->rutaHeader, $lista);
                 echo view($this->rutaModulo . 'pasarela', $lista);
                 echo view($this->rutaFooter, $lista);
@@ -119,130 +126,315 @@ class PasarelaController extends Controller
     }
 
     public function accion_pasarela()
-    { 
+    {
+        if ($this->_ValidateFields() == 1) {
+            $respuesta = array("0" => "Ocurrió un error interno", "1" => "error");
+            $this->session->setFlashdata('respuesta', $respuesta);
+            return redirect()->to(base_url(""));
+        }
 
-        $txtTipoPago =  $this->funciones->cleanSanitize("INT", $this->request->getVar('txtTipoPago'));
-        $txtIdCliente = $this->funciones->cleanSanitize("INT", session()->get("usuario_cliente"));
+
+        $res = true;
+        $respuesta = null;
+
         $txtDireccion = null;
-        
-        if(session()->get("tipo_orden") == "En sucursal"){
-             $txtDireccion = null;
-        }else{
-            if(session()->get("tipo_orden") == "A Domicilio"){
-            if($this->request->getVar('txtColonia') != null){
-                $txtDireccion = $this->funciones->cleanSanitize("INT", $this->request->getVar('txtColonia'));
-            }else{
-                
+
+        $txtTipoPago = $this->encrypter->decrypt(hex2bin($this->request->getVar('txtTipoPago')));
+        $txtTipoPago = $this->funciones->cleanSanitize("INT", $txtTipoPago);
+
+        $txtContacto = $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtContacto'));
+
+        $lista_usuario = $this->usuarios_modelo->where("usuario", $this->session->get("usuario_cliente"))->findAll();
+        $precioEnvio = null;
+        $tipoOrden = null;
+
+        $this->direccion_modelo->transBegin();
+
+        if (session()->get("tipo_orden") == "En sucursal") {
+            $txtDireccion = null;
+            $precioEnvio = 0;
+            $tipoOrden = 1;
+        } else {
+            if (session()->get("tipo_orden") == "A Domicilio") {
+                $tipoOrden = 2;
+                if (session()->get("cp") != null) {
+                    $lista_cobertura =  $this->sucursales_localidad_modelo->_obtenerCobertura($this->funciones->cleanSanitize("INT", session()->get("cp")));
+                    $precioEnvio = $lista_cobertura[0]["precio"];
+                } else {
+                    $precioEnvio = 0;
+                }
+
+                if (session()->get("usuario_cliente") != null) {
+
+                    if ($this->request->getVar("txtDireccion") != null) {
+                        $txtDireccion = $this->encrypter->decrypt(hex2bin($this->request->getVar('txtDireccion')));
+                        $txtDireccion = $this->funciones->cleanSanitize("INT", $txtDireccion);
+                    } else {
+                        $datos_direccion = [
+                            'calle' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtCalle')),
+                            'numero' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtNum')),
+                            'codigo_postal' =>  $this->funciones->cleanSanitize("INT", $this->request->getVar('txtCp')),
+                            'status' => "1",
+                            'id_usuario' => $lista_usuario[0]["id"],
+                            'id_localidad' =>  $this->funciones->cleanSanitize("INT", $this->encrypter->decrypt(hex2bin($this->request->getVar('txtLocalidad'))))
+                        ];
+
+                        $txtDireccion = $this->direccion_modelo->insert($datos_direccion);
+                        if (((int) $txtDireccion) == 0) {
+                            $res = false;
+                        }
+                    }
+                } else {
+                    $datos_direccion = [
+                        'calle' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtCalle')),
+                        'numero' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtNum')),
+                        'codigo_postal' =>  $this->funciones->cleanSanitize("INT", $this->request->getVar('txtCp')),
+                        'status' => "1",
+                        'id_usuario' => null,
+                        'id_localidad' =>  $this->funciones->cleanSanitize("INT", $this->encrypter->decrypt(hex2bin($this->request->getVar('txtLocalidad'))))
+                    ];
+
+                    $txtDireccion = $this->direccion_modelo->insert($datos_direccion);
+
+                    if (((int) $txtDireccion) == 0) {
+                        $res = false;
+                    }
+                }
             }
         }
-        
-        
-        if ($this->cart->totalItems() != 0) {
-            $total = 0;
+
+
+        $total = 0;
+        if ($this->cart->totalItems() > 0) {
             foreach ($this->cart->contents() as $value) {
                 $decryptedIdProducto = $this->encrypter->decrypt(hex2bin($value["id"]));
-                $lista_productos = $this->productos_modelo->_getProductosPublic(session()->get("sucursal_cobertura"),"100",null,null);
-               
+                $lista_productos = $this->productos_modelo->_getProductosPublic(session()->get("sucursal_cobertura"), "9999999999999", null, null);
+
                 foreach ($lista_productos as $key2 => $value2) {
-                    if($value2["idProducto"] == $decryptedIdProducto ){
+                    if ($value2["idProducto"] == $decryptedIdProducto) {
                         $total += $value["price"] * (int) $value["qty"];
                     }
                 }
             }
-
-            echo $total;
-
         }
+
+
+        $this->venta_modelo->transBegin();
+
+        $this->detalle_venta_modelo->transBegin();
+
+        $this->_GetContact($txtContacto);
+
+
+        if ($total != 0) {
+
+            $datos_venta = [
+                'total' => $total + $precioEnvio,
+                'metodo_pago' =>  $this->funciones->cleanSanitize("INT", $txtTipoPago),
+                'contacto' => $this->_GetContact(),
+                'precio_envio' => $precioEnvio,
+                'tipo_orden' => $tipoOrden,
+                'id_cliente' =>  session()->get("usuario_cliente") != null ? $this->funciones->cleanSanitize("STRING", $lista_usuario[0]["id"]) : null,
+                'id_direccion' => $txtDireccion
+            ];
+
+            $id_venta = 0;
+            try {
+                $id_venta = $this->venta_modelo->insert($datos_venta);
+            } catch (\Throwable $th) {
+                $res = false;
+                $id_venta = 0;
+            }
+        } else {
+            $res = false;
+            $respuesta = array("0" => "Error en total", "1" => "error");
+        }
+
+        if ($id_venta != 0 && is_numeric($id_venta)) {
+            try {
+                if ($this->cart->totalItems() > 0) {
+                    if ($res) {
+                        foreach ($this->cart->contents() as $value) {
+                            $decryptedIdProducto = $this->encrypter->decrypt(hex2bin($value["id"]));
+                            $lista_productos = $this->productos_modelo->_getProductosPublic(session()->get("sucursal_cobertura"), "999999999999", null, null);
+
+                            foreach ($lista_productos as $key2 => $value2) {
+                                if ($value2["idProducto"] == $decryptedIdProducto) {
+
+                                    $datos_detalle_venta = [
+                                        'cantidad' =>  $this->funciones->cleanSanitize("INT", $value["qty"]),
+                                        'precio' =>  $this->funciones->cleanSanitize("STRING", $value2["precioProducto"]),
+                                        'subtotal' =>  doubleval($value2["precioProducto"] * $value["qty"]),
+                                        'id_venta' => $id_venta,
+                                        'id_producto' => $value2["idProducto"]
+                                    ];
+
+                                    try {
+                                        $respuesta = $this->detalle_venta_modelo->save($datos_detalle_venta);
+                                    } catch (\Throwable $th) {
+                                        $res = false;
+                                        $respuesta = $this->detalle_venta_modelo->error();
+                                    }
+
+                                    $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->detalle_venta_modelo->errors());
+
+                                    if ($respuesta[1] != "success") {
+                                        $res = false;
+                                        $respuesta = array("0" => "Error en success", "1" => "error");
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        $res = false;
+                        $respuesta = array("0" => "Error en Res", "1" => "error");
+                    }
+                } else {
+                    $res = false;
+                    $respuesta = array("0" => "Error en total items", "1" => "error");
+                }
+            } catch (\Throwable $th) {
+                $res = false;
+                $respuesta = array("0" => "Error en detalle try", "1" => "error");
+            }
+        } else {
+            $res = false;
+            $respuesta = array("0" => "Error en compra", "1" => "error");
+        }
+
+
+        $token = $this->request->getVar("stripeToken");
+        $correo = $this->session->get('usuario_cliente');
+
+        $stripeStatus = $this->_StripePayment($token, $correo, $total, $id_venta, $txtTipoPago);
+
+        $redirect = null;
+        if ($res && $stripeStatus == 1) {
+            if ($this->venta_modelo->transStatus() !== FALSE) {
+                $this->venta_modelo->transCommit();
+            }
+            if ($this->detalle_venta_modelo->transStatus() !== FALSE) {
+                $this->detalle_venta_modelo->transCommit();
+            }
+
+            if ($this->direccion_modelo->transStatus() !== FALSE) {
+                $this->direccion_modelo->transCommit();
+            }
+
+            
+
+            $redirect = "miscompras/" . bin2hex($this->encrypter->encrypt($id_venta));
+            $respuesta = array("0" => "Compra realizada con exito", "1" => "success");
+            $this->cart->destroy();
+        } else {
+            if ($this->venta_modelo->transStatus() === FALSE) {
+                $this->venta_modelo->transRollback();
+            }
+            if ($this->detalle_venta_modelo->transStatus() === FALSE) {
+                $this->detalle_venta_modelo->transRollback();
+            }
+
+            if ($this->direccion_modelo->transStatus() === FALSE) {
+                $this->direccion_modelo->transRollback();
+            }
+
+            $respuesta = array("0" => "Ocurrió un error interno", "1" => "error");
+            $redirect = "pasarela";
+        }
+
+        $this->session->setFlashdata('respuesta', $respuesta);
+        return redirect()->to(base_url($redirect));
     }
 
 
+    public function _StripePayment($token, $correo, $total, $id_venta, $idTipoPago)
+    {
+        $res = null;
+        try {
+            if ($idTipoPago == 2) {
+                require_once APPPATH . "ThirdParty/stripe/init.php";
+                //set api key
+                $stripe = array(
+                    "publishable_key" => "pk_test_51IlgJAEmgefF22M8mTadCG13TFyKZfx7OuQfun2VNIngCJiSj200HMtYLqdOJfm1USFSqS2PQHPVfAsJElFr6Wq000jqXlQ4U2",
+                    "secret_key"      => "sk_test_51IlgJAEmgefF22M8ENXG39b4Apm6EqujYZz8Y7sxNh3BQbhnDymKQkEE2RvrJON5M2xpZwguipGcwEG1QgnvRaO800WQbaWk3H"
+                );
 
+                \Stripe\Stripe::setApiKey($stripe['secret_key']);
 
+                //add customer to stripe
+                $customer = \Stripe\Customer::create(array(
+                    'email' => $correo,
+                    'source'  => $token
+                ));
 
+                //item information
+                $itemName = "Pago en linea";
+                $itemNumber = $id_venta;
+                $itemPrice = $total;
+                $currency = "mxn";
 
+                //charge a credit or a debit card
+                $charge = \Stripe\Charge::create(array(
+                    'customer' => $customer->id,
+                    'amount'   => $itemPrice,
+                    'currency' => $currency,
+                    'description' => $itemName,
+                    'metadata' => array(
+                        'item_id' => $itemNumber
+                    )
+                ));
 
+                //retrieve charge details
+                $chargeJson = $charge->jsonSerialize();
 
+                //check whether the charge is successful
+                if ($chargeJson['amount_refunded'] == 0 && empty($chargeJson['failure_code']) && $chargeJson['paid'] == 1 && $chargeJson['captured'] == 1) {
+                    $res = 1;
+                } else {
+                    $res = 0;
+                }
+            } else {
+                $res = 1;
+            }
+        } catch (\Throwable $th) {
+            $res = 0;
+        }
+        return $res;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*$token = $this->request->getVar("stripeToken");
-        $titular =  $this->request->getVar("txtNombre");
-        $correo = $this->session->get('usuario_cliente');
-        $card_num = $this->request->getVar("txtNumero");
-        $card_cvc = $this->request->getVar("txtCVV");
-        $exp = explode("/", $this->request->getVar("txtExpiracion"));
-        $card_month = $exp[0];
-        $card_year = $exp[1];
-
-        //include Stripe PHP library
-        require_once APPPATH . "ThirdParty/stripe/init.php";
-
-        //set api key
-        $stripe = array(
-            "publishable_key" => "pk_test_51IlgJAEmgefF22M8mTadCG13TFyKZfx7OuQfun2VNIngCJiSj200HMtYLqdOJfm1USFSqS2PQHPVfAsJElFr6Wq000jqXlQ4U2",
-            "secret_key"      => "sk_test_51IlgJAEmgefF22M8ENXG39b4Apm6EqujYZz8Y7sxNh3BQbhnDymKQkEE2RvrJON5M2xpZwguipGcwEG1QgnvRaO800WQbaWk3H"
-        );
-
-        \Stripe\Stripe::setApiKey($stripe['secret_key']);
-
-        //add customer to stripe
-        $customer = \Stripe\Customer::create(array(
-            'email' => $correo,
-            'source'  => $token
-        ));
-
-        //item information
-        $itemName = "Pago en linea";
-        $itemNumber = "PS123456";
-        $itemPrice = "32000";
-        $currency = "mxn";
-        $orderID = $token;
-
-        //charge a credit or a debit card
-        $charge = \Stripe\Charge::create(array(
-            'customer' => $customer->id,
-            'amount'   => $itemPrice,
-            'currency' => $currency,
-            'description' => $itemNumber,
-            'metadata' => array(
-                'item_id' => $itemNumber
-            )
-        ));
-
-        //retrieve charge details
-        $chargeJson = $charge->jsonSerialize();
-
-        //check whether the charge is successful
-        if ($chargeJson['amount_refunded'] == 0 && empty($chargeJson['failure_code']) && $chargeJson['paid'] == 1 && $chargeJson['captured'] == 1) {
-            //order details 
-            $amount = $chargeJson['amount'];
-            $balance_transaction = $chargeJson['balance_transaction'];
-            $currency = $chargeJson['currency'];
-            $status = $chargeJson['status'];
-            $date = date("Y-m-d H:i:s");
-
-            $respuesta = array("0" => "OK", "1" => "success");
+    public function _GetContact()
+    {
+        $txtContacto = null;
+        if (session()->get("tipo_orden") == "A Domicilio") {
+            if (session()->get("usuario_cliente") == null) {
+                $txtContacto = $this->request->getVar("txtNombres") . " " . $this->request->getVar("txtContacto");
+            } else {
+                $txtContacto = $this->request->getVar("txtContacto");
+            }
         } else {
-            $respuesta = array("0" => "ERROR", "1" => "error");
+            if (session()->get("usuario_cliente") == null) {
+                $txtContacto = $this->request->getVar("txtContacto");
+            } else {
+                $txtContacto =  session()->get("nombre_cliente") . " " . session()->get("telefono_cliente");
+            }
+        }
+        return $txtContacto;
+    }
+
+    public function _ValidateFields()
+    {
+        $res = 1;
+
+        $txtTipoPago = $this->encrypter->decrypt(hex2bin($this->request->getVar('txtTipoPago')));
+
+        if ($txtTipoPago == null) {
+            $res = 0;
+        }
+        if ($txtTipoPago != 1 || $txtTipoPago != 2) {
+            $res = 0;
         }
 
-        session()->setFlashdata('respuesta', $respuesta);
-        return redirect()->to(base_url("pasarela"));*/
+        return $res;
     }
 }

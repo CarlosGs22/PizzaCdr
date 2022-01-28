@@ -1,3 +1,7 @@
+<?php
+$encrypter = \Config\Services::encrypter();
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -46,6 +50,28 @@
 
 <body>
 
+  <div class="loader"></div>
+
+  <style>
+    .loader {
+      position: fixed;
+      left: 0px;
+      top: 0px;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      background: url('<?= base_url("public/Admin/img/especiales/loading.gif") ?>') 50% 50% no-repeat white;
+    }
+  </style>
+
+
+  <script>
+    $(function() {
+      $(".loader")
+        .delay(900).slideUp(700)
+    });
+  </script>
+
   <?php if (isset($_SESSION['respuesta'])) : ?>
     <script>
       Swal.fire({
@@ -74,7 +100,7 @@
                 <?php
                 if ($_SESSION["tipo_orden"] != null) { ?>
                   <li>|</li>
-                  <li><i class="icon-copy ti-location-pin" aria-hidden="true"></i>Tipo de orden: <?= $_SESSION["tipo_orden"] . " " .  ($_SESSION["nombre_cobertura"] != null ? "(" . $_SESSION["nombre_cobertura"] . ")" : "")  ?> </li>
+                  <li><i class="icon-copy ti-location-pin" aria-hidden="true"></i>Tipo de orden: <Strong class="blink_me"><?= $_SESSION["tipo_orden"] . " " .  ($_SESSION["nombre_cobertura"] != null ? "(Desde " . $_SESSION["nombre_cobertura"] . ")" : "")  ?> </Strong> </li>
                 <?php } ?>
               </ul>
             </div>
@@ -158,19 +184,39 @@
 
                 <div class="col-6 border-right">
 
-                  <form id="frmSearch" class="form-inline" action="<?php echo base_url("/buscar_cobertura") ?>" accept-charset="UTF-8" method="post">
-                    <div class="form-group">
-                      <h4>Entrega a domicilio</h4>
+                  <form id="frmSearch" class="form text-center" action="<?php echo base_url("/buscar_cobertura") ?>" accept-charset="UTF-8" method="post">
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="form-group">
+                          <h4>Entrega a domicilio</h4>
+                        </div>
+                      </div>
                     </div>
-                    <div class="form-group mr-2">
-                      <input type="text" class="form-control Código-Postal" name="txtCp" placeholder="CP" maxlength="5">
+
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="form-group mr-2">
+                          <input type="text" class="form-control Código-Postal" name="txtCp" placeholder="CP" maxlength="5">
+                        </div>
+                      </div>
                     </div>
-                    <input type="hidden" name="txtReg" value="32U3&#vUd">
-                    <button type="submit" id="btnBuscarLocalización" class="btn btnForm mb-2">Buscar</button>
+
+                    <div class="row">
+                      <div class="col-12">
+                        <input type="hidden" name="txtReg" value="32U3&#vUd">
+                        <button type="submit" id="btnBuscarLocalización" class="btn btnForm mb-2">Buscar</button>
+
+                      </div>
+                    </div>
+
+
+
+
+
                   </form>
                 </div>
                 <div class="col-6">
-                  <form class="form-inline" id="frmChoose" action="<?php echo base_url("/buscar_cobertura") ?>" accept-charset="UTF-8" method="post">
+                  <form class="form text-center" id="frmChoose" action="<?php echo base_url("/buscar_cobertura") ?>" accept-charset="UTF-8" method="post">
                     <div class="form-group">
                       <h4>Recoje en sucursal</h4>
                     </div>
@@ -178,8 +224,9 @@
                       <select name="txtSucursal" id="txtSucursal" class="form-control Sucursal">
                         <option value="0"></option>
                         <?php if ($lista_sucursales) { ?>
-                          <?php foreach ($lista_sucursales as $key => $value) { ?>
-                            <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] ==  $id_sucursal) ? ' selected="selected"' : ''; ?>><?php echo $value['nombre']; ?></option>
+                          <?php foreach ($lista_sucursales as $key => $value) {
+                            $idValueSucursal = bin2hex($encrypter->encrypt($value["id"])); ?> ?>
+                            <option value="<?= $idValueSucursal; ?>" <?php echo ($value['id'] ==  $id_sucursal) ? ' selected="selected"' : ''; ?>><?php echo $value['nombre']; ?></option>
                         <?php }
                         } ?>
                       </select>

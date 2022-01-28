@@ -1,4 +1,5 @@
 <?php
+$encrypter = \Config\Services::encrypter();
 $cart = \Config\Services::cart();
 
 $totalPrice = 0;
@@ -12,6 +13,8 @@ if ($cart->totalItems() > 0) {
 }
 
 ?>
+
+
 
 <div class="container">
     <div class="card cardPasarela border-0">
@@ -46,84 +49,108 @@ if ($cart->totalItems() > 0) {
                                                             <h5 class="card-title">Nombre:</h5>
                                                             <p class="card-text"><?= $value["nombres"] . " " . $value["apellido_materno"] . " " . $value["apellido_paterno"] ?></p>
 
+
+                                                            <div class="row">
+                                                                <div class="col-12">
+
+                                                                    <label for="username">
+                                                                        <h6>Contacto (Télefono):</h6>
+                                                                    </label>
+                                                                    <input type="text" class="form-control Télefono" value="<?php echo session()->get("telefono_cliente") != null ? session()->get("telefono_cliente") : "" ?>" name="txtContacto" id="txtContacto" oninput="restrict(this);" minlength="1" maxlength="10">
+                                                                </div>
+
+                                                            </div>
+
                                                             <div class="form-group">
                                                                 <label for="username">
-                                                                    <h6>Dirección</h6>
+                                                                    <h6>Dirección:</h6>
                                                                 </label>
                                                                 <?php if ($lista_direccion) { ?>
-                                                                    <select name="txtStatus" id="txtStatus" class="form-control height-auto status">
+                                                                    <select name="txtDireccion" id="txtDireccion" class="form-control height-auto Dirección">
                                                                         <option value="0"></option>
 
-                                                                        <?php foreach ($lista_direccion as $key => $value) { ?>
-                                                                            <option value="<?php echo $value['id']; ?>"><?php echo $value['direccion']; ?></option>
+                                                                        <?php foreach ($lista_direccion as $key => $value) {
+                                                                            $idValueDireccion = bin2hex($encrypter->encrypt($value["idDireccion"])); ?> ?>
+                                                                            <option value="<?= $idValueDireccion ?>"><?php echo $value['calle'] . " #" . $value['numero'] . ", " . $value['cp'] . ", " . $value['nombreLocalidad']; ?></option>
                                                                         <?php } ?>
 
                                                                     </select>
                                                                 <?php } else { ?>
                                                                     </br>
                                                                     <div class="row">
-                                                            <div class="col-6">
-                                                                <div class="form-group">
-                                                                    <label for="username">
-                                                                        <h6>Calle:</h6>
-                                                                    </label>
-                                                                    <input type="text" class="form-control Calle" name="txtCalle" id="txtCalle">
-                                                                </div>
-                                                            </div>
+                                                                        <div class="col-6">
+                                                                            <div class="form-group">
+                                                                                <label for="username">
+                                                                                    <h6>Calle:</h6>
+                                                                                </label>
+                                                                                <input type="text" class="form-control Calle" name="txtCalle" id="txtCalle">
+                                                                            </div>
+                                                                        </div>
 
-                                                            <div class="col-6">
-                                                                <div class="form-group">
-                                                                    <label for="username">
-                                                                        <h6>#:</h6>
-                                                                    </label>
-                                                                    <input type="text" class="form-control Número" name="txtNumero" id="txtNumero">
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <div class="form-group">
+                                                                                <label for="username">
+                                                                                    <h6>#:</h6>
+                                                                                </label>
+                                                                                <input type="text" class="form-control Número-Casa" name="txtNum" id="txtNum">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
 
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <div class="form-group">
-                                                                    <label for="username">
-                                                                        <h6>Colonia:</h6>
-                                                                    </label>
-                                                                    <select name="txtColonia" id="txtStatus" class="form-control height-auto status">
+                                                                    <div class="row">
+                                                                        <div class="col-4">
+                                                                            <div class="form-group">
+                                                                                <label for="username">
+                                                                                    <h6>Código Postal:</h6>
+                                                                                </label>
+                                                                                <input type="text" class="form-control Código-Postal" name="txtCp" id="txtCp">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-8">
 
-                                                                        <option value="0"></option>
-                                                                        <?php if ($lista_colonias) { ?>
-                                                                            <?php foreach ($lista_colonias as $key => $value) { ?>
-                                                                                <option value="<?php echo $value['idLocalidad']; ?>"><?php echo $value['nombreLocalidad']; ?></option>
-                                                                        <?php }
-                                                                        } ?>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                                            <div class="form-group">
+                                                                                <label for="username">
+                                                                                    <h6>Colonia:</h6>
+                                                                                </label>
+                                                                                <select name="txtLocalidad" id="txtLocalidad" class="form-control height-auto Colonia">
+
+                                                                                    <option value="0"></option>
+                                                                                    <?php if ($lista_colonias) { ?>
+                                                                                        <?php foreach ($lista_colonias as $key => $value) {
+                                                                                            $idValueLocalidad = bin2hex($encrypter->encrypt($value["idLocalidad"])); ?> ?>?>
+                                                                                            <option value="<?= $idValueLocalidad ?>"><?php echo $value['nombreLocalidad']; ?></option>
+                                                                                    <?php }
+                                                                                    } ?>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 <?php  } ?>
                                                             </div>
                                                         <?php }
                                                     } else { ?>
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <div class="form-group">
-                                                                    <label for="username">
-                                                                        <h6>Correo:</h6>
-                                                                    </label>
-                                                                    <input type="text" class="form-control Correo" name="txtCorreo" id="txtNombres">
-                                                                </div>
-                                                            </div>
-                                                        </div>
+
 
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <div class="form-group">
                                                                     <label for="username">
-                                                                        <h6>Nombres:</h6>
+                                                                        <h6>Nombre:</h6>
                                                                     </label>
                                                                     <input type="text" class="form-control Nombres" name="txtNombres" id="txtNombres">
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="form-group">
+                                                                    <label for="tel">
+                                                                        <h6>Contacto (Télefono):</h6>
+                                                                    </label>
+                                                                    <input type="text" class="form-control Télefono" value="<?php echo session()->get("telefono_cliente") != null ? session()->get("telefono_cliente") : "" ?>" name="txtContacto" id="txtContacto" oninput="restrict(this);" minlength="1" maxlength="10">
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
                                                         <div class="row">
                                                             <div class="col-6">
@@ -140,23 +167,33 @@ if ($cart->totalItems() > 0) {
                                                                     <label for="username">
                                                                         <h6>#:</h6>
                                                                     </label>
-                                                                    <input type="text" class="form-control Número" name="txtNumero" id="txtNumero">
+                                                                    <input type="text" class="form-control Número-Casa" name="txtNum" id="txtNum">
                                                                 </div>
                                                             </div>
                                                         </div>
 
                                                         <div class="row">
-                                                            <div class="col-12">
+                                                            <div class="col-4">
+                                                                <div class="form-group">
+                                                                    <label for="username">
+                                                                        <h6>Código Postal:</h6>
+                                                                    </label>
+                                                                    <input type="text" class="form-control Código-Postal" name="txtCp" id="txtCp">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-8">
                                                                 <div class="form-group">
                                                                     <label for="username">
                                                                         <h6>Colonia:</h6>
                                                                     </label>
-                                                                    <select name="txtColonia" id="txtColonia" class="form-control height-auto Colonia">
+                                                                    <select name="txtLocalidad" id="txtLocalidad" class="form-control height-auto Colonia">
 
                                                                         <option value="0"></option>
                                                                         <?php if ($lista_colonias) { ?>
-                                                                            <?php foreach ($lista_colonias as $key => $value) { ?>
-                                                                                <option value="<?php echo $value['idLocalidad']; ?>"><?php echo $value['nombreLocalidad']; ?></option>
+                                                                            <?php foreach ($lista_colonias as $key => $value) {
+                                                                                $idValueLocalidad = bin2hex($encrypter->encrypt($value["idLocalidad"])); ?> ?>?>
+                                                                                <option value="<?= $idValueLocalidad ?>"><?php echo $value['nombreLocalidad']; ?></option>
                                                                         <?php }
                                                                         } ?>
                                                                     </select>
@@ -169,20 +206,23 @@ if ($cart->totalItems() > 0) {
                                                 <?php } else if (session()->get("tipo_orden") == "En sucursal") {  ?>
                                                     <h5 class="card-title">Sucursal de entrega:</h5>
                                                     <p class="card-text"><?= session()->get("nombre_cobertura") ?></p>
-                                                    
-                                                    <?php if (session()->get("usuario_cliente") == null){?>
-                                                    
+
+                                                    <?php if (session()->get("usuario_cliente") == null) { ?>
+
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <div class="form-group">
                                                                     <label for="username">
-                                                                        <h6>Nombres:</h6>
+                                                                        <h6>A nombre:</h6>
                                                                     </label>
-                                                                    <input type="text" class="form-control Nombres" name="txtNombres" id="txtNombres">
+                                                                    <input type="text" class="form-control Télefono" name="txtContacto" id="txtContacto">
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    <?php } ?>
+                                                    <?php } else { ?>
+                                                        <p class="card-text">A Nombre: <?= session()->get("nombre_cliente") ?></p>
+
+                                                    <?php }  ?>
                                                 <?php  } ?>
                                             </div>
                                         </div>
@@ -195,7 +235,7 @@ if ($cart->totalItems() > 0) {
                                             <div class="card-body">
 
                                                 <div class="onoffswitch2">
-                                                    <input type="checkbox" name="txtTipoPago" class="onoffswitch2-checkbox" id="myonoffswitch2" checked>
+                                                    <input type="checkbox" name="txtTipoPago" class="onoffswitch2-checkbox" id="myonoffswitch2" checked value="<?php echo bin2hex($encrypter->encrypt("1")); ?>">
                                                     <label class="onoffswitch2-label" for="myonoffswitch2">
                                                         <span class="onoffswitch2-inner"></span>
                                                         <span class="onoffswitch2-switch"></span>
@@ -214,13 +254,13 @@ if ($cart->totalItems() > 0) {
                                                             <h6>Número de tarjeta</h6>
                                                         </label>
                                                         <div class="input-group">
-                                                            <input type="text" name="txtNumero" id="txtNumero" class="form-control Número" placeholder="0000 0000 0000 0000" id="cr_no" minlength="19" maxlength="19" oninput="restrict(this);">
+                                                            <input type="text" name="txtNumero" id="txtNumero" class="form-control Número" placeholder="0000 0000 0000 0000" id="cr_no" minlength="1" maxlength="16" oninput="restrict(this);">
                                                             <div class="input-group-append">
                                                                 <span class="input-group-text text-muted"> <i class="fab fa-cc-visa mx-1"></i>
                                                                     <i class="fab fa-cc-mastercard mx-1"></i>
                                                                     <i class="fab fa-cc-amex mx-1"></i>
                                                                 </span>
-                                                            </div>
+                                                            </div>o'
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -232,8 +272,8 @@ if ($cart->totalItems() > 0) {
                                                                     </span>
                                                                 </label>
                                                                 <div class="input-group">
-                                                                    <input type="text" placeholder="MM" name="txtMonth" name="txtMonth" id="txtMonth" class="form-control Mes" oninput="restrict(this);">
-                                                                    <input type="text" placeholder="YY" name="" name="txtYear" id="txtYear" class="form-control Año" oninput="restrict(this);">
+                                                                    <input type="text" placeholder="MM" name="txtMonth" name="txtMonth" id="txtMonth" class="form-control Mes" oninput="restrict(this);" min="1" max="12" minlength="1" maxlength="2">
+                                                                    <input type="text" placeholder="YY" name="" name="txtYear" id="txtYear" class="form-control Año" oninput="restrict(this);" minlength="1" maxlength="2">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -242,7 +282,7 @@ if ($cart->totalItems() > 0) {
                                                                 <label data-toggle="tooltip" title="Three digit CV code on the back of your card">
                                                                     <h6>CVV <i class="fa fa-question-circle d-inline"></i></h6>
                                                                 </label>
-                                                                <input type="text" name="txtCVV" id="txtCVV" class="form-control Cvv" oninput="restrict(this);">
+                                                                <input type="text" name="txtCVV" id="txtCVV" class="form-control Cvv" oninput="restrict(this);" minlength="1" maxlength="3">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -258,12 +298,24 @@ if ($cart->totalItems() > 0) {
                             </div>
                         </div>
                     </div>
+
+                    <?php
+
+                    $precioEnvio = 0;
+                    if ($lista_cobertura) {
+                        foreach ($lista_cobertura as $keyEnvio => $valueEnvio) {
+                            $precioEnvio = $valueEnvio["precio"];
+                            break;
+                        }
+                    }
+
+                    ?>
                     <div class="col-12 col-sm-12 col-md-4 col-lg-6 h-100">
                         <div class="col-12 princing-item blue h-100">
                             <div class="pricing-divider text-center">
                                 <h3 class="text-light">Total de pagar</h3>
                                 <h4 class="my-0 display-4 text-light font-weight-normal mb-3">
-                                    <span class="h3">$</span> <?= $totalPrice ?>
+                                    <span class="h3">$</span> <?= $totalPrice + $precioEnvio ?>
                                 </h4>
                                 <svg class='pricing-divider-img' enable-background='new 0 0 300 100' height='100px' id='Layer_1' preserveAspectRatio='none' version='1.1' viewBox='0 0 300 100' width='300px' x='0px' xml:space='preserve' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg' y='0px'>
                                     <path class='deco-layer deco-layer--1' d='M30.913,43.944c0,0,42.911-34.464,87.51-14.191c77.31,35.14,113.304-1.952,146.638-4.729
@@ -291,15 +343,15 @@ if ($cart->totalItems() > 0) {
 
 <script>
     $(function() {
-        
+
         $(".panelTarjeta").hide();
         $("#myonoffswitch2").on("change", function() {
             if (!$(this).is(':checked')) {
-                $(this).val("2");
+                $(this).val("<?php echo bin2hex($encrypter->encrypt("2")); ?>");
                 $(".panelTarjeta").show();
                 $(".panelEfectivo").hide();
             } else {
-                $(this).val("1");
+                $(this).val("<?php echo bin2hex($encrypter->encrypt("1")); ?>");
                 $(".panelEfectivo").show();
                 $(".panelTarjeta").hide();
             }

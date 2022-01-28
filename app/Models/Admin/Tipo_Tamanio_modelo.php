@@ -30,7 +30,8 @@ class Tipo_Tamanio_modelo extends Model
 
     public function _obtenerTipoTamamanio()
     {
-        $sql = "SELECT tipo_tamanio.id as id_tipo_tamanio,precio,tipo.id as id_tipo,tipo.tipo,tamanio.id as id_tamanio,tamanio.tamanio  FROM `tipo_tamanio`
+        $sql = "SELECT tipo_tamanio.id as id_tipo_tamanio,precio,tipo.id as id_tipo,tipo.tipo,tamanio.id as id_tamanio,tamanio.tamanio  
+        FROM `tipo_tamanio`
         INNER JOIN tipo ON tipo.id = tipo_tamanio.id_tipo
         INNER JOIN tamanio ON tamanio.id = tipo_tamanio.id_tamanio
         WHERE tipo.status = 1 and tamanio.status = 1";

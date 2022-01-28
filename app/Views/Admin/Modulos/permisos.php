@@ -103,8 +103,9 @@
     $("#txtUsuario").change(function() {
 
         if ($(this).val() !== "0") {
-            type: "GET",
+           
             $.ajax({
+                type: "GET",
                 url: "<?= base_url() ?>/admin/obtenerSubmenuUsuario",
                 dataType: 'json',
                 data: {

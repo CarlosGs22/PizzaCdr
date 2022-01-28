@@ -14,7 +14,7 @@ protected $allowedFields = ['idpermiso','id_usuario','id_submenu','cve_usuario',
 
 public function _obtenerPermisoUsuario($idusuario)
   {
-    $sql = "SELECT permiso_menu.*, submenu_web.*, usuario.id,usuario.usuario,usuario.nombres,usuario.imagen,usuario.status,
+    $sql = "SELECT permiso_menu.*, submenu_web.*, usuario.id,usuario.usuario,usuario.nombres,usuario.imagen,usuario.status,usuario.telefono,
     usuario.id_sucursal, sucursal.nombre as nombre_sucursal
     FROM `permiso_menu` 
     INNER join submenu_web on submenu_web.id = permiso_menu.id_submenu 

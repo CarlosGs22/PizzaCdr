@@ -146,3 +146,14 @@
 .newsletter {
     color: #0062cc !important
 }
+
+.blink_me {
+    animation: blinker 2s linear infinite;
+    font-size: 18px;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}

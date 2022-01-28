@@ -16,8 +16,8 @@ $encrypter = \Config\Services::encrypter();
                     foreach ($lista_productos as $key => $value) {
 
                 ?>
-                            <div class="col-sm-6 col-lg-4 all pizza">
-                                <div class="box">
+                            <div class="col-sm-6 col-lg-4 all pizza ">
+                                <div class="box h-100">
                                     <div>
                                         <div class="img-box">
                                             <img src="<?php echo base_url("public/Admin/img/productos/" . $value["imagen_producto"]) ?>" alt="">

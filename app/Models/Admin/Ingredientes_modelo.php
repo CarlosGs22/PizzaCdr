@@ -10,10 +10,11 @@ public $table = 'ingrediente';
 
 public $primaryKey = 'id';
 
-protected $allowedFields = ['id', 'ingrediente','status','cve_fecha','cve_usuario'];
+protected $allowedFields = ['id', 'ingrediente','id_unidad','status','cve_fecha','cve_usuario'];
 
 protected $validationRules    = [
     'ingrediente' => 'required',
+    'unidad' => 'required',
     'status' => 'required',
     'cve_usuario' => 'required'
 ];

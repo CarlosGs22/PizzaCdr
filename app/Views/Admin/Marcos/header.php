@@ -49,14 +49,15 @@
 			width: 100%;
 			height: 100%;
 			z-index: 9999;
-			background: url('https://lkp.dispendik.surabaya.go.id/assets/loading.gif') 50% 50% no-repeat rgb(249, 249, 249);
+			background: url('<?= base_url("public/Admin/img/especiales/loading.gif") ?>') 50% 50% no-repeat white;
 		}
 	</style>
 
 
 	<script>
 		$(function() {
-			$(".loader").slideUp(1000);
+			$(".loader")
+                  .delay(900).slideUp(700)        
 		});
 	</script>
 
@@ -70,12 +71,29 @@
 			</div>
 		</div>
 		<div class="header-right">
-			<div class="user-info-dropdown">
+			<div class="dashboard-setting user-notification">
 				<div class="dropdown">
-				<a class="dropdown-item" href="<?php echo base_url("salir"); ?>"><i class="dw dw-logout"></i> Salir</a>
-					
+					<a class="dropdown-toggle no-arrow" href="<?php echo base_url(""); ?>" data-toggle="right-sidebar">
+						<i class="fa fa-eye" aria-hidden="true"></i>
+					</a>
 				</div>
 			</div>
+
+			<div class="user-info-dropdown">
+				<div class="dropdown show">
+					<a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="true">
+						<span class="user-icon">
+							<img src="<?php echo base_url("public/Admin/img/especiales/logo1.jpg"); ?>" alt="">
+						</span>
+						<span class="user-name"><?php echo session()->get('usuario'); ?></span>
+					</a>
+					<div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list" x-placement="bottom-end" style="position: absolute; transform: translate3d(4px, 62px, 0px); top: 0px; left: 0px; will-change: transform;">
+						<a class="dropdown-item" href="<?php echo base_url("admin/micuenta"); ?>"><i class="dw dw-user1"></i> Perfil</a>
+						<a class="dropdown-item" href="<?php echo base_url("salir"); ?>"><i class="dw dw-logout"></i> Salir</a>
+					</div>
+				</div>
+			</div>
+
 		</div>
 	</div>
 
@@ -96,14 +114,12 @@
 						</div>
 						<div class="address">Sucursal: <?php echo session()->get('nombre_sucursal'); ?></div>
 					</div>
-					<div class="follow">
-						<div class="follow_btn"><a href="<?php echo base_url("admin/micuenta"); ?>"><i class="icon-copy dw dw-user3"></i> Mi cuenta</a></div>
-					</div>
+
 
 				</div>
 
 			</div>
-			
+
 			<div class="close-sidebar" data-toggle="left-sidebar-close">
 				<i class="ion-close-round"></i>
 			</div>
@@ -196,16 +212,16 @@
 
 			.follow_btn {
 				background: rgb(244, 111, 48);
-				
+
 				color: #fff;
 				border-radius: 12px;
 				cursor: pointer;
 			}
-			.address{
+
+			.address {
 				display: flex;
 				justify-content: center;
 				font-size: 12px;
 				color: white;
 			}
 		</style>
-

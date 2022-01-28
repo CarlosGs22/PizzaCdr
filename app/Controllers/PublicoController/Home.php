@@ -39,7 +39,7 @@ class Home extends Controller
 
   public function initController(\CodeIgniter\HTTP\RequestInterface $request, \CodeIgniter\HTTP\ResponseInterface $response, \Psr\Log\LoggerInterface $logger)
   {
- 
+
     $this->funciones = new Funciones();
     $this->funcionesPublic = new PublicoFunciones();
 
@@ -81,7 +81,7 @@ class Home extends Controller
 
   public function principal()
   {
-    
+
 
     $pagina = 12;
 
@@ -108,9 +108,11 @@ class Home extends Controller
 
     if ($this->request->getVar('txtReg') == "ZM8ByFx#" || $this->request->getVar('txtReg') == "32U3&#vUd") {
       if ($this->request->getVar('txtCp') != null || $this->request->getVar('txtSucursal') != null) {
+
+
         $lista["lista_cobertura"] = $this->request->getVar('txtCp') != null
           ? $this->sucursales_localidad_modelo->_obtenerCobertura($this->funciones->cleanSanitize("INT", $this->request->getVar('txtCp')))
-          : $this->sucursales_modelo->select("id as id_sucursal,nombre as nombre_sucursal")->where("status", "1")->where("id", $this->funciones->cleanSanitize("INT", $this->request->getVar('txtSucursal')))->findAll();
+          : $this->sucursales_modelo->select("id as id_sucursal,nombre as nombre_sucursal")->where("status", "1")->where("id", $this->funciones->cleanSanitize("INT", $this->encrypter->decrypt(hex2bin($this->request->getVar('txtSucursal')))))->findAll();
 
 
         if ($lista["lista_cobertura"][0]["id_sucursal"] != null) {
@@ -123,18 +125,19 @@ class Home extends Controller
                 $tiempoInicial = $value["horade"] . ":" . $value["horademns"];
                 $tiempoFinal = $value["horahasta"] . ":" . $value["horahastamns"];
                 $restiempo = $this->funcionesPublic->_obtenerHorarioDisponible($tiempoActual, $tiempoInicial, $tiempoFinal);
-                
+
                 if ($restiempo != "1") {
                   session()->setFlashdata('respuesta', array("0" => "Por el momento no hay servicio en esta sucursal, revise los horarios y cambie el tipo de orden", "1" => "error"));
                   return redirect()->to(base_url(""));
-                }  
+                }
               }
             }
 
             $cobertura = [
               'sucursal_cobertura' => $lista["lista_cobertura"][0]["id_sucursal"],
               'nombre_cobertura' => $lista["lista_cobertura"][0]["nombre_sucursal"],
-              'tipo_orden' => $this->request->getVar('txtReg') == "ZM8ByFx#" ? "En sucursal" : "A Domicilio"
+              'tipo_orden' => $this->request->getVar('txtReg') == "ZM8ByFx#" ? "En sucursal" : "A Domicilio",
+              'cp' => $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtCp')),
             ];
 
             if ($this->session->get("sucursal_cobertura") != null &&  $this->session->get("nombre_cobertura")) {
@@ -197,18 +200,17 @@ class Home extends Controller
   public function detalle($id)
   {
 
-    $decrypted_data = $this->encrypter->decrypt(hex2bin($id));
-    $lista["detalle_producto"] = $this->productos_modelo->_obtenerProductospUBL($decrypted_data);
+    try {
+      $decrypted_data = $this->encrypter->decrypt(hex2bin($id));
+      $lista["detalle_producto"] = $this->productos_modelo->_obtenerProductospUBL($decrypted_data);
 
-    if (!empty($lista["detalle_producto"])) {
+      if (!empty($lista["detalle_producto"])) {
 
-      try {
         $idSucursal = session()->get('sucursal_cobertura');
 
         $lista["listas_especiales"] = $this->especiales->findAll();
         $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
         $lista["lista_sucursal_info"] = $this->sucursales_localidad_modelo->_obtenerHorarios($this->session->get("sucursal_cobertura"));
-
 
         $lista["listas_producto_existente"] = $this->productos_modelo->_getProductosPublic($idSucursal, "50", null, $lista["detalle_producto"][0]["idTipoTamanio"]);
         $lista["lista_imagenes"] = $this->imagen_modelo->where("id_producto", $decrypted_data)->findAll();
@@ -220,9 +222,11 @@ class Home extends Controller
         echo view($this->rutaHeader, $lista);
         echo view($this->rutaModulo . 'detalle', $lista);
         echo view($this->rutaFooter, $lista);
-      } catch (\Throwable $th) {
+      } else {
+        $this->session->setFlashdata('respuesta', array("0" => "No se encontró el producto", "1" => "error"));
+        return redirect()->to(base_url(""));
       }
-    } else {
+    } catch (\Throwable $th) {
       $this->session->setFlashdata('respuesta', array("0" => "No se encontró el producto", "1" => "error"));
       return redirect()->to(base_url(""));
     }

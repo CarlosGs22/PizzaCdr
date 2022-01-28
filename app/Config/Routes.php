@@ -68,7 +68,6 @@ $routes->post('/admin/accion_usuarios', 'AdminController/UsuariosController::acc
 //productos
 $routes->get('/admin/productos', 'AdminController/ProductoController::productos', ['filter' => 'auth']);
 $routes->post('/admin/accion_productos', 'AdminController/ProductoController::accion_productos');
-$routes->get('/admin/consulta_porciones', 'AdminController/ProductoController::consulta_porciones/');
 $routes->post('/admin/accion_productos_editar', 'AdminController/ProductoController::accion_productos_editar');
 $routes->post('/admin/accion_imagenes', 'AdminController/ProductoController::accion_imagenes');
 
@@ -93,11 +92,15 @@ $routes->post('/admin/accion_productos_promociones', 'AdminController/PromocionC
 
 
 //ingredientes
+$routes->get('/admin/consulta_porciones', 'AdminController/IngredienteController::consulta_porciones/');
+
 $routes->get('/admin/ingredientes', 'AdminController/IngredienteController::ingredientes', ['filter' => 'auth']);
 $routes->post('/admin/accion_ingredientes', 'AdminController/IngredienteController::accion_ingredientes');
 $routes->post('/admin/accion_menu', 'AdminController/IngredienteController::accion_menu');
 $routes->post('/admin/consultaMenuIngredientes', 'AdminController/IngredienteController::consultaMenuIngredientes');
 $routes->post('/admin/accion_ingredientes_menu', 'AdminController/IngredienteController::accion_ingredientes_menu');
+$routes->post('/admin/accion_tamanio_ingrediente', 'AdminController/IngredienteController::accion_tamanio_ingrediente');
+
 
 //compras
 $routes->get('/admin/compras', 'AdminController/ComprasController::compras', ['filter' => 'auth']);
@@ -123,6 +126,8 @@ $routes->post('/admin/accion_inventario', 'AdminController/InventarioController:
 //horarios
 $routes->post('/admin/accion_horarios', 'AdminController/SucursalController::accion_horarios');
 
+//ventas
+$routes->get('/admin/ventas', 'AdminController/VentasController::ventas', ['filter' => 'auth']);
 
 
 
@@ -163,7 +168,10 @@ $routes->post('/accion_direccion', 'PublicoController/ClienteController::accion_
 $routes->get('/accion_direcciones/(:any)', 'PublicoController\ClienteController::accion_direcciones/$1', ['filter' => 'noauthcliente']);
 
 $routes->get('/pasarela', 'PublicoController/PasarelaController::pasarela', ['filter' => 'sessionsucursal']);
-$routes->post('/accion_pasarela', 'PublicoController/PasarelaController::accion_pasarela', ['filter' => 'sessionsucursal'],['filter' => 'noauthcliente']);
+$routes->post('/accion_pasarela', 'PublicoController/PasarelaController::accion_pasarela', ['filter' => 'sessionsucursal'], ['filter' => 'noauthcliente']);
+
+//miscompras
+$routes->get('/miscompras/(:any)', 'PublicoController\ClienteController::miscompras/$1');
 
 
 

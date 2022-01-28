@@ -147,6 +147,7 @@ $cart = \Config\Services::cart();
 							$totalPrice = 0;
 							$subTotal = 0;
 
+
 							if ($cart->totalItems() > 0) {
 								foreach ($cart->contents() as $value) {
 									$totalPrice += (int) $value["price"] * (int) $value["qty"];
@@ -207,12 +208,31 @@ $cart = \Config\Services::cart();
 							} ?>
 						</div>
 					</div>
+
+					<?php
+
+					$precioEnvio = 0;
+					if ($lista_cobertura) {
+						foreach ($lista_cobertura as $keyEnvio => $valueEnvio) {
+							$precioEnvio = $valueEnvio["precio"];
+							break;
+						}
+					}
+
+					?>
 					<div class="col-md-12 col-lg-4">
 						<div class="summary">
 							<h3>Resúmen</h3>
-							<div class="summary-item"><span class="text">Subtotal</span><span class="price" id="labelSubPrice">$<?= $subTotal ?></span></div>
-							<div class="summary-item"><span class="text">Total</span><span class="price" id="labelTotalPrice">$<?= $totalPrice ?></span></div>
-							<a href="<?=base_url("pasarela")?>" class="btn generalBackgroundColor btn-lg btn-block">Pasarela de Pago</a>
+							<div class="summary-item"><span class="text">Subtotal</span><span class="price" id="labelSubPrice">$<?= $totalPrice ?></span></div>
+							<?php
+							if ($precioEnvio != 0) { ?>
+								<div class="summary-item"><span class="text">Envío</span><span class="price" id="labelSubSend">$<?= $precioEnvio ?></span></div>
+							<?php } else { ?>
+								<div class="summary-item"><span class="text">Envío</span><span class="price" id="labelSubSend"><span class="badge badge-success">Gratis</span></span></div>
+							<?php } ?>
+
+							<div class="summary-item"><span class="text">Total</span><span class="price" id="labelTotalPrice">$<?= $totalPrice + $precioEnvio ?></span></div>
+							<a href="<?= base_url("pasarela") ?>" class="btn generalBackgroundColor btn-lg btn-block">Pasarela de Pago</a>
 							<a class="btn btn-primary btn-lg btn-block" href="<?php echo base_url("") ?>">Seguir Comprando</a>
 							<a class="btn btn-link btn-lg btn-block" href="<?php echo base_url("limpiar_carrito") ?>">Vaciar Carrito</a>
 						</div>
@@ -237,6 +257,7 @@ $cart = \Config\Services::cart();
 
 
 		$(".textQty").find("#quantity").blur(function() {
+
 			if (isNumeric($(this).val()) && parseInt(this.value) > 0) {
 				$.ajax({
 					type: "GET",
@@ -270,6 +291,7 @@ $cart = \Config\Services::cart();
 		});
 
 		$(".textQty").find("#quantity").on('change', function() {
+
 			if (isNumeric($(this).val()) && parseInt(this.value) > 0) {
 				$.ajax({
 					type: "GET",
@@ -281,8 +303,18 @@ $cart = \Config\Services::cart();
 					dataType: "JSON",
 					success: function(data) {
 						if (data[0] == 200) {
-							$("#labelSubPrice").text("$" + data[1]);
-							$("#labelTotalPrice").text("$" + data[2]);
+							var total = 0;
+
+							if (isNumeric($("#labelSubSend").text().replace("$", ""))) {
+								total = parseFloat(data[2]) + parseFloat($("#labelSubSend").text().replace("$", ""));
+							} else {
+								total = data[2];
+							}
+
+
+
+							$("#labelSubPrice").text("$" + data[2]);
+							$("#labelTotalPrice").text("$" + total);
 						} else {
 							Swal.fire({
 								icon: 'error',
@@ -301,38 +333,6 @@ $cart = \Config\Services::cart();
 				});
 			}
 		});
-
-	});
-</script>
-
-
-<script>
-	$(document).ready(function() {
-
-		//For Card Number formatted input
-		var cardNum = document.getElementById('txtNumero');
-		cardNum.onkeyup = function(e) {
-			if (this.value == this.lastValue) return;
-			var caretPosition = this.selectionStart;
-			var sanitizedValue = this.value.replace(/[^0-9]/gi, '');
-			var parts = [];
-
-			for (var i = 0, len = sanitizedValue.length; i < len; i += 4) {
-				parts.push(sanitizedValue.substring(i, i + 4));
-			}
-			for (var i = caretPosition - 1; i >= 0; i--) {
-				var c = this.value[i];
-				if (c < '0' || c > '9') {
-					caretPosition--;
-				}
-			}
-			caretPosition += Math.floor(caretPosition / 4);
-
-			this.value = this.lastValue = parts.join(' ');
-			this.selectionStart = this.selectionEnd = caretPosition;
-		}
-
-
 
 	});
 </script>

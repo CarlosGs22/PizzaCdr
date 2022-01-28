@@ -81,23 +81,23 @@ if ($detalle_producto) {
                         </div>
                         <p><?= $descripcion != null ? $descripcion : "" ?></p>
                         <div class="row">
-                           <?php if($idClasificacion == 1){?>
-                            <div class="col-12 col-md-6">
-                                <h6><strong>Ingredientes</strong></h6>
-                                <ul class="list-group ingredienteLista">
-                                    <?php
-                                    if ($lista_menu_ingrediente) {
+                            <?php if ($idClasificacion == 1) { ?>
+                                <div class="col-12 col-md-6">
+                                    <h6><strong>Ingredientes</strong></h6>
+                                    <ul class="list-group ingredienteLista">
+                                        <?php
+                                        if ($lista_menu_ingrediente) {
 
-                                        foreach ($lista_menu_ingrediente as $key => $valueIn) {
-                                    ?>
-                                            <li class="list-item"><i class="icon-copy fa fa-caret-right mx-2"></i><?= $valueIn["ingredienteNombre"] ?></li>
+                                            foreach ($lista_menu_ingrediente as $key => $valueIn) {
+                                        ?>
+                                                <li class="list-item"><i class="icon-copy fa fa-caret-right mx-2"></i><?= $valueIn["ingredienteNombre"] ?></li>
 
-                                    <?php }
-                                    } ?>
+                                        <?php }
+                                        } ?>
 
-                                </ul>
-                            </div>
-                        <?php }?>
+                                    </ul>
+                                </div>
+                            <?php } ?>
 
                             <?php if ($total > 1) { ?>
 
@@ -133,7 +133,7 @@ if ($detalle_producto) {
                                     $idValueProduct = bin2hex($encrypter->encrypt($idProducto));
                                     ?>
                                     <input type="hidden" name="idProducto" value="<?= $idValueProduct;  ?>">
-                                    <input type="text" name="qty" value="1" class="qty">
+                                    <input type="text" name="qty" value="1" class="qty" maxlength="1" oninput="restrict(this);">
                                     <div class="qtyplus">+</div>
                                 </div>
                                 <input type="submit" class="round-black-btn" style="background: #ffbe33; border:none;" value="Añadir al pedido">
@@ -287,7 +287,7 @@ if ($detalle_producto) {
 
         $(".qtyplus").on("click", function() {
             var now = $(".qty").val();
-            if ($.isNumeric(now)) {
+            if ($.isNumeric(now) && parseInt(now) < 10) {
                 $(".qty").val(parseInt(now) + 1);
             }
         });

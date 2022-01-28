@@ -83,9 +83,11 @@ class Carrito extends Controller
 
       $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
       
-      $idSucursal = session()->get('sucursal_cobertura');
-    
-
+     if(session()->get("cp") != null && session()->get("tipo_orden") == "A Domicilio"){
+      $lista["lista_cobertura"] =  $this->sucursales_localidad_modelo->_obtenerCobertura($this->funciones->cleanSanitize("INT", session()->get("cp")));
+     }
+      
+      
       $lista["lista_sucursal_info"] = $this->sucursales_localidad_modelo->_obtenerHorarios($this->session->get("sucursal_cobertura"));
       $lista["listas_producto_existente"] = [];
 

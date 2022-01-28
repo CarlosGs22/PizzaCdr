@@ -97,7 +97,7 @@ if ($lista_micuenta) {
                                                 $idDireccion = bin2hex($encrypter->encrypt($value["idDireccion"])); ?>
                                                 <a href="<?= base_url("accion_direcciones/" . $idDireccion) ?>">
                                                     <li class="list-group-item">
-                                                        <?= $value["calle"] . " #" . $value["numero"] . ", " . $value["colonia"] . " " . $value["codigo_postal"]
+                                                        <?= $value["calle"] . " #" . $value["numero"] . ", " . " " . $value["codigo_postal"]
                                                         ?>
                                                         <br>
                                                         <?= $value["nombreLocalidad"]  . ", " . $value["nombreEstado"]
@@ -140,22 +140,18 @@ if ($lista_micuenta) {
                 <form method="post" action="<?php echo base_url("accion_direccion") ?>" enctype="multipart/form-data" id="frm_direccion">
 
                     <div class="row mt-2">
-                        <div class="col-md-9"><label class="labels">Calle *</label>
+                        <div class="col-md-7"><label class="labels">Calle *</label>
                             <input type="text" class="form-control Calle" name="txtCalle" value="" maxlength="65" minlength="1">
                         </div>
                         <div class="col-md-3"><label class="labels">Número *</label>
                             <input type="text" class="form-control Número" name="txtNumero" value="" maxlength="65" minlength="1">
                         </div>
-                    </div>
-
-                    <div class="row mt-2">
-                        <div class="col-md-9"><label class="labels">Colonia *</label>
-                            <input type="text" class="form-control Colonia" name="txtColonia" value="" maxlength="65">
-                        </div>
-                        <div class="col-md-3"><label class="labels">Código postal *</label>
+                        <div class="col-md-2"><label class="labels">Código postal *</label>
                             <input type="text" class="form-control Código-Postal" name="txtCp" value="" oninput="restrict(this);" maxlength="5" minlength="1">
                         </div>
                     </div>
+
+                
                     <div class="row mt-2">
                         <div class="col-md-4"><label class="labels">Estado *</label>
                             <select name="txtEstado" id="" class="form-control Estado">

@@ -10,7 +10,7 @@
 	
 	<script src="<?php echo base_url("public/Admin/vendors/scripts/script.min.js"); ?>"></script>
 	<script src="<?php echo base_url("public/Admin/vendors/scripts/process.js"); ?>"></script>
-	
+	<script src="https://kit.fontawesome.com/c2206c4cff.js" crossorigin="anonymous"></script>
 
     <!--
 		<script src="<?php echo base_url("public/Admin/vendors/scripts/dashboard2.js"); ?>"></script>
@@ -25,6 +25,7 @@
 
 
 	->
+	
 
 	<!--datatble -->
 	<script src="<?php echo base_url("public/Admin/vendors/scripts/datatable-setting.js"); ?>"></script>

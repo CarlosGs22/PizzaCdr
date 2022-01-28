@@ -10,6 +10,7 @@ use App\Models\Admin\Municipios_modelo;
 use App\Models\Admin\Status_modelo;
 use App\Models\Admin\Usuarios_modelo;
 use App\Models\Publico\Direccion_modelo;
+use App\Models\Publico\Venta_modelo;
 use CodeIgniter\Controller;
 
 class ClienteController extends Controller
@@ -26,6 +27,7 @@ class ClienteController extends Controller
     protected $municipios_modelo;
     protected $estados_modelo;
     protected $direccion_modelo;
+    protected $venta_modelo;
     protected $funciones;
 
     protected $encrypter;
@@ -44,6 +46,7 @@ class ClienteController extends Controller
         $this->municipios_modelo = new Municipios_modelo();
         $this->localidades_modelo = new Localidades_modelo();
         $this->direccion_modelo = new Direccion_modelo();
+        $this->venta_modelo = new Venta_modelo();
 
         $this->funciones = new Funciones();
         $this->session = session();
@@ -69,7 +72,7 @@ class ClienteController extends Controller
 
         $lista['lista_estados'] = $this->estados_modelo->findAll();
 
-        $lista['lista_direcciones'] = $this->direccion_modelo->select("direccion.id as idDireccion,calle,numero,colonia,direccion.codigo_postal,localidad.nombre as nombreLocalidad,estado.nombre as nombreEstado")->join("localidad", "localidad.id = direccion.id_localidad")->join("municipio", "municipio.id = localidad.municipio_id")->join("estado", "estado.id = municipio.estado_id")->where("id_usuario", $lista['lista_micuenta'][0]["id"])->where("status", "1")->findAll();
+        $lista['lista_direcciones'] = $this->direccion_modelo->select("direccion.id as idDireccion,calle,numero,direccion.codigo_postal,localidad.nombre as nombreLocalidad,estado.nombre as nombreEstado")->join("localidad", "localidad.id = direccion.id_localidad")->join("municipio", "municipio.id = localidad.municipio_id")->join("estado", "estado.id = municipio.estado_id")->where("id_usuario", $lista['lista_micuenta'][0]["id"])->where("status", "1")->findAll();
 
         if (!empty($lista['lista_micuenta'])) {
             echo view($this->rutaHeader, $this->datamenu);
@@ -181,7 +184,6 @@ class ClienteController extends Controller
             $datos_direccion = [
                 'calle' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtCalle')),
                 'numero' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtNumero')),
-                'colonia' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtColonia')),
                 'codigo_postal' =>  $this->funciones->cleanSanitize("INT", $this->request->getVar('txtCp')),
                 'status' => "1",
                 'id_usuario' => $lista_usuario[0]["id"],
@@ -212,5 +214,21 @@ class ClienteController extends Controller
 
         $this->session->setFlashdata('respuesta', array("0" => "Registro eliminado", "1" => "success"));
         return redirect()->to(base_url("micuenta"));
+    }
+
+    public function miscompras($idCompra)
+    {
+        $decrypted_data_id = $this->encrypter->decrypt(hex2bin($idCompra));
+
+        $lista["lista_compras"] = $this->venta_modelo->_obtenerMisVentas($decrypted_data_id);
+
+        if (!empty($lista["lista_compras"])) {
+            echo view($this->rutaHeader, $this->datamenu);
+            echo view($this->rutaModulo . 'miscompras', $lista);
+        
+        } else {
+            $this->session->setFlashdata('respuesta', array("0" => "No existe el Num. De Compra", "1" => "success"));
+            return redirect()->to(base_url(""));
+        }
     }
 }

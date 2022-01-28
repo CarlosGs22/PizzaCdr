@@ -141,8 +141,8 @@
                 </ul>
                 <div class="user_option">
 
-                    <a class="cart_link" href="#">
-                        <i class="ti-plus"></i>
+                    <a class="cart_link" href="<?=base_url("carrito")?>">
+                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                     </a>
                     <a href="<?php echo base_url("login") ?>" class="user_link">
                         <i class="fa fa-user" aria-hidden="true"></i>

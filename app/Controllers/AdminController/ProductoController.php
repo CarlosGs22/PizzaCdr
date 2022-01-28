@@ -4,25 +4,19 @@ namespace App\Controllers\AdminController;
 
 use App\Models\Admin\Categorias_modelo;
 use App\Models\Admin\Clasificacion_Modelo;
-use App\Models\Admin\Clasificación_Modelo;
 use App\Models\Admin\Especiales_modelo;
 use App\Models\Admin\Funciones;
 use App\Models\Admin\Imagenes_modelo;
 use App\Models\Admin\Ingredientes_modelo;
-use App\Models\Admin\Ingredientes_Producto_modelo;
 use App\Models\Admin\Ingredientes_Productos_modelo;
-use App\Models\Admin\Ingredientes_Tamanios_modelo;
 use App\Models\Admin\Masas_modelo;
 use App\Models\Admin\Menu_Modelo;
-use App\Models\Admin\Menu_Mpdelo;
 use App\Models\Admin\Permiso_menu_modelo;
 use App\Models\Admin\Status_modelo;
 use App\Models\Admin\Productos_modelo;
 use App\Models\Admin\Tamanios_Ingredientes_modelo;
 use App\Models\Admin\Tipo_Tamanio_modelo;
 use CodeIgniter\Controller;
-use CodeIgniter\HTTP\Request;
-use CodeIgniter\Pager\Pager;
 
 class ProductoController extends Controller
 {
@@ -54,8 +48,8 @@ class ProductoController extends Controller
     $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(session()->get('id'));
     
     $this->productos_modelo = new Productos_modelo();
-    //$this->ingredientes_modelo = new Ingredientes_modelo();
-    //$this->tipo_tamanio_modelo = new Tipo_Tamanio_modelo();
+    $this->ingredientes_modelo = new Ingredientes_modelo();
+    $this->tipo_tamanio_modelo = new Tipo_Tamanio_modelo();
     $this->status_modelo = new Status_modelo();
     $this->categorias_modelo = new Categorias_modelo();
     $this->masas_modelo = new Masas_modelo();
@@ -225,31 +219,7 @@ class ProductoController extends Controller
     }
   }
 
-  public function consulta_porciones()
-  {
-
-    $this->ingredientes_tamanios_modelo->join('ingrediente', 'ingrediente.id = tamanio_ingrediente.id_ingrediente');
-    //$this->ingredientes_tamanios_modelo->join('tipo_tamanio', 'tipo_tamanio.id = tamanio_ingrediente.id_tipo_tamanio');
-    $this->ingredientes_tamanios_modelo->join('tipo', 'tipo.id = tipo_tamanio.id_tipo');
-
-    $this->ingredientes_tamanios_modelo->select(
-      'tamanio_ingrediente.id as ingre_tama_id,
-      tamanio_ingrediente.porcion as porcion,
-      ingrediente.id as id_ingrediente,ingrediente.ingrediente as ingrediente,tipo.tipo as tipo'
-    );
-
-    //$this->ingredientes_tamanios_modelo->where("tipo_tamanio.id", $this->request->getVar("txtTipoTamanio"));
-    $datos_ingrediendes_gen = $this->ingredientes_modelo->where('cantidad >', '0')->findAll();
-    $datos_tamanio_ingrediende = $this->tamanios_ingredientes_modelo->_obtener_ingredientes($this->request->getVar('txtTipoTamanio'));
-
-    $datos = array(
-      'ingredientes_gen' => $datos_ingrediendes_gen,
-      'ingredientes_tamanio' => $datos_tamanio_ingrediende
-    );
-
-    header('Content-Type: application/json');
-    echo json_encode($datos);
-  }
+ 
 
   public function accion_productos_editar()
   {

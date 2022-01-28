@@ -13,8 +13,8 @@ public $primaryKey = 'id';
 protected $allowedFields = ['id', 'nombre','status'];
 
 protected $validationRules    = [
-    'nombre' => 'required',
-    'status' => 'required',
+    'nombre' => 'required|min_length[50]',
+    'status' => 'required|min_length[1]',
 ];
 
 protected $validationMessages = [

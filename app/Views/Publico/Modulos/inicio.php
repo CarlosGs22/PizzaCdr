@@ -8,7 +8,6 @@ $encrypter = \Config\Services::encrypter();
     <!-- Bootstrap carousel-->
     <div class="carousel slide w-100" id="carouselExampleIndicators" data-ride="carousel">
 
-
       <div class="carousel-inner w-100">
         <?php if ($lista_productos) {
           foreach ($lista_productos as $key => $value) {
@@ -92,8 +91,8 @@ $encrypter = \Config\Services::encrypter();
           if ($value["idClasificacion"] == 2) {
             if ($cont < 4) {
         ?>
-              <div class="col-md-6  ">
-                <div class="box ">
+              <div class="col-sm-12 col-12 col-md-6 col-lg-6 mb-4">
+                <div class="box h-100">
                   <div class="img-box">
                     <img src="<?php echo base_url("public/Admin/img/productos/" . $value["imagen_producto"]) ?>" alt="">
 
@@ -164,8 +163,8 @@ $encrypter = \Config\Services::encrypter();
             if ($value["idClasificacion"] == 1) {
               if ($cont < 6) {
         ?>
-                <div class="col-sm-6 col-lg-4 all pizza">
-                  <div class="box">
+                <div class="col-sm-6 col-lg-4 all pizza m-2">
+                  <div class="box h-100">
                     <div>
                       <div class="img-box">
                         <img src="<?php echo base_url("public/Admin/img/productos/" . $value["imagen_producto"]) ?>" alt="">

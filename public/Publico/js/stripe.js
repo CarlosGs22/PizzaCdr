@@ -46,16 +46,13 @@ $(function() {
                     if ($("#myonoffswitch2").val() == "2") {
                         $('#btnEnviarPago').attr("disabled", "disabled");
 
-                        var month = $('#txtMonth').val();
-
-                        var year = $('#txtYeah').val();
 
                         //create single-use token to charge the user
                         Stripe.createToken({
                             number: $('#txtNumero').val(),
                             cvc: $('#txtCVV').val(),
-                            exp_month: month,
-                            exp_year: year
+                            exp_month: $('#txtMonth').val(),
+                            exp_year: $('#txtYear').val()
                         }, stripeResponseHandler);
 
                         return false;

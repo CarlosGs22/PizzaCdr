@@ -9,6 +9,9 @@ use App\Models\Admin\Ingredientes_modelo;
 use App\Models\Admin\Menu_Modelo;
 use App\Models\Admin\Permiso_menu_modelo;
 use App\Models\Admin\Status_modelo;
+use App\Models\Admin\Tamanios_Ingredientes_modelo;
+use App\Models\Admin\Tipo_Tamanio_modelo;
+use App\Models\Admin\Unidades_modelo;
 use CodeIgniter\Controller;
 
 class IngredienteController extends Controller
@@ -21,6 +24,10 @@ class IngredienteController extends Controller
     protected $menu_modelo;
     protected $status_modelo;
     protected $ingredientes_menu_modelo;
+    protected $tipo_tamanio_modelo;
+    protected $ingredientes_tamanios_modelo;
+    protected $tamanios_ingredientes_modelo;
+    protected $unidad_modelo;
     protected $funciones;
 
     public function initController(\CodeIgniter\HTTP\RequestInterface $request, \CodeIgniter\HTTP\ResponseInterface $response, \Psr\Log\LoggerInterface $logger)
@@ -36,6 +43,13 @@ class IngredienteController extends Controller
         $this->status_modelo = new Status_modelo();
         $this->menu_modelo = new Menu_Modelo();
         $this->ingredientes_menu_modelo = new Ingredientes_Menu_modelo();
+        $this->tamanios_ingredientes_modelo = new Tamanios_Ingredientes_modelo();
+        $this->unidad_modelo = new Unidades_modelo();
+
+
+        $this->ingredientes_tamanios_modelo = new Tamanios_Ingredientes_modelo();
+
+        $this->tipo_tamanio_modelo = new Tipo_Tamanio_modelo();
         $this->funciones = new Funciones();
         $this->session = session();
 
@@ -58,12 +72,19 @@ class IngredienteController extends Controller
             $search = $this->request->getVar('txtBuscar');
         }
         if ($search == null) {
-            $lista['lista_ingredientes'] = $this->ingredientes_modelo->paginate($paginas);
+            $lista['lista_ingredientes'] = $this->ingredientes_modelo->select("ingrediente.id as id, ingrediente, ingrediente.status as statusIngrediente, unidad.id as idUnidad, unidad.nombre, unidad.status as statusUnidad")
+            ->join("unidad","unidad.id = ingrediente.id_unidad")
+            ->paginate($paginas);
         } else {
-            $lista['lista_ingredientes'] = $this->ingredientes_modelo->like("ingrediente", $search)->paginate($paginas);
+            $lista['lista_ingredientes'] = $this->ingredientes_modelo->select("ingrediente.id as id, ingrediente, ingrediente.status as statusIngrediente, unidad.id as idUnidad, unidad.nombre, unidad.status as statusUnidad")
+            ->join("unidad","unidad.id = ingrediente.id_unidad")
+            ->paginate($paginas)
+            ->like("ingrediente", $search)->paginate($paginas);
         }
 
+        $lista['lista_tipo_tamanio'] = $this->tipo_tamanio_modelo->_obtenerTipoTamamanio();
 
+        $lista['lista_unidad'] = $this->unidad_modelo->where("status","1")->findAll();
 
         $searchM = null;
         if ($this->request->getVar('txtBuscarMenu') != null) {
@@ -74,7 +95,6 @@ class IngredienteController extends Controller
         } else {
             $lista['lista_menu'] = $this->menu_modelo->like("nombre", $searchM)->paginate($paginas);
         }
-
 
 
         $lista['lista_status'] = $this->status_modelo->findAll();
@@ -109,15 +129,15 @@ class IngredienteController extends Controller
         $idIngrediente = $this->request->getVar("txtId");
 
         $datos_ingrediente = [
-            'ingrediente' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtIngrediente')),
-            'status' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('txtStatus')),
+            'ingrediente' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtIngrediente')),
+            'id_unidad' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtUnidad')),
+            'status' =>  $this->funciones->cleanSanitize("INT", $this->request->getVar('txtStatus')),
             'cve_usuario' =>  $this->session->get("id")
         ];
 
         if ($idIngrediente != null) {
             array_merge($datos_ingrediente, array("id" => $idIngrediente));
         }
-
 
         $respuesta = null;
         try {
@@ -142,15 +162,14 @@ class IngredienteController extends Controller
         $idMenu = $this->request->getVar("txtId");
 
         $datos_menu = [
-            'nombre' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtNombre')),
-            'status' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('txtStatus')),
+            'nombre' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtNombre')),
+            'status' =>  $this->funciones->cleanSanitize("INT", $this->request->getVar('txtStatus')),
             'cve_usuario' =>  $this->session->get("id")
         ];
 
         if ($idMenu != null) {
-            array_merge($datos_menu, array("id" => $this->funciones->cleanSanitize("INT",$idMenu)));
+            array_merge($datos_menu, array("id" => $this->funciones->cleanSanitize("INT", $idMenu)));
         }
-
 
         $respuesta = null;
         try {
@@ -174,8 +193,8 @@ class IngredienteController extends Controller
         $opcion = $this->request->getVar('opcion');
 
         $datos_ingrediente_menu = [
-            'id_ingrediente' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('id_ingrediente')),
-            'id_menu' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('id_menu')),
+            'id_ingrediente' =>  $this->funciones->cleanSanitize("INT", $this->request->getVar('id_ingrediente')),
+            'id_menu' =>  $this->funciones->cleanSanitize("INT", $this->request->getVar('id_menu')),
             'cve_usuario' =>  $this->session->get("id")
         ];
 
@@ -199,6 +218,67 @@ class IngredienteController extends Controller
         }
         $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->ingredientes_menu_modelo->errors());
 
+        echo json_encode($respuesta);
+    }
+
+    public function consulta_porciones()
+    {
+
+        $this->ingredientes_tamanios_modelo->join('ingrediente', 'ingrediente.id = tamanio_ingrediente.id_ingrediente');
+        //$this->ingredientes_tamanios_modelo->join('tipo_tamanio', 'tipo_tamanio.id = tamanio_ingrediente.id_tipo_tamanio');
+        $this->ingredientes_tamanios_modelo->join('tipo', 'tipo.id = tipo_tamanio.id_tipo');
+
+        $this->ingredientes_tamanios_modelo->select(
+            'tamanio_ingrediente.id as ingre_tama_id,
+        tamanio_ingrediente.porcion as porcion,
+        ingrediente.id as id_ingrediente,ingrediente.ingrediente as ingrediente,tipo.tipo as tipo'
+        );
+
+        //$this->ingredientes_tamanios_modelo->where("tipo_tamanio.id", $this->request->getVar("txtTipoTamanio"));
+        $datos_ingrediendes_gen = $this->ingredientes_modelo->select("ingrediente.id , ingrediente, unidad.nombre")->join("unidad", "unidad.id = ingrediente.id_unidad")
+            ->findAll();
+
+        $datos_tamanio_ingrediende = $this->tamanios_ingredientes_modelo->_obtener_ingredientes($this->request->getVar('txtTipoTamanio'));
+
+        $datos = array(
+            'ingredientes_gen' => $datos_ingrediendes_gen,
+            'ingredientes_tamanio' => $datos_tamanio_ingrediende
+        );
+
+        header('Content-Type: application/json');
+        echo json_encode($datos);
+    }
+
+
+    public function accion_tamanio_ingrediente()
+    {
+        $porcion = $this->funciones->cleanSanitize("STRING", $this->request->getVar('porcion'));
+        $id_ingrediente = $this->funciones->cleanSanitize("INT", $this->request->getVar('id_ingrediente'));
+        $id_tipo_tamanio = $this->funciones->cleanSanitize("INT", $this->request->getVar('id_tipo_tamanio'));
+
+
+        $lista_validar = $this->tamanios_ingredientes_modelo
+        ->where("id_ingrediente",$id_ingrediente)
+        ->where("id_tipo_tamanio",$id_tipo_tamanio)
+        ->findAll();
+
+          
+        $datos_ingrediente_tamanio = [
+            'id_ingrediente' => $id_ingrediente,
+            'id_tipo_tamanio' => $id_tipo_tamanio,
+            'porcion' =>  $porcion,
+            'cve_usuario' =>  $this->session->get("id")
+        ];
+
+        if(empty($lista_validar)){
+            $respuesta = $this->tamanios_ingredientes_modelo->save($datos_ingrediente_tamanio);
+        }else{
+            $respuesta = $this->tamanios_ingredientes_modelo->update($lista_validar[0]["id"],$datos_ingrediente_tamanio);
+        }
+
+        $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->tamanios_ingredientes_modelo->errors());
+
+        header('Content-Type: application/json');
         echo json_encode($respuesta);
     }
 }
