@@ -15,15 +15,10 @@ class Menu_Modelo extends Model
     protected $allowedFields = ['id', 'nombre', 'status'];
 
     protected $validationRules    = [
-        'nombre' => 'required',
-        'status' => 'required'
+        'nombre' => 'required|max_length[50]',
+        'status' => 'required|is_numeric|integer|'
     ];
 
-    protected $validationMessages = [
-        'nombre' => [
-            'is_unique' => 'Sorry. That email has already been taken. Please choose another.'
-        ]
-    ];
 
     public function _obtenerIngredienteMenu($idMenu)
     {

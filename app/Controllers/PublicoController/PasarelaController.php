@@ -133,7 +133,6 @@ class PasarelaController extends Controller
             return redirect()->to(base_url(""));
         }
 
-
         $res = true;
         $respuesta = null;
 

@@ -15,23 +15,16 @@ class Proveedores_modelo extends Model{
     'telefono','direccion','correo','status','cve_usuario'];
     
     protected $validationRules    = [
-        'nombre' => 'required',
-        'razon_social' => 'required',
+        'nombre' => 'required|max_length[255]',
+        'razon_social' => 'required|max_length[255]',
         'telefono' => 'required',
-        'direccion' => 'required',
+        'direccion' => 'required|max_length[255]',
         //'correo' => 'required',
-        'status' => 'required',
-        'cve_usuario' => 'required'
+        'status' => 'required|integer|is_numeric',
+        'cve_usuario' => 'required|max_length[255]'
     ];
     
-    /*protected $validationMessages = [
-        'nombre'=> [
-            'is_unique' => 'Sorry. That email has already been taken. Please choose another.'
-        ]
-    ];*/
-    
-
-
+   
 }
 
 ?>

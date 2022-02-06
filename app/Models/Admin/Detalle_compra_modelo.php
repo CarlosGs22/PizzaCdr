@@ -15,7 +15,7 @@ class Detalle_compra_modelo extends Model
     protected $allowedFields = ['id', 'cantidad', 'precio', 'subtotal','id_compra','id_articulo_ingrediente'];
 
     protected $validationRules    = [
-        'cantidad' => 'required|integer|numeric',
+        'cantidad' => 'required|integer|numeric|integer',
         'precio' => 'required|decimal|numeric',
         'precio' => 'required|decimal|numeric',
         'subtotal' => 'required|decimal|numeric',

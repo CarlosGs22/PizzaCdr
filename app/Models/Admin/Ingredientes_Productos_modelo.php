@@ -13,8 +13,8 @@ public $primaryKey = 'id';
 protected $allowedFields = ['id','id_ingrediente','id_producto'];
 
 protected $validationRules    = [
-    'id_ingrediente' => 'required',
-    'id_producto' => 'required'
+    'id_ingrediente' => 'required|integer',
+    'id_producto' => 'required|integer'
 ];
 
 }

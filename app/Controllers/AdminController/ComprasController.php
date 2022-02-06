@@ -159,11 +159,11 @@ class ComprasController extends Controller
 
     $this->compras_modelo->where('id', $idCompra);
     $this->compras_detalle_modelo->where('id_compra', $idCompra);
-    if ($this->compras_modelo->delete() && $this->compras_detalle_modelo->delete()) {
 
+    if ($this->compras_detalle_modelo->delete() && $this->compras_modelo->delete()) {
       $respuesta = array('0' => "Registro guardado exitosamente", '1' => "success");
     } else {
-
+      $res = false;
       $respuesta = array('0' => "Ocurrió un error al guardar", '1' => "error");
     }
 

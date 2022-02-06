@@ -12,7 +12,8 @@ $encrypter = \Config\Services::encrypter();
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <link rel="shortcut icon" href="<?php echo base_url("public/Admin/img/especiales/1.png") ?>" type="">
+  <title><?php echo $listas_especiales[0]["img2"] ?></title>
+  <link rel="shortcut icon" href="<?php echo base_url("public/Admin/img/especiales/logo1.png") ?>" type="">
 
   <title> <?php echo $listas_especiales[0]["img3"] != null ? $listas_especiales[0]["img3"] : "Tienda" ?></title>
 
@@ -81,6 +82,17 @@ $encrypter = \Config\Services::encrypter();
       });
     </script>
   <?php endif; ?>
+
+
+  <?php if (isset($_SESSION['respuesta'][2])) : ?>
+    <script>
+      $(function() {
+        $("#modal_horarios").modal("show");
+      });
+    </script>
+  <?php endif; ?>
+
+
   <?php if ($lista_sucursal_info) {
 
 
@@ -243,6 +255,81 @@ $encrypter = \Config\Services::encrypter();
     </div>
   </div>
 
+  <div class="modal fade" id="modal_horarios" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Horario de sucursal</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+              <div id="demo" class="carousel slide" data-ride="carousel">
+
+                <?php
+                if ($lista_sucursales) { ?>
+                  <ul class="carousel-indicators">
+                    <?php foreach ($lista_sucursales as $keys => $values) { ?>
+                      <li data-target="#demo" data-slide-to="<?= $keys ?>" class="active"></li>
+                    <?php  } ?>
+                  </ul>
+                <?php } ?>
+
+                <div class="carousel-inner">
+                  <?php
+                  if ($lista_sucursales) {
+                    foreach ($lista_sucursales as $key1 => $value1) { ?>
+                      <div class="container demo-bg">
+                        
+                        <div class="row">
+                          <div class="col-12 col-sm-12 col-md-12 col-lg-8 text-center p-2" style="align-self: center;">
+                          <h2><?=$value1["nombre"]?></h2>
+                            <img style="max-width: 40%; " src="<?=base_url("public/Admin/img/sucursales/".$value1["imagen"])?>" alt="">
+                          </div>
+                          <div class="col-12 col-sm-12 col-md-12 col-lg-4 p-2">
+
+                            <div class="business-hours">
+                              <h2 class="title">Horarios</h2>
+
+                              <ul class="list-unstyled opening-hours">
+                                <?php if ($lista_horarios) {
+                                  foreach ($lista_horarios as $key2 => $value2) {
+                                    if ($value2["id_sucursal"] == $value1["id"]) {
+                                ?>
+                                      <li><?= $value2["dia_espanol"] ?> <span class="pull-right"><?=$value2["horade"] . ":" . $value2["horademns"] . " a " . $value2["horahasta"] . ":" . $value2["horahastamns"] . " Hrs"?></span></li>
+
+                                <?php }
+                                  }
+                                } ?>
+                              </ul>
+                            </div>
+                        <?php }
+                    } ?>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+
+
+                <!-- Left and right controls -->
+                <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                  <span class="carousel-control-prev-icon"></span>
+                </a>
+                <a class="carousel-control-next" href="#demo" data-slide="next">
+                  <span class="carousel-control-next-icon"></span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     $(function() {
       $("#frmChoose").submit(function(e) {
@@ -275,3 +362,50 @@ $encrypter = \Config\Services::encrypter();
 
     });
   </script>
+
+  <style>
+    .demo-bg {
+      background: #f8f9fa;
+    }
+
+    .business-hours {
+      background: #111419;
+      padding: 40px 14px;
+      margin-top: -15px;
+      position: relative;
+    }
+
+    .business-hours:before {
+      content: '';
+      width: 23px;
+      height: 23px;
+      background: #111;
+      position: absolute;
+      top: 5px;
+      left: -12px;
+      transform: rotate(-45deg);
+      z-index: -1;
+    }
+
+    .business-hours .title {
+      font-size: 20px;
+      color: #BBB;
+      text-transform: uppercase;
+      padding-left: 5px;
+      border-left: 4px solid #ffac0c;
+    }
+
+    .business-hours li {
+      color: #888;
+      line-height: 30px;
+      border-bottom: 1px solid #333;
+    }
+
+    .business-hours li:last-child {
+      border-bottom: none;
+    }
+
+    .business-hours .opening-hours li.today {
+      color: #ffac0c;
+    }
+  </style>

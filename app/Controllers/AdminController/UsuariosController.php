@@ -99,19 +99,19 @@ class UsuariosController extends Controller
     $hash = password_hash($this->request->getVar('txtContrasenia'), PASSWORD_DEFAULT);
 
     $datos_usuario = [
-      'nombres' =>   $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtNombre')),
-      'apellido_paterno' =>   $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtApe1')),
+      'nombres' =>   $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtNombre')),
+      'apellido_paterno' =>   $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtApe1')),
       'apellido_materno' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtApe2')),
-      'tipo' =>  $this->funciones->cleanSanitize("INT",$idTipoUsuario),
-      'usuario' =>   $this->funciones->cleanSanitize("EMAIL",$this->request->getVar('txtUsuario')),
-      'contrasenia' =>   $this->funciones->cleanSanitize("STRING",$hash),
-      'status' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('txtStatus')),
+      'tipo' =>  $this->funciones->cleanSanitize("INT", $idTipoUsuario),
+      'usuario' =>   $this->funciones->cleanSanitize("EMAIL", $this->request->getVar('txtUsuario')),
+      'contrasenia' =>   $this->funciones->cleanSanitize("STRING", $hash),
+      'status' =>  $this->funciones->cleanSanitize("INT", $this->request->getVar('txtStatus')),
       'cve_usuario' =>  $this->session->get("id"),
-      'id_sucursal' =>  $this->funciones->cleanSanitize("INT",$this->request->getVar('txtSucursal'))
+      'id_sucursal' =>  $this->funciones->cleanSanitize("INT", $this->request->getVar('txtSucursal'))
     ];
 
     if ($idUsuario != null) {
-      array_merge($datos_usuario, array("id" =>  $this->funciones->cleanSanitize("INT",$idUsuario)));
+      array_merge($datos_usuario, array("id" =>  $this->funciones->cleanSanitize("INT", $idUsuario)));
     }
 
     $datos_usuario = $this->funciones->_GuardarImagen(
@@ -145,7 +145,7 @@ class UsuariosController extends Controller
     return redirect()->to(base_url("admin/usuarios"));
   }
 
-  public function accion_usuarios_clientes()
+  public function accion_usuarios_clientes_public()
   {
 
     if (
@@ -158,18 +158,18 @@ class UsuariosController extends Controller
       $hash = password_hash($this->request->getVar('txtContrasenia'), PASSWORD_DEFAULT);
 
       $datos_usuario = [
-        'nombres' =>   $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtNombre')),
-        'apellido_paterno' =>   $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtApe1')),
-        'apellido_materno' =>   $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtApe2')),
+        'nombres' =>   $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtNombre')),
+        'apellido_paterno' =>   $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtApe1')),
+        'apellido_materno' =>   $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtApe2')),
         'tipo' => "2",
-        'usuario' =>   $this->funciones->cleanSanitize("EMAIL",$this->request->getVar('txtUsuario')),
+        'usuario' =>   $this->funciones->cleanSanitize("EMAIL", $this->request->getVar('txtUsuario')),
         'contrasenia' =>  $this->funciones->cleanSanitize("STRING", $hash),
         'status' => "1",
         'cve_usuario' =>  "0"
       ];
 
       if ($idUsuario != null) {
-        array_merge($datos_usuario, array("id" =>  $this->funciones->cleanSanitize("INT",$idUsuario)));
+        array_merge($datos_usuario, array("id" =>  $this->funciones->cleanSanitize("INT", $idUsuario)));
       }
       $datos_usuario = $this->funciones->_GuardarImagen(
         $this->request->getFile('imgUsuario'),
@@ -178,7 +178,7 @@ class UsuariosController extends Controller
         "imagen"
       );
 
-      $contras = $this->usuarios_modelo->_validarContraseniaHash( $this->funciones->cleanSanitize("EMAIL",$this->request->getVar('txtUsuario')));
+      $contras = $this->usuarios_modelo->_validarContraseniaHash($this->funciones->cleanSanitize("EMAIL", $this->request->getVar('txtUsuario')));
       if ($contras == $this->request->getVar('txtContrasenia')) {
         $datos_usuario['contrasenia'] = $contras;
       } else {
@@ -197,13 +197,13 @@ class UsuariosController extends Controller
       }
 
       $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->usuarios_modelo->errors());
+
       $session = session();
       if ($respuesta[1] == 'success' && $idUsuario == null) {
 
-
         $newdata = [
-          'nombre_cliente' =>  $this->funciones->cleanSanitize("STRING",$this->request->getVar('txtNombre')),
-          'usuario_cliente' =>  $this->funciones->cleanSanitize("EMAIL",$this->request->getVar('txtUsuario')),
+          'nombre_cliente' =>  $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtNombre')),
+          'usuario_cliente' =>  $this->funciones->cleanSanitize("EMAIL", $this->request->getVar('txtUsuario')),
           'imagen_cliente' => ""
         ];
         $session->set($newdata);
@@ -212,12 +212,10 @@ class UsuariosController extends Controller
         $this->session->setFlashdata('respuesta', $respuesta);
         return redirect()->to(base_url("mi_cuenta"));
       } else {
-        $_SESSION['error'] = $respuesta;
         $this->session->setFlashdata('respuesta', $respuesta);
         return redirect()->to(base_url("login"));
       }
     } else {
-      $_SESSION['error'] = "Datos inválidos";
       $respuesta = array('0' => "Ocurrió un error interno ", '1' => "error");
       $this->session->setFlashdata('respuesta', $respuesta);
       return redirect()->to(base_url("login"));

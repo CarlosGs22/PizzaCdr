@@ -14,9 +14,9 @@ protected $allowedFields = ['id','imagen','status','id_producto','cve_usuario'];
 
 protected $validationRules    = [
     'imagen' => 'required',
-    'id_producto' => 'required',
-    'status' => 'required',
-    'cve_usuario' => 'required'
+    'id_producto' => 'required|integer',
+    'status' => 'required|integer',
+    'cve_usuario' => 'required|max_length[5]'
 ];
 
 

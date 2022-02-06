@@ -356,13 +356,12 @@ $datos_dias = [
                                                             <td class="table-plus"><?= $value['idSL'] ?></td>
                                                             <td><?= $value['nombreLoca'] . " " . $value['nombreMun'] ?></td>
 
-                                                            <td><input type="text" name="txtPrecio" class="form-control txtPrecio" value="<?= $value['precio'] ?>"></td>
+                                                            <td><input type="text" name="txtPrecio" class="form-control txtPrecio" value="<?= $value['precio'] ?>" oninput="restrict(this);" ></td>
                                                             <td><button type="button" id="<?= $value['idSL'] ?>" class="btn btnPrecioLoca" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);"><i class="fa fa-edit"></i>Editar</button></t>
 
                                                         </tr>
                                                 <?php }
                                                 } ?>
-
 
                                             </tbody>
                                         </table>
@@ -944,8 +943,7 @@ $datos_dias = [
         });
 
         $(".btnPrecioLoca").click(function() {
-            alert($(this).attr("id"));
-
+            
 
             $.ajax({
                 type: 'POST',

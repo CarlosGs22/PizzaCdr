@@ -6,12 +6,8 @@
 	<meta charset="utf-8">
 	<title><?php echo $listas_especiales[0]["img2"] ?></title>
 
-	<!-- Site favicon -->
-	<link rel="apple-touch-icon" sizes="180x180" href="<?php echo base_url("public/Admin/vendors/images/apple-touch-icon.png") ?>">
-	<link rel="icon" type="image/png" sizes="32x32" href="<?php echo base_url("public/Admin/vendors/images/favicon-32x32.png") ?>">
-	<link rel="icon" type="image/png" sizes="16x16" href="<?php echo base_url("public/Admin/vendors/images/favicon-16x16.png") ?>">
+	<link rel="shortcut icon" href="<?php echo base_url("public/Admin/img/especiales/logo1.png") ?>" type="">
 
-	<!-- Mobile Specific Metas -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 	<!-- CSS -->
@@ -27,7 +23,7 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Admin/vendors/styles/promociones.css") ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Admin/vendors/styles/sucursales.css") ?>">
 
-
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Publico/css/detail.css") ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Admin/vendors/styles/productos.css") ?>">
 
 	<script src="<?php echo base_url("public/Admin/vendors/scripts/jquery-3.6.0.min.js") ?>"></script>

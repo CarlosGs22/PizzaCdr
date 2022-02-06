@@ -13,15 +13,9 @@ public $primaryKey = 'id';
 protected $allowedFields = ['id', 'categoria','imagen','status','cve_fecha','cve_usuario'];
 
 protected $validationRules    = [
-    'categoria' => 'required',
-    'status' => 'required',
-    'cve_usuario' => 'required'
-];
-
-protected $validationMessages = [
-    'nombre'=> [
-        'is_unique' => 'Sorry. That email has already been taken. Please choose another.'
-    ]
+    'categoria' => 'required|max_length[50]',
+    'status' => 'required|max_length[5]|integer',
+    'cve_usuario' => 'required|max_length[5]'
 ];
 
 

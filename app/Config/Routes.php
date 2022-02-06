@@ -81,7 +81,7 @@ $routes->get('/salir', 'PublicoController/LoginController::salir');
 
 //usuarios_clientes
 $routes->get('/admin/usuarios_cliente', 'AdminController/UsuariosController::usuarios_cliente', ['filter' => 'auth']);
-$routes->post('/admin/accion_usuarios_clientes', 'AdminController/UsuariosController::accion_usuarios_clientes', ['filter' => 'noauthcliente']);
+$routes->post('/admin/accion_usuarios_clientes_public', 'AdminController/UsuariosController::accion_usuarios_clientes_public');
 
 
 //promociones
@@ -128,6 +128,9 @@ $routes->post('/admin/accion_horarios', 'AdminController/SucursalController::acc
 
 //ventas
 $routes->get('/admin/ventas', 'AdminController/VentasController::ventas', ['filter' => 'auth']);
+
+//pedidos
+$routes->get('/admin/pedidos', 'AdminController/PedidosController::pedidos', ['filter' => 'auth']);
 
 
 

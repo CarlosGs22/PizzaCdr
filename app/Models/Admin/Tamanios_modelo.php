@@ -15,7 +15,7 @@ class Tamanios_modelo extends Model
     protected $allowedFields = ['id', 'tamanio', 'imagen', 'status', 'cve_fecha', 'cve_usuario'];
 
     protected $validationRules    = [
-        'tamanio' => 'required'
+        'tamanio' => 'required|max_length[50]'
     ];
 
     protected $validationMessages = [

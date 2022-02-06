@@ -20,13 +20,13 @@ class Sucursal_modelo extends Model
     ];
 
     protected $validationRules    = [
-        'nombre' => 'required',
+        'nombre' => 'required|max_length[255]',
         'telefono' => 'required',
-        'calle' => 'required',
-        'numero' => 'required',
-        'colonia' => 'required',
-        'cp' => 'required',
-        'presentacion' => 'required'
+        'calle' => 'required|max_length[50]',
+        'numero' => 'required|max_length[50]',
+        'colonia' => 'required|max_length[255]',
+        'cp' => 'required|max_length[5]',
+        'presentacion' => 'required|max_length[255]'
     ];
 
     protected $validationMessages = [

@@ -13,9 +13,9 @@ public $primaryKey = 'id';
 protected $allowedFields = ['id', 'id_ingrediente','id_menu','cve_usuario'];
 
 protected $validationRules    = [
-    'id_ingrediente' => 'required',
-    'id_menu' => 'required',
-    'cve_usuario' => 'required'
+    'id_ingrediente' => 'required|integer',
+    'id_menu' => 'required|integer',
+    'cve_usuario' => 'required|max_length[5]'
 ];
 
 

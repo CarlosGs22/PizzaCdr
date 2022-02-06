@@ -13,9 +13,9 @@ public $primaryKey = 'id';
 protected $allowedFields = ['id','precio','id_sucursal','id_localidad'];
     
 protected $validationRules    = [
-    
-    'id_sucursal' => 'required',
-    'id_localidad' => 'required'
+    'precio' => 'required|is_numeric',
+    'id_sucursal' => 'required|integer|is_numeric',
+    'id_localidad' => 'required|integer|is_numeric'
 ];
 
 

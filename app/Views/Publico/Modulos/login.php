@@ -8,12 +8,10 @@
     <meta name="keywords" content="" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <link rel="shortcut icon" href="" type="">
 
+    <title><?php echo $listas_especiales[0]["img2"] ?></title>
+    <link rel="shortcut icon" href="<?php echo base_url("public/Admin/img/especiales/logo1.png") ?>" type="">
 
-    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo base_url("public/Admin/vendors/images/apple-touch-icon.png") ?>">
-    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo base_url("public/Admin/vendors/images/favicon-32x32.png") ?>">
-    <link rel="icon" type="image/png" sizes="16x16" href="<?php echo base_url("public/Admin/vendors/images/favicon-16x16.png") ?>">
 
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url("public/Admin/vendors/styles/core.css") ?>">
@@ -62,48 +60,48 @@
 
 
 <body class="login-page">
-    <?php if (isset($_SESSION['error'])) : ?>
+
+    <?php if (isset($_SESSION['respuesta'])) : ?>
         <script>
             Swal.fire({
-                icon: 'error',
+                icon: '<?php echo $_SESSION['respuesta'][1] ?>',
                 title: '',
-                text: '<?= $_SESSION['error']; ?>'
+                text: '<?php echo $_SESSION['respuesta'][0] ?>'
             });
         </script>
-    <?php unset($_SESSION['error']);
-    endif; ?>
+    <?php endif; ?>
 
-<?php if ($lista_sucursal_info) {
-    
-     
-    $telefono = "";
-    
-    foreach ($lista_sucursal_info as  $value) {
-      $telefono = $value["telefono"];
-    }
-  ?>
-      <div id="header">
-        <div class="topbar">
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                <ul>
-                  <li><i class="fa fa-volume-control-phone" aria-hidden="true"></i> <?= $telefono; ?></li>
-                  <?php
-                  if ($_SESSION["tipo_orden"] != null) { ?>
-                    <li>|</li>
-                    <li><i class="icon-copy ti-location-pin" aria-hidden="true"></i>Tipo de orden: <?= $_SESSION["tipo_orden"] . " " .  ($_SESSION["nombre_cobertura"] != null ? "(" . $_SESSION["nombre_cobertura"] .")" : "")  ?> </li>
-                  <?php } ?>
-                </ul>
-              </div>
+    <?php if ($lista_sucursal_info) {
+
+
+        $telefono = "";
+
+        foreach ($lista_sucursal_info as  $value) {
+            $telefono = $value["telefono"];
+        }
+    ?>
+        <div id="header">
+            <div class="topbar">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                            <ul>
+                                <li><i class="fa fa-volume-control-phone" aria-hidden="true"></i> <?= $telefono; ?></li>
+                                <?php
+                                if ($_SESSION["tipo_orden"] != null) { ?>
+                                    <li>|</li>
+                                    <li><i class="icon-copy ti-location-pin" aria-hidden="true"></i>Tipo de orden: <?= $_SESSION["tipo_orden"] . " " .  ($_SESSION["nombre_cobertura"] != null ? "(" . $_SESSION["nombre_cobertura"] . ")" : "")  ?> </li>
+                                <?php } ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
 
-  <?php
+    <?php
     }
-  ?>
+    ?>
 
 
     <header class="header_section headerPage">
@@ -126,13 +124,13 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=base_url("nosotros")?>">Nosotros</a>
+                        <a class="nav-link" href="<?= base_url("nosotros") ?>">Nosotros</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=base_url("menu/individuales")?>">Menu</a>
+                        <a class="nav-link" href="<?= base_url("menu/individuales") ?>">Menu</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=base_url("menu/promociones")?>">Promociones</a>
+                        <a class="nav-link" href="<?= base_url("menu/promociones") ?>">Promociones</a>
                     </li>
 
                     <li class="nav-item" data-toggle="modal" data-target="#modal_tipos_dir">
@@ -141,8 +139,8 @@
                 </ul>
                 <div class="user_option">
 
-                    <a class="cart_link" href="<?=base_url("carrito")?>">
-                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                    <a class="cart_link" href="<?= base_url("carrito") ?>">
+                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                     </a>
                     <a href="<?php echo base_url("login") ?>" class="user_link">
                         <i class="fa fa-user" aria-hidden="true"></i>
@@ -222,7 +220,7 @@
                         <div class="login-title">
                             <h2 class="text-center text-primary">Bienvenido</h2>
                         </div>
-                        <form id="frmRegistro" method="POST" action="<?php echo base_url("admin/accion_usuarios_clientes") ?>">
+                        <form id="frmRegistro" method="POST" action="<?php echo base_url("admin/accion_usuarios_clientes_public") ?>">
 
                             <div class="input-group custom">
                                 <input type="text" class="form-control form-control-lg Nombres" value="" name="txtNombre" placeholder="Nombres">

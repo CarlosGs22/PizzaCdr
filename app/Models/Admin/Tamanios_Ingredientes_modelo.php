@@ -14,10 +14,10 @@ protected $allowedFields = ['id', 'id_ingrediente','id_tipo_tamanio',
 'porcion','cve_usuario'];
     
 protected $validationRules    = [
-    'id_ingrediente' => 'required',
-    'id_tipo_tamanio' => 'required',
+    'id_ingrediente' => 'required|integer|is_numeric',
+    'id_tipo_tamanio' => 'required|integer|is_numeric',
     'porcion' => 'required',
-    'cve_usuario' => 'required',
+    'cve_usuario' => 'required|max_length[5]',
 ];
 
 public function _obtener_ingredientes($id_tamanio)

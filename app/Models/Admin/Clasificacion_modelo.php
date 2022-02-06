@@ -14,13 +14,7 @@ protected $allowedFields = ['id', 'nombre','status'];
 
 protected $validationRules    = [
     'nombre' => 'required|min_length[50]',
-    'status' => 'required|min_length[1]',
-];
-
-protected $validationMessages = [
-    'nombre'=> [
-        'is_unique' => 'Sorry. That email has already been taken. Please choose another.'
-    ]
+    'status' => 'required|min_length[5]|integer',
 ];
 
 

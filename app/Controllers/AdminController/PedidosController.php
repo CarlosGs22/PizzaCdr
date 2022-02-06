@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\PublicoController;
+namespace App\Controllers\AdminController;
 
 use App\Models\Publico\Contacto_modelo;
 use App\Models\Admin\Especiales_modelo;
@@ -8,13 +8,14 @@ use App\Models\Admin\Funciones;
 use App\Models\Admin\Horario_modelo;
 use App\Models\Admin\Imagenes_modelo;
 use App\Models\Admin\Menu_Modelo;
+use App\Models\Admin\Permiso_menu_modelo;
 use App\Models\Publico\Sucursal_Localidad_modelo;
 use App\Models\Admin\Sucursal_modelo;
 use App\Models\Publico\Funciones as PublicoFunciones;
 use App\Models\Publico\Productos_modelo;
 use CodeIgniter\Controller;
 
-class Home extends Controller
+class PedidosController extends Controller
 {
 
   protected $helpers = [];
@@ -57,6 +58,10 @@ class Home extends Controller
     $this->menu_modelo = new Menu_Modelo();
     $this->horario_modelo = new Horario_modelo();
 
+    $submenu_web = new Permiso_menu_modelo();
+    $this->datamenu['listas_submenu_web'] = $submenu_web->_obtenerSubmenu_web(session()->get('id'));
+
+
 
     $this->session = \Config\Services::session();
 
@@ -72,22 +77,24 @@ class Home extends Controller
     parent::initController($request, $response, $logger);
   }
 
-  public $rutaHeader = 'Publico/Marcos/header.php';
-  public $rutaSelect_Sucursal = 'Publico/Marcos/select_sucursal.php';
-  public $rutaContact = 'Publico/Marcos/contacto.php';
-  public $rutaModulo = 'Publico/Modulos/';
-  public $rutaFooter = 'Publico/Marcos/footer.php';
+  public $rutaHeader = 'Admin/Marcos/header.php';
+  public $rutaSelect_Sucursal = 'Admin/Marcos/select_sucursal.php';
+  public $rutaContact = 'Admin/Marcos/contacto.php';
+  public $rutaModulo = 'Admin/Modulos/';
+  public $rutaFooter = 'Admin/Marcos/footer.php';
 
-  public $rutaHeaderServicio = 'Publico/Marcos/header_servicio.php';
+  public $rutaHeaderServicio = 'Admin/Marcos/header_servicio.php';
 
-  public $rutaFooterServicio = 'Publico/Marcos/footer_servicio.php';
+  public $rutaFooterServicio = 'Admin/Marcos/footer_servicio.php';
 
-  public function principal()
+  public function pedidos()
   {
 
     $pagina = 12;
 
-    $lista["listas_especiales"] = $this->especiales->findAll();
+
+
+    $this->datamenu['listas_especiales'] = $this->especiales->findAll();
 
     $lista["lista_horarios"] = $this->horario_modelo->findAll();
 
@@ -101,9 +108,9 @@ class Home extends Controller
       $lista["lista_sucursal_info"] = $this->sucursales_localidad_modelo->_obtenerHorarios($this->session->get("sucursal_cobertura"));
     }
 
-    echo view($this->rutaHeader, $lista);
-    echo view($this->rutaModulo . 'inicio', $lista);
-    echo view($this->rutaContact, $lista);
+
+    echo view($this->rutaHeader,   $this->datamenu);
+    echo view($this->rutaModulo . 'pedidos', $lista);
     echo view($this->rutaFooter, $lista);
   }
 
@@ -156,7 +163,7 @@ class Home extends Controller
 
             $respuesta = array('0' => "Si hay cobertura para esta zona", '1' => "success");
           } else {
-            session()->setFlashdata('respuesta', array("0" => "Por el momento no hay servicio en esta sucursal,revise los horarios y cambie el tipo de orden", "1" => "error","2" => "500"));
+            session()->setFlashdata('respuesta', array("0" => "Por el momento no hay servicio en esta sucursal,revise los horarios y cambie el tipo de orden", "1" => "error", "2" => "500"));
             return redirect()->to(base_url(""));
           }
         } else {

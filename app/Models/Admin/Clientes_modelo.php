@@ -18,11 +18,6 @@ protected $validationRules    = [
     'apellido_materno' => 'required'
 ];
 
-protected $validationMessages = [
-    'nombre'=> [
-        'is_unique' => 'Sorry. That email has already been taken. Please choose another.'
-    ]
-];
 
 
 }

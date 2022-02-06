@@ -55,7 +55,7 @@ class PermisosController extends Controller
 
     $usuarios_model = new Usuarios_modelo();
 
-    $lista['listas_usuarios'] = $usuarios_model->_obtenerUsuarios($this->session->get("id"));
+    $lista['listas_usuarios'] = $usuarios_model->_obtenerUsuarios($this->session->get("id"),1);
 
     $submenu_model = new Sub_Menu_Model();
     $datasubmenu['listas_submenu'] = $submenu_model->_obtenerSubmenu_web($this->session->get("id"));

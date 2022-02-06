@@ -13,21 +13,21 @@ class Productos_modelo extends Model
 
     protected $allowedFields = [
         'id', 'nombre', 'descripcion', 'precio', 'total',
-        'status', 'id_masa', 'id_categoria', 'id_menu', 
-        'id_clasificacion', 'id_tamanio','id_sucursal', 
+        'status', 'id_masa', 'id_categoria', 'id_menu',
+        'id_clasificacion', 'id_tamanio', 'id_sucursal',
         'cve_usuario'
     ];
 
     protected $validationRules    = [
-        'nombre' => 'required',
-        'descripcion' => 'required',
-        'precio' => 'required',
-        'status' => 'required',
-        'id_masa' => 'required',
-        'id_categoria' => 'required',
-        'id_menu' => 'required',
-        'id_clasificacion' => 'required',
-        'cve_usuario' => 'required'
+        'nombre' => 'required|max_length[255]',
+        'descripcion' => 'required|max_length[255]',
+        'precio' => 'required|is_numeric',
+        'status' => 'required|integer|is_numeric',
+        'id_masa' =>  'required|integer|is_numeric',
+        'id_categoria' =>  'required|integer|is_numeric',
+        'id_menu' =>  'required|integer|is_numeric',
+        'id_clasificacion' =>  'required|integer|is_numeric',
+        'cve_usuario' =>  'required|max_length[5]'
     ];
 
     public function _obtenerProductos($idProducto)
@@ -63,7 +63,7 @@ class Productos_modelo extends Model
         return $query->getResultArray();
     }
 
-    public function getProductos($buscar,$id_sucursal)
+    public function getProductos($buscar, $id_sucursal)
     {
         $this->select('producto.id as idProducto, producto.nombre,producto.descripcion,producto.precio precioProducto,producto.status,producto.cve_fecha,
         masa.id as idMasa,masa.masa,
@@ -82,9 +82,9 @@ class Productos_modelo extends Model
             ->groupBy("producto.id");
 
         if ($buscar == null) {
-            return $this->where("id_sucursal",$id_sucursal)->paginate(10);
+            return $this->where("id_sucursal", $id_sucursal)->paginate(10);
         } else {
-            return $this->where("id_sucursal",$id_sucursal)->like("producto.nombre", $buscar)->paginate(10);
+            return $this->where("id_sucursal", $id_sucursal)->like("producto.nombre", $buscar)->paginate(10);
         }
     }
 }

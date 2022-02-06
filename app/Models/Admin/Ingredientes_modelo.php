@@ -13,10 +13,10 @@ public $primaryKey = 'id';
 protected $allowedFields = ['id', 'ingrediente','id_unidad','status','cve_fecha','cve_usuario'];
 
 protected $validationRules    = [
-    'ingrediente' => 'required',
-    'unidad' => 'required',
-    'status' => 'required',
-    'cve_usuario' => 'required'
+    'ingrediente' => 'required|max_length[50]',
+    'id_unidad' => 'required|integer',
+    'status' => 'required|integer',
+    'cve_usuario' => 'required|max_length[5]'
 ];
 
 protected $validationMessages = [

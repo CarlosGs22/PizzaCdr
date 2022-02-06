@@ -22,10 +22,10 @@ class Compras_modelo extends Model
 
     protected $validationRules    = [
         'fecha' => 'required',
-        'total' => 'required',
-        'id_metodo_pago' => 'required',
-        'cve_usuario' => 'required',
-        'id_sucursal' => 'required'
+        'total' => 'required|numeric',
+        'id_metodo_pago' => 'required|integer',
+        'cve_usuario' => 'required|max_length[5]',
+        'id_sucursal' => 'required|integer'
     ];
 
 

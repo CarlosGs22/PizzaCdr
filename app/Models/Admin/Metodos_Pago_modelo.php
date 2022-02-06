@@ -13,9 +13,9 @@ public $primaryKey = 'id';
 protected $allowedFields = ['id', 'metodo','status','cve_fecha','cve_usuario'];
 
 protected $validationRules    = [
-    'metodo' => 'required',
-    'status' => 'required',
-    'cve_usuario' => 'required'
+    'metodo' => 'required|max_length[50]',
+    'status' => 'required|integer|numeric',
+    'cve_usuario' => 'required|max_length[5]'
 ];
 
 

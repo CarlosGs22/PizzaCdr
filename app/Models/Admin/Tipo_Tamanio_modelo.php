@@ -15,16 +15,12 @@ class Tipo_Tamanio_modelo extends Model
     protected $allowedFields = ['id', 'id_tipo', 'id_tamanio', 'precio', 'cve_usuario'];
 
     protected $validationRules    = [
-        'id_tipo' => 'required',
-        'id_tamanio' => 'required',
-        'precio' => 'required'
+        'id_tipo' => 'required|integer|is_numeric',
+        'id_tamanio' => 'required|integer|is_numeric',
+        'precio' => 'required|is_numeric',
     ];
 
-    /*protected $validationMessages = [
-    'nombre'=> [
-        'is_unique' => 'Sorry. That email has already been taken. Please choose another.'
-    ]
-];*/
+    
 
 
 

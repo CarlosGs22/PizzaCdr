@@ -13,16 +13,9 @@ public $primaryKey = 'id';
 protected $allowedFields = ['id', 'cantidad','id_ingrediente_producto','id_sucursal'];
 
 protected $validationRules    = [
-    'cantidad' => 'required',
-    'id_ingrediente_producto' => 'required',
-    'id_sucursal' => 'required'
+    'cantidad' => 'required|is_numeric|integer',
+    'id_ingrediente_producto' => 'required|integer',
+    'id_sucursal' => 'required|integer'
 ];
-
-protected $validationMessages = [
-    'nombre'=> [
-        'is_unique' => 'Sorry. That email has already been taken. Please choose another.'
-    ]
-];
-
 
 }

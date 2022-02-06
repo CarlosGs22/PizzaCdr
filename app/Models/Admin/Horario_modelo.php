@@ -15,13 +15,13 @@ protected $allowedFields = ['id', 'dia',
 'horahastamns','status','id_sucursal','cve_fecha','cve_usuario'];
 
 protected $validationRules    = [
-    'dia' => 'required',
-    'horade' => 'required',
-    'horademns' => 'required',
-    'horahasta' => 'required',
-    'horahastamns' => 'required',
-    'status' => 'required',
-    'id_sucursal' => 'required',
+    'dia' => 'required|max_length[20]',
+    'horade' => 'required|max_length[20]',
+    'horademns' => 'required|max_length[20]',
+    'horahasta' => 'required|max_length[20]',
+    'horahastamns' => 'required|max_length[20]',
+    'status' => 'required|integer',
+    'id_sucursal' => 'required|integer',
     'cve_usuario' => 'required'
 ];
 

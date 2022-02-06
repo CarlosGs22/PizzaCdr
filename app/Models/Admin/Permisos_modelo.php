@@ -10,7 +10,14 @@ public $table = 'permiso_menu';
 
 public $primaryKey = 'idpermiso';
 
-protected $allowedFields = ['idpermiso','id_usuario','id_submenu','cve_usuario','cve_fecha'];
+protected $allowedFields = ['idpermiso','id_usuario',
+'id_submenu','cve_usuario','cve_fecha'];
+
+protected $validationRules    = [
+  'id_usuario' => 'required|integer|is_numeric',
+  'id_submenu' => 'required|integer|is_numeric',
+  'cve_usuario' => 'required|max_length[5]'
+];
 
 public function _obtenerPermisoUsuario($idusuario)
   {

@@ -29,10 +29,10 @@ class SessionSucursal implements FilterInterface
 
 
     $funciones = new Funciones();
-  
+
 
     if (session()->get('sucursal_cobertura') == null) {
-      
+
 
       $lista["lista_sucursal_info"] = $sucursales_localidad_modelo->_obtenerHorarios("1");
 
@@ -41,13 +41,13 @@ class SessionSucursal implements FilterInterface
 
         foreach ($lista["lista_sucursal_info"] as $key => $value) {
           if ($value["dia"] == date('l')) {
-            
+
             $tiempoInicial = $value["horade"] . ":" . $value["horademns"];
             $tiempoFinal = $value["horahasta"] . ":" . $value["horahastamns"];
             $restiempo = $funciones->_obtenerHorarioDisponible($tiempoActual, $tiempoInicial, $tiempoFinal);
 
             if ($restiempo != "1") {
-              session()->setFlashdata('respuesta', array("0" => "Por el momento no hay servicio en esta sucursal, revise los horarios y cambie el tipo de orden", "1" => "error"));
+              session()->setFlashdata('respuesta', array("0" => "Por el momento no hay servicio en esta sucursal, revise los horarios y cambie el tipo de orden", "1" => "error","2" => "500"));
               return redirect()->to(base_url(""));
             }
           }
@@ -66,7 +66,7 @@ class SessionSucursal implements FilterInterface
         $session = session();
         $session->set($cobertura);
       } else {
-        session()->setFlashdata('respuesta', array("0" => "Por el momento no hay servicio en esta sucursal, revise los horarios y cambie el tipo de orden", "1" => "error"));
+        session()->setFlashdata('respuesta', array("0" => "Por el momento no hay servicio en esta sucursal, revise los horarios y cambie el tipo de orden", "1" => "error", "2" => "500"));
 
         return redirect()->to(base_url(""));
       }
@@ -79,9 +79,9 @@ class SessionSucursal implements FilterInterface
           $tiempoInicial = $value["horade"] . ":" . $value["horademns"];
           $tiempoFinal = $value["horahasta"] . ":" . $value["horahastamns"];
           $restiempo = $funciones->_obtenerHorarioDisponible($tiempoActual, $tiempoInicial, $tiempoFinal);
-      
+
           if ($restiempo != "1") {
-            session()->setFlashdata('respuesta', array("0" => "Por el momento no hay servicio en esta sucursal, revise los horarios y cambie el tipo de orden", "1" => "error"));
+            session()->setFlashdata('respuesta', array("0" => "Por el momento no hay servicio en esta sucursal, revise los horarios y cambie el tipo de orden", "1" => "error", "2" => "500"));
             return redirect()->to(base_url(""));
           }
         }
