@@ -3,7 +3,7 @@ namespace App\Models\Admin;
 use CodeIgniter\Model;
 
 
-class Clasificacion_Modelo extends Model
+class Clasificacion_modelo extends Model
 {
 
 public $table = 'clasificacion';

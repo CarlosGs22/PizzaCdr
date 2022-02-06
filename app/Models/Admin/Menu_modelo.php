@@ -5,7 +5,7 @@ namespace App\Models\Admin;
 use CodeIgniter\Model;
 
 
-class Menu_Modelo extends Model
+class Menu_modelo extends Model
 {
 
     public $table = 'menu';

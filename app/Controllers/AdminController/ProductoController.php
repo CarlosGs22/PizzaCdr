@@ -3,7 +3,7 @@
 namespace App\Controllers\AdminController;
 
 use App\Models\Admin\Categorias_modelo;
-use App\Models\Admin\Clasificacion_Modelo;
+use App\Models\Admin\Clasificacion_modelo;
 use App\Models\Admin\Especiales_modelo;
 use App\Models\Admin\Funciones;
 use App\Models\Admin\Imagenes_modelo;
@@ -57,8 +57,8 @@ class ProductoController extends Controller
     $this->ingredientes_productos_modelo = new Ingredientes_Productos_modelo();
     $this->tamanios_ingredientes_modelo = new Tamanios_Ingredientes_modelo();
     $this->imagenes_modelo = new Imagenes_modelo();
-    $this->menu_modelo = new Menu_Modelo();
-    $this->clasificacion_modelo = new Clasificacion_Modelo();
+    $this->menu_modelo = new Menu_modelo();
+    $this->clasificacion_modelo = new Clasificacion_modelo();
     $this->funciones = new Funciones();
     $this->tipo_tamanio_modelo = new Tipo_Tamanio_modelo();
     $this->session = session();

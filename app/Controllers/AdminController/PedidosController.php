@@ -55,7 +55,7 @@ class PedidosController extends Controller
     $this->sucursales_localidad_modelo = new Sucursal_Localidad_modelo();
     $this->contacto_modelo = new Contacto_modelo();
     $this->imagen_modelo = new Imagenes_modelo();
-    $this->menu_modelo = new Menu_Modelo();
+    $this->menu_modelo = new Menu_modelo();
     $this->horario_modelo = new Horario_modelo();
 
     $submenu_web = new Permiso_menu_modelo();

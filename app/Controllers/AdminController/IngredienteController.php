@@ -41,7 +41,7 @@ class IngredienteController extends Controller
 
         $this->ingredientes_modelo = new Ingredientes_modelo();
         $this->status_modelo = new Status_modelo();
-        $this->menu_modelo = new Menu_Modelo();
+        $this->menu_modelo = new Menu_modelo();
         $this->ingredientes_menu_modelo = new Ingredientes_Menu_modelo();
         $this->tamanios_ingredientes_modelo = new Tamanios_Ingredientes_modelo();
         $this->unidad_modelo = new Unidades_modelo();

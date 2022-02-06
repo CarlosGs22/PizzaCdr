@@ -68,7 +68,7 @@ class LoginController extends Controller
 
     if ($usuario != null & $contrasenia != null) {
 
-      $usuarios_model = new Usuarios_Modelo();
+      $usuarios_model = new Usuarios_modelo();
       $permiso_model = new Permisos_modelo();
 
       $validar = $usuarios_model->_validarContrasenia($usuario, $contrasenia);
