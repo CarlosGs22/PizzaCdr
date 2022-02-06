@@ -6,7 +6,6 @@ use App\Models\Admin\Especiales_modelo;
 use App\Models\Admin\Funciones;
 use App\Models\Admin\Permiso_menu_modelo;
 use App\Models\Admin\Status_modelo;
-use App\Models\Admin\Ingredientes_modelo;
 use App\Models\Admin\Proveedores_modelo;
 use CodeIgniter\Controller;
 

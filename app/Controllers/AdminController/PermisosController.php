@@ -3,10 +3,7 @@
 namespace App\Controllers\AdminController;
 
 use App\Models\Admin\Especiales_modelo;
-use App\Models\Admin\Estados_modelo;
 use App\Models\Admin\Funciones;
-use App\Models\Admin\Localidades_modelo;
-use App\Models\Admin\Municipios_modelo;
 use App\Models\Admin\Permiso_menu_modelo;
 use App\Models\Admin\Permisos_modelo;
 use App\Models\Admin\Status_modelo;

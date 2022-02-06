@@ -6,7 +6,7 @@ use App\Models\Admin\Funciones;
 use App\Models\Admin\Especiales_modelo;
 use App\Models\Admin\Ingredientes_Menu_modelo;
 use App\Models\Admin\Ingredientes_modelo;
-use App\Models\Admin\Menu_Modelo;
+use App\Models\Admin\Menu_modelo;
 use App\Models\Admin\Permiso_menu_modelo;
 use App\Models\Admin\Status_modelo;
 use App\Models\Admin\Tamanios_Ingredientes_modelo;

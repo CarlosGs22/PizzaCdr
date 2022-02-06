@@ -6,7 +6,7 @@ use App\Models\Publico\Contacto_modelo;
 use App\Models\Admin\Especiales_modelo;
 use App\Models\Admin\Funciones;
 use App\Models\Admin\Imagenes_modelo;
-use App\Models\Admin\Menu_Modelo;
+use App\Models\Admin\Menu_modelo;
 use App\Models\Publico\Sucursal_Localidad_modelo;
 use App\Models\Admin\Sucursal_modelo;
 use App\Models\Publico\Productos_modelo;

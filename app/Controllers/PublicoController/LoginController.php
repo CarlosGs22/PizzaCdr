@@ -5,7 +5,6 @@ namespace App\Controllers\PublicoController;
 use App\Models\Admin\Especiales_modelo;
 use App\Models\Admin\Funciones;
 use App\Models\Admin\Permisos_modelo;
-use App\Models\Admin\Sucursal_Localidad_modelo;
 use App\Models\Admin\Sucursal_modelo;
 use App\Models\Admin\Usuarios_modelo;
 use App\Models\Publico\Sucursal_Localidad_modelo as PublicoSucursal_Localidad_modelo;

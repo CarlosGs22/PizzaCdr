@@ -10,7 +10,7 @@ use App\Models\Admin\Imagenes_modelo;
 use App\Models\Admin\Ingredientes_modelo;
 use App\Models\Admin\Ingredientes_Productos_modelo;
 use App\Models\Admin\Masas_modelo;
-use App\Models\Admin\Menu_Modelo;
+use App\Models\Admin\Menu_modelo;
 use App\Models\Admin\Permiso_menu_modelo;
 use App\Models\Admin\Status_modelo;
 use App\Models\Admin\Productos_modelo;

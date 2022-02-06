@@ -2,7 +2,6 @@
 
 namespace App\Controllers\AdminController;
 
-use App\Models\Admin\Clientes_modelo;
 use App\Models\Admin\Especiales_modelo;
 use App\Models\Admin\Permiso_menu_modelo;
 use App\Models\Admin\Usuarios_modelo;
