@@ -34,14 +34,14 @@ class Database extends \CodeIgniter\Database\Config
 
 	public $default = [
 		'DSN'      => '',
-		'hostname' => 'localhost',
-		'username' => 'root',
+		'hostname' => '',
+		'username' => '',
 		'password' => '',
-		'database' => 'pizzacdr',
+		'database' => '',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,
-		'DBDebug'  => (ENVIRONMENT !== 'development'),
+		'DBDebug'  => 'production',
 		'cacheOn'  => false,
 		'cacheDir' => '',
 		'charset'  => 'utf8',
