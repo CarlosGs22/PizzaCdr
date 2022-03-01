@@ -545,15 +545,30 @@
                                 arreglo.push(id_gen);
                             }
 
+
+                            console.log(data.ingredientes_tamanio);
+                            console.log("PPPPPPPPPPPPPPPPPPPP");
+                            console.log( data.ingredientes_gen);
+
                             for (var i = 0; i < data.ingredientes_gen.length; i++) {
                                 id_sub = data.ingredientes_gen[i].id;
                                 ingrediente = data.ingredientes_gen[i].ingrediente;
                                 unidad = data.ingredientes_gen[i].nombre;
+                                porcion = 0;
+                                
 
-                                if (typeof data.ingredientes_tamanio[i] !== 'undefined') {
-                                    porcion = data.ingredientes_tamanio[i].porcion;
-                                } else {
+                                if (typeof data.ingredientes_tamanio[i] == 'undefined') {
                                     porcion = 0;
+                                } 
+
+                                for (var j = 0; j < data.ingredientes_tamanio.length; j++) {
+                                  id_sub_tamanio = data.ingredientes_tamanio[j].id_ingrediente;
+                                  if(id_sub_tamanio == id_sub){
+                                      porcion = data.ingredientes_tamanio[j].porcion;
+                                      ingrediente = data.ingredientes_tamanio[j].ingrediente;
+                                  }else{
+                                    ingrediente = data.ingredientes_gen[i].ingrediente;
+                                  }
                                 }
 
                                 var found = arreglo.includes(id_sub);

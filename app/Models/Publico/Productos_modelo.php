@@ -2,6 +2,7 @@
 
 namespace App\Models\Publico;
 
+use App\Models\Admin\Funciones;
 use CodeIgniter\Model;
 
 
@@ -32,8 +33,10 @@ class Productos_modelo extends Model
 
     public function _obtenerProductospUBL($idProducto)
     {
+        $funciones = new Funciones();
         $condicion = null;
         if ($idProducto != null) {
+            $idProducto = $funciones->cleanSanitize("STRING", $idProducto);
             $condicion = "WHERE producto.id = " . $idProducto;
         } else {
             $condicion = "";
@@ -87,15 +90,19 @@ class Productos_modelo extends Model
         return $query->getResultArray();
     }
 
-    public function _getProductosPublic($idSucursal, $pagina, $idClasificacion, $idTipoTamanio)
+    public function _getProductosPublic($txtBuscar, $idSucursal, $pagina, $idClasificacion, $idTipoTamanio)
     {
+        $funciones = new Funciones();
         $condicion = null;
         if ($idClasificacion != null) {
             $condicion = "AND clasificacion.id = " . $idClasificacion;
         } else if ($idTipoTamanio != null) {
             $condicion = "AND tipo_tamanio.id = " . $idTipoTamanio;
-        } else {
-            $condicion = "";
+        } else if ($txtBuscar != null) {
+            $txtBuscar = $funciones->cleanSanitize("STRING", $txtBuscar);
+            $condicion = "AND (producto.nombre like '%" . $txtBuscar . "%' 
+            OR producto.descripcion like '%" . $txtBuscar . "%'
+            ) ";
         }
 
         $this->table('ingrediente');
@@ -157,5 +164,20 @@ class Productos_modelo extends Model
 
 
         return $this->where("inventario.id_sucursal", $idSucursal)->paginate($pagina);
+    }
+
+    public function _obtenerIngredientesTamanio($idMenu, $idTipoTamanio)
+    {
+        $sql = "SELECT menu.id as idMenu,menu.nombre as nombreMenu,
+        ingrediente.id as idIngrediente, ingrediente.ingrediente,
+        porcion
+        FROM menu
+        LEFT JOIN menu_ingredientes on menu_ingredientes.id_menu = menu.id
+        LEFT JOIN ingrediente on ingrediente.id = menu_ingredientes.id_ingrediente
+        LEFT JOIN tamanio_ingrediente on tamanio_ingrediente.id_ingrediente = ingrediente.id
+        WHERE menu.id = ? and tamanio_ingrediente.id_tipo_tamanio = ?";
+
+        $query = $this->query($sql, array($idMenu, $idTipoTamanio));
+        return $query->getResultArray();
     }
 }

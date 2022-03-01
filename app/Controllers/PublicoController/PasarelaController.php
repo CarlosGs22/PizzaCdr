@@ -5,10 +5,13 @@ namespace App\Controllers\PublicoController;
 use App\Models\Admin\Especiales_modelo;
 use App\Models\Admin\Estados_modelo;
 use App\Models\Admin\Funciones;
+use App\Models\Admin\Inventario_modelo;
 use App\Models\Admin\Localidades_modelo;
+use App\Models\Admin\Menu_modelo;
 use App\Models\Admin\Municipios_modelo;
 use App\Models\Admin\Status_modelo;
 use App\Models\Admin\Sucursal_modelo;
+use App\Models\Admin\Tamanios_Ingredientes_modelo;
 use App\Models\Admin\Usuarios_modelo;
 use App\Models\Publico\Detalle_Venta_modelo;
 use App\Models\Publico\Direccion_modelo;
@@ -16,6 +19,7 @@ use App\Models\Publico\Productos_modelo as PublicoProductos_modelo;
 use App\Models\Publico\Sucursal_Localidad_modelo;
 use App\Models\Publico\Venta_modelo;
 use CodeIgniter\Controller;
+use phpDocumentor\Reflection\DocBlock\Tags\Return_;
 
 class PasarelaController extends Controller
 {
@@ -31,6 +35,8 @@ class PasarelaController extends Controller
     protected $municipios_modelo;
     protected $estados_modelo;
     protected $direccion_modelo;
+    protected $inventario_modelo;
+    protected $menu_modelo;
     protected $funciones;
 
     protected $cart;
@@ -38,6 +44,8 @@ class PasarelaController extends Controller
     protected $venta_modelo;
     protected $productos_modelo;
     protected $detalle_venta_modelo;
+
+    protected $tamanio_ingredientes_modelo;
 
     protected $encrypter;
     protected $encryption;
@@ -58,6 +66,10 @@ class PasarelaController extends Controller
         $this->municipios_modelo = new Municipios_modelo();
         $this->localidades_modelo = new Localidades_modelo();
         $this->direccion_modelo = new Direccion_modelo();
+
+        $this->tamanio_ingredientes_modelo = new Tamanios_Ingredientes_modelo();
+        $this->inventario_modelo = new Inventario_modelo();
+        $this->menu_modelo = new Menu_modelo();
 
         $this->venta_modelo = new Venta_modelo();
         $this->detalle_venta_modelo = new Detalle_Venta_modelo();
@@ -89,8 +101,11 @@ class PasarelaController extends Controller
 
     public function pasarela()
     {
+
         if ($this->cart->totalItems() != 0) {
             if (session()->get("sucursal_cobertura") != null) {
+
+                $lista['lista_estados'] = $this->estados_modelo->findAll();
 
                 $lista["lista_usuario"] = $this->usuarios_modelo->where("usuario", $this->session->get("usuario_cliente"))->findAll();
 
@@ -128,7 +143,7 @@ class PasarelaController extends Controller
     public function accion_pasarela()
     {
         if ($this->_ValidateFields() == 1) {
-            $respuesta = array("0" => "Ocurrió un error interno", "1" => "error");
+            $respuesta = array("0" => "Ocurrió un error interno(Valores esperados) ", "1" => "error");
             $this->session->setFlashdata('respuesta', $respuesta);
             return redirect()->to(base_url(""));
         }
@@ -143,18 +158,20 @@ class PasarelaController extends Controller
 
         $txtContacto = $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtContacto'));
 
+        $txtComentario = $this->funciones->cleanSanitize("STRING", $this->request->getVar('txtComentario'));
+
         $lista_usuario = $this->usuarios_modelo->where("usuario", $this->session->get("usuario_cliente"))->findAll();
         $precioEnvio = null;
         $tipoOrden = null;
 
         $this->direccion_modelo->transBegin();
 
-        if (session()->get("tipo_orden") == "En sucursal") {
+        if (session()->get("tipo_orden") == "En sucursal" || $this->request->getVar("txtTipoOrden") == "1") {
             $txtDireccion = null;
             $precioEnvio = 0;
             $tipoOrden = 1;
         } else {
-            if (session()->get("tipo_orden") == "A Domicilio") {
+            if (session()->get("tipo_orden") == "A Domicilio" || $this->request->getVar("txtTipoOrden") == "2") {
                 $tipoOrden = 2;
                 if (session()->get("cp") != null) {
                     $lista_cobertura =  $this->sucursales_localidad_modelo->_obtenerCobertura($this->funciones->cleanSanitize("INT", session()->get("cp")));
@@ -207,7 +224,7 @@ class PasarelaController extends Controller
         if ($this->cart->totalItems() > 0) {
             foreach ($this->cart->contents() as $value) {
                 $decryptedIdProducto = $this->encrypter->decrypt(hex2bin($value["id"]));
-                $lista_productos = $this->productos_modelo->_getProductosPublic(session()->get("sucursal_cobertura"), "9999999999999", null, null);
+                $lista_productos = $this->productos_modelo->_getProductosPublic(NULL,session()->get("sucursal_cobertura"), "9999999999999", null, null);
 
                 foreach ($lista_productos as $key2 => $value2) {
                     if ($value2["idProducto"] == $decryptedIdProducto) {
@@ -222,6 +239,8 @@ class PasarelaController extends Controller
 
         $this->detalle_venta_modelo->transBegin();
 
+        $this->inventario_modelo->transBegin();
+
         $this->_GetContact($txtContacto);
 
 
@@ -232,6 +251,7 @@ class PasarelaController extends Controller
                 'metodo_pago' =>  $this->funciones->cleanSanitize("INT", $txtTipoPago),
                 'contacto' => $this->_GetContact(),
                 'precio_envio' => $precioEnvio,
+                'comentario' =>  $this->funciones->cleanSanitize("INT", $txtComentario),
                 'tipo_orden' => $tipoOrden,
                 'id_cliente' =>  session()->get("usuario_cliente") != null ? $this->funciones->cleanSanitize("STRING", $lista_usuario[0]["id"]) : null,
                 'id_direccion' => $txtDireccion
@@ -255,7 +275,7 @@ class PasarelaController extends Controller
                     if ($res) {
                         foreach ($this->cart->contents() as $value) {
                             $decryptedIdProducto = $this->encrypter->decrypt(hex2bin($value["id"]));
-                            $lista_productos = $this->productos_modelo->_getProductosPublic(session()->get("sucursal_cobertura"), "999999999999", null, null);
+                            $lista_productos = $this->productos_modelo->_getProductosPublic(NULL,session()->get("sucursal_cobertura"), "999999999999", null, null);
 
                             foreach ($lista_productos as $key2 => $value2) {
                                 if ($value2["idProducto"] == $decryptedIdProducto) {
@@ -281,6 +301,105 @@ class PasarelaController extends Controller
                                         $res = false;
                                         $respuesta = array("0" => "Error en success", "1" => "error");
                                         break;
+                                    } else {
+                                        foreach ($value["options"] as $keyO => $valueO) {
+                                            if ($res) {
+                                                foreach ($valueO as $keyIn => $valueIn) {
+                                                    if ($res) {
+
+                                                        try {
+                                                            $txtIdMenu = $this->encrypter->decrypt(hex2bin($valueIn["idMenu"]));
+                                                            $lista['lista_menu_ingrediente'] = $this->menu_modelo->_obtenerIngredienteMenu($txtIdMenu);
+
+                                                            if (!empty($lista['lista_menu_ingrediente'])) {
+                                                                foreach ($lista['lista_menu_ingrediente'] as $key3 => $value3) {
+                                                                    if ($res) {
+                                                                        $lista['lista_porcion'] = $this->tamanio_ingredientes_modelo->where("id_ingrediente", $value3["idIngrediente"])->where("id_tipo_tamanio", $value2["idTipoTamanio"])->findAll();
+
+                                                                        if (!empty($lista['lista_porcion'])) {
+                                                                            for ($i = 0; $i < (int) $value["qty"]; $i++) {
+
+                                                                                $id_sucursal = (session()->get("sucursal_cobertura") != null ? session()->get("sucursal_cobertura") : session()->get("id_sucursal"));
+
+                                                                                $lista['lista_inventario'] = $this->inventario_modelo->where("id_ingrediente_producto", $value3["idIngrediente"])->where("id_sucursal", $id_sucursal)->findAll();
+
+                                                                                if (!empty($lista['lista_inventario'])) {
+
+
+
+                                                                                    if ((int) $lista['lista_inventario'][0]["cantidad"] > 0 && ((int) $lista['lista_inventario'][0]["cantidad"] >= (int) $lista['lista_porcion'][0]["porcion"])) {
+
+                                                                                        $cantidad_restar =  ((int) $lista['lista_inventario'][0]["cantidad"] - (int) $lista['lista_porcion'][0]["porcion"]);
+
+                                                                                        $datos_porcion_inventario = [
+                                                                                            'cantidad' => $cantidad_restar
+                                                                                        ];
+
+
+
+                                                                                        try {
+                                                                                            $respuesta = $this->inventario_modelo->update($lista['lista_inventario'][0]["id"], $datos_porcion_inventario);
+                                                                                        } catch (\Throwable $th) {
+                                                                                            $res = false;
+                                                                                            $respuesta = $this->inventario_modelo->error();
+                                                                                            break;
+                                                                                        }
+
+
+
+
+                                                                                        $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->inventario_modelo->errors());
+
+
+                                                                                        if ($respuesta[1] != "success") {
+                                                                                            $res = false;
+                                                                                            $respuesta = array("0" => "Error en inventario", "1" => "error");
+                                                                                            break;
+                                                                                        }
+                                                                                    } else {
+                                                                                        $res = false;
+                                                                                        $respuesta = array("0" => "Error no hay inventario del producto", "1" => "error");
+                                                                                        break;
+                                                                                    }
+                                                                                } else {
+                                                                                    $res = false;
+                                                                                    $respuesta = array("0" => "Ocurrió un error interno (002) ", "1" => "error");
+                                                                                    break;
+                                                                                }
+                                                                            }
+                                                                        } else {
+                                                                            $res = false;
+                                                                            $respuesta = array("0" => "Ocurrió un error interno (006) ", "1" => "error");
+                                                                            break;
+                                                                        }
+                                                                    } else {
+                                                                        $res = false;
+                                                                        $respuesta = array("0" => "Ocurrió un error interno (005) ", "1" => "error");
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                $res = false;
+                                                                $respuesta = array("0" => "Ocurrió un error interno (001)", "1" => "error");
+                                                                break;
+                                                            }
+                                                        } catch (\Throwable $th) {
+                                                            $res = false;
+                                                            $respuesta = array("0" => "Error en inventario " . $th->getMessage(), "1" => "error");
+                                                            break;
+                                                        }
+                                                    } else {
+                                                        $res = false;
+                                                        $respuesta = array("0" => "Ocurrió un errro interno (003)", "1" => "error");
+                                                        break;
+                                                    }
+                                                }
+                                            } else {
+                                                $res = false;
+                                                $respuesta = array("0" => "Ocurrió un errro interno (004)", "1" => "error");
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -321,9 +440,11 @@ class PasarelaController extends Controller
                 $this->direccion_modelo->transCommit();
             }
 
-            
+            if ($this->inventario_modelo->transStatus() !== FALSE) {
+                $this->inventario_modelo->transCommit();
+            }
 
-            $redirect = "miscompras/" . bin2hex($this->encrypter->encrypt($id_venta));
+            $redirect = "miscompras/00-" . $id_venta;
             $respuesta = array("0" => "Compra realizada con exito", "1" => "success");
             $this->cart->destroy();
         } else {
@@ -338,9 +459,13 @@ class PasarelaController extends Controller
                 $this->direccion_modelo->transRollback();
             }
 
-            $respuesta = array("0" => "Ocurrió un error interno", "1" => "error");
+            if ($this->inventario_modelo->transStatus() === FALSE) {
+                $this->inventario_modelo->transRollback();
+            }
+
             $redirect = "pasarela";
         }
+
 
         $this->session->setFlashdata('respuesta', $respuesta);
         return redirect()->to(base_url($redirect));
@@ -426,11 +551,16 @@ class PasarelaController extends Controller
         $res = 1;
 
         $txtTipoPago = $this->encrypter->decrypt(hex2bin($this->request->getVar('txtTipoPago')));
+        $txtCp = $this->request->getVar('txtCp');
 
         if ($txtTipoPago == null) {
             $res = 0;
         }
         if ($txtTipoPago != 1 || $txtTipoPago != 2) {
+            $res = 0;
+        }
+
+        if ($txtCp != null && strlen($txtCp) <> 5) {
             $res = 0;
         }
 

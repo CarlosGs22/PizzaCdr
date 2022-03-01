@@ -1,5 +1,13 @@
 <?php
+
+use App\Models\Admin\Funciones;
+use App\Models\Publico\Productos_modelo;
+
 $encrypter = \Config\Services::encrypter();
+
+$productos_modelo = new Productos_modelo();
+$funciones = new Funciones();
+
 ?>
 
 <div class="hero_are">
@@ -10,50 +18,61 @@ $encrypter = \Config\Services::encrypter();
 
       <div class="carousel-inner w-100">
         <?php if ($lista_productos) {
+          $active = "active";
           foreach ($lista_productos as $key => $value) {
+            $lista["lista_ingredientes_tamanios"] = $productos_modelo->_obtenerIngredientesTamanio($value["idMenu"], $value["idTipoTamanio"]);
 
-            if ($value["slider"] == "1") {
+            $validarPorciones = $funciones->findTextByValueInArray($lista["lista_ingredientes_tamanios"], "0", "porcion");
+
+            if (!empty($lista["lista_ingredientes_tamanios"])) {
+              if ($validarPorciones == 0) {
+
+
+                if ($value["slider"] == "1") {
         ?>
-              <div class="carousel-item <?php echo $key == 0 ? 'active' : '' ?>">
-                <div class="media">
-                  <section class="about_section layout_padding w-100 panel_section">
-                    <div class="container  ">
+                  <div class="carousel-item <?= $active ?>">
+                    <div class="media">
+                      <section class="about_section layout_padding w-100 panel_section">
+                        <div class="container  ">
 
-                      <div class="row">
-                        <div class="col-6 col-sm-6 col-md-6 col-lg-6">
-                          <div class="img-box">
-                            <img src="<?php echo base_url("public/Admin/img/productos/" . $value["imagen_producto"]) ?>" alt="">
-                          </div>
-                        </div>
-                        <div class="col-6 col-sm-6 col-md-6 col-lg-6">
-                          <div class="detail-box">
-                            <div class="heading_container">
-                              <h2>
-                                <?= $value["nombre_menu"] ?>
-                              </h2>
+                          <div class="row">
+                            <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                              <div class="img-box">
+                                <img src="<?php echo base_url("public/Admin/img/productos/" . $value["imagen_producto"]) ?>" alt="">
+                              </div>
                             </div>
-                            <p>
-                              <?= $value["descripcion"] ?>
-                            </p>
+                            <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                              <div class="detail-box">
+                                <div class="heading_container">
+                                  <h2>
+                                    <?= $value["nombre_menu"] ?>
+                                  </h2>
+                                </div>
+                                <p>
+                                  <?= $value["descripcion"] ?>
+                                </p>
 
-                            <?php
-                            $link = bin2hex($encrypter->encrypt($value["idProducto"]));
+                                <?php
+                                $link = bin2hex($encrypter->encrypt($value["idProducto"]));
 
-                            ?>
-                            <a href="<?php echo base_url("detalle/" .  $link) ?>">
-                              Ver Más
-                            </a>
+                                ?>
+                                <a href="<?php echo base_url("detalle/" .  $link) ?>">
+                                  Ver Más
+                                </a>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      </section>
+
                     </div>
-                  </section>
-
-                </div>
-              </div>
+                  </div>
 
 
-        <?php }
+        <?php $active = "";
+                }
+              }
+            }
           }
         } ?>
 
@@ -87,37 +106,45 @@ $encrypter = \Config\Services::encrypter();
         <?php
         $cont = 0;
         foreach ($lista_productos as $key => $value) {
+          $lista["lista_ingredientes_tamanios"] = $productos_modelo->_obtenerIngredientesTamanio($value["idMenu"], $value["idTipoTamanio"]);
 
-          if ($value["idClasificacion"] == 2) {
-            if ($cont < 4) {
+          $validarPorciones = $funciones->findTextByValueInArray($lista["lista_ingredientes_tamanios"], "0", "porcion");
+
+          if (!empty($lista["lista_ingredientes_tamanios"])) {
+            if ($validarPorciones == 0) {
+
+              if ($value["idClasificacion"] == 2) {
+                if ($cont < 4) {
         ?>
-              <div class="col-sm-12 col-12 col-md-6 col-lg-6 mb-4">
-                <div class="box h-100">
-                  <div class="img-box">
-                    <img src="<?php echo base_url("public/Admin/img/productos/" . $value["imagen_producto"]) ?>" alt="">
+                  <div class="col-sm-12 col-12 col-md-6 col-lg-6 mb-4">
+                    <div class="box h-100">
+                      <div class="img-box">
+                        <img src="<?php echo base_url("public/Admin/img/productos/" . $value["imagen_producto"]) ?>" alt="">
 
+                      </div>
+                      <div class="detail-box">
+                        <h5>
+                          <?= $value["nombre_producto"]; ?>
+                        </h5>
+                        <h6>
+                          <?= $value["precio_producto"]; ?>
+                        </h6>
+                        <?php
+                        $link = bin2hex($encrypter->encrypt($value["idProducto"]));
+
+
+                        ?>
+                        <a class="iconCart" href="<?php echo base_url("detalle/" .  $link) ?>">
+                          <i class="icon-copy fa fa-shopping-cart" aria-hidden="true"></i>
+                        </a>
+
+
+                      </div>
+                    </div>
                   </div>
-                  <div class="detail-box">
-                    <h5>
-                      <?= $value["nombre_producto"]; ?>
-                    </h5>
-                    <h6>
-                      <?= $value["precio_producto"]; ?>
-                    </h6>
-                    <?php
-                    $link = bin2hex($encrypter->encrypt($value["idProducto"]));
-
-
-                    ?>
-                    <a class="iconCart" href="<?php echo base_url("detalle/" .  $link) ?>">
-                      <i class="icon-copy fa fa-shopping-cart" aria-hidden="true"></i>
-                    </a>
-
-
-                  </div>
-                </div>
-              </div>
         <?php $cont++;
+                }
+              }
             }
           }
         }
@@ -160,39 +187,47 @@ $encrypter = \Config\Services::encrypter();
         <?php if ($lista_productos) {
           $contMenu = 0;
           foreach ($lista_productos as $key => $value) {
-            if ($value["idClasificacion"] == 1) {
-              if ($cont < 6) {
-        ?>
-                <div class="col-sm-6 col-lg-4 all pizza m-2">
-                  <div class="box h-100">
-                    <div>
-                      <div class="img-box">
-                        <img src="<?php echo base_url("public/Admin/img/productos/" . $value["imagen_producto"]) ?>" alt="">
-                      </div>
-                      <div class="detail-box">
-                        <h5>
-                          <?= $value["nombre_producto"]; ?>
-                        </h5>
-                        <p class="txtDescripcion">
-                          <?= $value["descripcion"]; ?>
-                        </p>
-                        <div class="options">
-                          <h6>
-                            <?= $value["precio_producto"]; ?>
-                          </h6>
-                          <?php
-                          $link = bin2hex($encrypter->encrypt($value["idProducto"]));
+            $lista["lista_ingredientes_tamanios"] = $productos_modelo->_obtenerIngredientesTamanio($value["idMenu"], $value["idTipoTamanio"]);
 
-                          ?>
-                          <a class="iconCart" href="<?php echo base_url("detalle/" . $link) ?>">
-                            <i class="icon-copy fa fa-shopping-cart" aria-hidden="true"></i>
-                          </a>
+            $validarPorciones = $funciones->findTextByValueInArray($lista["lista_ingredientes_tamanios"], "0", "porcion");
+
+            if (!empty($lista["lista_ingredientes_tamanios"])) {
+              if ($validarPorciones == 0) {
+                if ($value["idClasificacion"] == 1) {
+                  if ($cont < 6) {
+        ?>
+                    <div class="col-sm-6 col-lg-4 all pizza m-2">
+                      <div class="box h-100">
+                        <div>
+                          <div class="img-box">
+                            <img src="<?php echo base_url("public/Admin/img/productos/" . $value["imagen_producto"]) ?>" alt="">
+                          </div>
+                          <div class="detail-box">
+                            <h5>
+                              <?= $value["nombre_producto"]; ?>
+                            </h5>
+                            <p class="txtDescripcion">
+                              <?= $value["descripcion"]; ?>
+                            </p>
+                            <div class="options">
+                              <h6>
+                                <?= $value["precio_producto"]; ?>
+                              </h6>
+                              <?php
+                              $link = bin2hex($encrypter->encrypt($value["idProducto"]));
+
+                              ?>
+                              <a class="iconCart" href="<?php echo base_url("detalle/" . $link) ?>">
+                                <i class="icon-copy fa fa-shopping-cart" aria-hidden="true"></i>
+                              </a>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
         <?php $contMenu++;
+                  }
+                }
               }
             }
           }

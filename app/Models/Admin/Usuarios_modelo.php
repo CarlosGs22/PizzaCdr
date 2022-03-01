@@ -21,8 +21,9 @@ class Usuarios_modelo extends Model
     'usuario' => 'required|valid_email',
     'contrasenia' => 'required',
     'status' => 'required|integer|is_numeric',
-    'cve_usuario' => 'required|max_length[5]'
-    //'id_sucursal' => 'required'
+    'cve_usuario' => 'required|max_length[5]',
+    //'id_sucursal' => 'required',
+    'imagen' => 'ext_in[png,jpg]',
   ];
 
 

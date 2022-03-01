@@ -45,6 +45,7 @@ $encrypter = \Config\Services::encrypter();
 
   <script src="https://js.stripe.com/v2/"></script>
   <script src="<?php echo base_url("public/Publico/js/stripe.js"); ?>"></script>
+  
 
 
 </head>

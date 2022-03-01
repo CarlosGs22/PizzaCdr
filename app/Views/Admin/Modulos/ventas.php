@@ -193,6 +193,7 @@ $encrypter = \Config\Services::encrypter();
                     $fecha = null;
                     $status = null;
                     $status_v = null;
+                    $statusIdVenta = null;
                     $tipo_orden = null;
                     $direccion = null;
                     $id_metodo = null;
@@ -207,9 +208,12 @@ $encrypter = \Config\Services::encrypter();
                         $id_metodo = $value['metodo_pago'];
                         $direccion = "";
                         $id_venta = $value["idVenta"];
+                        $statusIdVenta =  $value["statusIdVenta"];
                         break;
                     }
-                } ?>
+                }
+                
+                ?>
 
                 <div class="container">
                     <div class="row">
@@ -248,7 +252,6 @@ $encrypter = \Config\Services::encrypter();
                                     <form action="<?= base_url("admin/accion_venta") ?>" method="post" class="w-100">
                                         <div class="row">
                                             <?php
-
                                             $idValueId = bin2hex($encrypter->encrypt($id_venta)); ?>
 
                                             <div class="col text-center">
@@ -256,10 +259,13 @@ $encrypter = \Config\Services::encrypter();
                                                 <strong>Cambiar Status</strong>
                                                 <select name="txtStatus" id="txtStatus" class="form-control m-2">
                                                     <option value="0"></option>
-                                                    <?php if ($lista_status_venta) { ?>
+                                                    <?php if ($lista_status_venta) { 
+                                                    
+                                                       ?>
                                                         <?php foreach ($lista_status_venta as $key => $value) {
+                                                           
                                                               $idValueStatus = bin2hex($encrypter->encrypt($value["id"])); ?>
-                                                            <option value="<?=$idValueStatus ?>"><?php echo $value['nombre']; ?></option>
+                                                            <option value="<?=$idValueStatus ?>" <?php echo ($value['id'] ==  $statusIdVenta) ? ' selected="selected"' : ''; ?>><?php echo $value['nombre']; ?></option>
                                                     <?php }
                                                     } ?>
                                                 </select>

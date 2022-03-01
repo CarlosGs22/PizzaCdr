@@ -7,6 +7,7 @@ use App\Models\Admin\Especiales_modelo;
 use App\Models\Admin\Funciones;
 use App\Models\Admin\Horario_modelo;
 use App\Models\Admin\Imagenes_modelo;
+use App\Models\Admin\Localidades_modelo;
 use App\Models\Admin\Menu_modelo;
 use App\Models\Admin\Permiso_menu_modelo;
 use App\Models\Publico\Sucursal_Localidad_modelo;
@@ -24,6 +25,7 @@ class PedidosController extends Controller
 
   protected $sucursales_modelo;
   protected $sucursales_localidad_modelo;
+  protected $localidad_modelo;
   protected $productos_modelo;
   protected $datamenu;
   protected $especiales;
@@ -53,6 +55,7 @@ class PedidosController extends Controller
     //$this->datamenu['listas_especiales'] = $especiales->findAll();
 
     $this->sucursales_localidad_modelo = new Sucursal_Localidad_modelo();
+    $this->localidad_modelo = new Localidades_modelo();
     $this->contacto_modelo = new Contacto_modelo();
     $this->imagen_modelo = new Imagenes_modelo();
     $this->menu_modelo = new Menu_modelo();
@@ -94,6 +97,8 @@ class PedidosController extends Controller
 
 
 
+    $this->cart->destroy();
+
     $this->datamenu['listas_especiales'] = $this->especiales->findAll();
 
     $lista["lista_horarios"] = $this->horario_modelo->findAll();
@@ -102,11 +107,26 @@ class PedidosController extends Controller
 
     $idSucursal = session()->get('sucursal_cobertura') != null ? session()->get('sucursal_cobertura') : "1";
 
-    $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal, $pagina, null, null);
 
     if ($this->session->get("sucursal_cobertura") != null) {
       $lista["lista_sucursal_info"] = $this->sucursales_localidad_modelo->_obtenerHorarios($this->session->get("sucursal_cobertura"));
     }
+
+    $lista["lista_colonias"] = $this->sucursales_localidad_modelo->_obtenerColonia($this->session->get("id_sucursal"));
+
+
+
+    $search = null;
+    if ($this->request->getVar('txtBuscar') != null) {
+      $search = $this->request->getVar('txtBuscar');
+    }
+    if ($search == null) {
+      $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic(NULL, $idSucursal, $pagina, null, null);
+    } else {
+      $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($search, $idSucursal, $pagina, null, null);
+    }
+
+    $lista["pager"] = $this->productos_modelo->pager->links();
 
 
     echo view($this->rutaHeader,   $this->datamenu);
@@ -223,7 +243,7 @@ class PedidosController extends Controller
         $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
         $lista["lista_sucursal_info"] = $this->sucursales_localidad_modelo->_obtenerHorarios($this->session->get("sucursal_cobertura"));
 
-        $lista["listas_producto_existente"] = $this->productos_modelo->_getProductosPublic($idSucursal, "50", null, $lista["detalle_producto"][0]["idTipoTamanio"]);
+        $lista["listas_producto_existente"] = $this->productos_modelo->_getProductosPublic(NULL, $idSucursal, "50", null, $lista["detalle_producto"][0]["idTipoTamanio"]);
         $lista["lista_imagenes"] = $this->imagen_modelo->where("id_producto", $decrypted_data)->findAll();
 
         if (!empty($lista["detalle_producto"])) {
@@ -258,7 +278,7 @@ class PedidosController extends Controller
 
       $idSucursal = session()->get('sucursal_cobertura');
 
-      $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal, $pagina, $clasificacion, null);
+      $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic(NULL, $idSucursal, $pagina, $clasificacion, null);
 
       $lista["lista_sucursal_info"] = $this->sucursales_localidad_modelo->_obtenerHorarios($this->session->get("sucursal_cobertura"));
 
@@ -282,7 +302,7 @@ class PedidosController extends Controller
 
     $idSucursal = session()->get('sucursal_cobertura');
 
-    $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal, $pagina, null, null);
+    $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic(NULL, $idSucursal, $pagina, null, null);
 
     if ($this->session->get("sucursal_cobertura") != null) {
       $lista["lista_sucursal_info"] = $this->sucursales_localidad_modelo->_obtenerHorarios($this->session->get("sucursal_cobertura"));
@@ -305,7 +325,7 @@ class PedidosController extends Controller
 
     $idSucursal = session()->get('sucursal_cobertura');
 
-    $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal, $pagina, null, null);
+    $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic(NULL, $idSucursal, $pagina, null, null);
 
     $lista["lista_sucursal_info"] = $this->sucursales_localidad_modelo->_obtenerHorarios($this->session->get("sucursal_cobertura"));
 
@@ -313,5 +333,25 @@ class PedidosController extends Controller
     echo view($this->rutaModulo . 'servicio', $lista);
 
     echo view($this->rutaFooterServicio, $lista);
+  }
+
+  public function getCoberturaPrecio()
+  {
+
+    $decrypted_data = $this->encrypter->decrypt(hex2bin($this->request->getVar('txtLocalidad')));
+
+    $lista_cp =  $this->localidad_modelo->select("codigo_postal")->where("id", $decrypted_data)->findAll();
+    header('Content-Type: application/json');
+    if (!empty($lista_cp)) {
+      $lista_cobertura =  $this->sucursales_localidad_modelo->_obtenerCobertura($this->funciones->cleanSanitize("INT", $lista_cp[0]["codigo_postal"]));
+
+      if (!empty($lista_cobertura)) {
+        echo json_encode(array("0" => $lista_cobertura[0]["precio"], "1" => "success"));
+      } else {
+        echo json_encode(array("0" => "", "1" => "error"));
+      }
+    } else {
+      echo json_encode(array("0" => "", "1" => "error"));
+    }
   }
 }

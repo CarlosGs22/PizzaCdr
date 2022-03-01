@@ -22,6 +22,7 @@ class VentasController extends Controller
     protected $tipo_orden_modelo;
     protected $status_venta_modelo;
     protected $funciones;
+    protected $encrypter;
 
     public function initController(\CodeIgniter\HTTP\RequestInterface $request, \CodeIgniter\HTTP\ResponseInterface $response, \Psr\Log\LoggerInterface $logger)
     {
@@ -40,6 +41,8 @@ class VentasController extends Controller
         $this->funciones = new Funciones();
         $this->session = session();
 
+        $this->encrypter = \Config\Services::encrypter();
+
 
         $especiales = new Especiales_modelo();
         $this->datamenu['listas_especiales'] = $especiales->findAll();
@@ -54,11 +57,11 @@ class VentasController extends Controller
     public function ventas()
     {
         $paginas = 10;
-        $lista['lista_ventas'] = $this->ventas_modelo->_obtenerVentas(null, null, $paginas, null,$this->request->getVar('txtStatusVenta'));
+        $lista['lista_ventas'] = $this->ventas_modelo->_obtenerVentas(null, null, $paginas, null, $this->request->getVar('txtStatusVenta'));
 
         $lista['lista_status'] = $this->status_modelo->findAll();
 
-        $lista['lista_status_venta'] = $this->status_venta_modelo->where("status","1")->findAll();
+        $lista['lista_status_venta'] = $this->status_venta_modelo->where("status", "1")->findAll();
 
         $lista['lista_orden'] = $this->tipo_orden_modelo->findAll();
 
@@ -68,11 +71,11 @@ class VentasController extends Controller
         }
 
         if ($this->request->getVar('txtFechaDe') != null && $this->request->getVar('txtFechaHasta') != null) {
-            $lista['lista_ventas'] = $this->ventas_modelo->_obtenerVentas($this->request->getVar('txtFechaDe'), $this->request->getVar('txtFechaHasta'), $paginas, null,$this->request->getVar('txtStatusVenta'));
+            $lista['lista_ventas'] = $this->ventas_modelo->_obtenerVentas($this->request->getVar('txtFechaDe'), $this->request->getVar('txtFechaHasta'), $paginas, null, $this->request->getVar('txtStatusVenta'));
         } else if ($this->request->getVar('txtFechaDe') == null && $this->request->getVar('txtFechaHasta') == null & $this->request->getVar('txtTipoOrden') != null) {
-            $lista['lista_ventas'] = $this->ventas_modelo->_obtenerVentas(null, null, $paginas, $this->request->getVar('txtTipoOrden'),$this->request->getVar('txtStatusVenta'));
+            $lista['lista_ventas'] = $this->ventas_modelo->_obtenerVentas(null, null, $paginas, $this->request->getVar('txtTipoOrden'), $this->request->getVar('txtStatusVenta'));
         } else if ($this->request->getVar('txtFechaDe') != null && $this->request->getVar('txtFechaHasta') != null && $this->request->getVar('txtTipoOrden') != null) {
-            $lista['lista_ventas'] = $this->ventas_modelo->_obtenerVentas($this->request->getVar('txtFechaDe'), $this->request->getVar('txtFechaHasta'), $paginas, $this->request->getVar('txtTipoOrden'),$this->request->getVar('txtStatusVenta'));
+            $lista['lista_ventas'] = $this->ventas_modelo->_obtenerVentas($this->request->getVar('txtFechaDe'), $this->request->getVar('txtFechaHasta'), $paginas, $this->request->getVar('txtTipoOrden'), $this->request->getVar('txtStatusVenta'));
         }
 
         $lista['lista_validar_txtFechaDeHasta'] = array(
@@ -89,5 +92,27 @@ class VentasController extends Controller
         echo view($this->rutaHeader, $this->datamenu);
         echo view($this->rutaModulo . 'ventas', $lista);
         echo view($this->rutaFooter);
+    }
+
+    public function accion_venta()
+    {
+        $txtStatusVenta = $this->encrypter->decrypt(hex2bin($this->request->getVar('txtStatus')));
+        $txtIdVenta = $this->encrypter->decrypt(hex2bin($this->request->getVar('txtId')));
+
+        $datos_venta = [
+            "status_venta" => $txtStatusVenta
+        ];
+
+        $respuesta = null;
+
+        try {
+            $respuesta = $this->ventas_modelo->update($txtIdVenta, $datos_venta);
+        } catch (\Throwable $th) {
+            $respuesta = $this->ventas_modelo->error();
+        }
+
+        $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->ventas_modelo->errors());
+        $this->session->setFlashdata('respuesta', $respuesta);
+        return redirect()->to(base_url("admin/ventas?id=".$txtIdVenta));
     }
 }

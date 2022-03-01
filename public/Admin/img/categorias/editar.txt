@@ -1,0 +1,17 @@
+*************anadir observaciones al pedido
+*************cambiar label # pasarela
+*************cambiar tipo pago a efectivo/terminal
+
+
+*************parpadear estado de venta y add nota
+
+
+*************desencriptar valor id de compra en mis compras
+
+*************añadir listado mis compras a usurio logueado
+
+
+**************añadir nueva direccion en usuario loguedo con direcion activa
+
+validar campos file a imagen
+

@@ -44,7 +44,7 @@ class Sucursal_Localidad_modelo extends Model
     {
         $sql = "SELECT sucursal.id as idSucursal , sucursal.nombre as nombreSucursal,
         sucursal_localidad.precio,
-        localidad.id as idLocalidad, localidad.nombre as nombreLocalidad
+        localidad.id as idLocalidad, localidad.nombre as nombreLocalidad,localidad.codigo_postal
         from sucursal
         INNER JOIN sucursal_localidad on sucursal.id = sucursal_localidad.id_sucursal
         INNER JOIN localidad on localidad.id = sucursal_localidad.id_localidad

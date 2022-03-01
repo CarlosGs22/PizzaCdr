@@ -409,7 +409,6 @@
                 //$(this).closest(".row").find(".txtResUni").attr("name", "txtResUni-" + $(this).val());
 
 
-
             } else {
                 $(this).attr("name", "txtResProd");
                 $(this).closest(".row").find(".txtResCant").attr("name", "txtResCant");

@@ -13,7 +13,7 @@ public $primaryKey = 'id';
 protected $allowedFields = ['id','imagen','status','id_producto','cve_usuario'];
 
 protected $validationRules    = [
-    'imagen' => 'required',
+    'imagen' => 'required|ext_in[png,jpg]',
     'id_producto' => 'required|integer',
     'status' => 'required|integer',
     'cve_usuario' => 'required|max_length[5]'

@@ -99,5 +99,17 @@ class Funciones
         return $cleanStep3;
     }
 
+    function findTextByValueInArray($fooArray, $searchValue,$columFind){
+        $value = 0;
+        foreach ($fooArray as $bar )
+        {
+            if ($bar[$columFind] == $searchValue) {
+                $value = 1;
+                break;
+            }
+        }
+        return $value;
+    }
+
 
 }

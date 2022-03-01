@@ -128,10 +128,11 @@ $routes->post('/admin/accion_horarios', 'AdminController/SucursalController::acc
 
 //ventas
 $routes->get('/admin/ventas', 'AdminController/VentasController::ventas', ['filter' => 'auth']);
+$routes->post('/admin/accion_venta', 'AdminController/VentasController::accion_venta');
 
 //pedidos
 $routes->get('/admin/pedidos', 'AdminController/PedidosController::pedidos', ['filter' => 'auth']);
-
+$routes->get('/admin/getCoberturaPrecio', 'AdminController/PedidosController::getCoberturaPrecio');
 
 
 

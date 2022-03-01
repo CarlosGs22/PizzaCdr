@@ -15,14 +15,11 @@ class Tamanios_modelo extends Model
     protected $allowedFields = ['id', 'tamanio', 'imagen', 'status', 'cve_fecha', 'cve_usuario'];
 
     protected $validationRules    = [
-        'tamanio' => 'required|max_length[50]'
+        'tamanio' => 'required|max_length[50]',
+        
     ];
 
-    protected $validationMessages = [
-        'tamanio' => [
-            'is_unique' => 'Sorry. That email has already been taken. Please choose another.'
-        ]
-    ];
+ 
 
     public function _obtener_tipos($id_tamanio)
     {

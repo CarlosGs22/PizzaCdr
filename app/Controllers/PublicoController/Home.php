@@ -95,11 +95,19 @@ class Home extends Controller
 
     $idSucursal = session()->get('sucursal_cobertura') != null ? session()->get('sucursal_cobertura') : "1";
 
-    $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal, $pagina, null, null);
+    $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic(NULL,$idSucursal, $pagina, null, null);
+    //echo $this->productos_modelo->getLastQuery();
 
+
+    
+    
+    
+    
     if ($this->session->get("sucursal_cobertura") != null) {
       $lista["lista_sucursal_info"] = $this->sucursales_localidad_modelo->_obtenerHorarios($this->session->get("sucursal_cobertura"));
     }
+
+  
 
     echo view($this->rutaHeader, $lista);
     echo view($this->rutaModulo . 'inicio', $lista);
@@ -216,7 +224,7 @@ class Home extends Controller
         $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
         $lista["lista_sucursal_info"] = $this->sucursales_localidad_modelo->_obtenerHorarios($this->session->get("sucursal_cobertura"));
 
-        $lista["listas_producto_existente"] = $this->productos_modelo->_getProductosPublic($idSucursal, "50", null, $lista["detalle_producto"][0]["idTipoTamanio"]);
+        $lista["listas_producto_existente"] = $this->productos_modelo->_getProductosPublic(NULL,$idSucursal, "50", null, $lista["detalle_producto"][0]["idTipoTamanio"]);
         $lista["lista_imagenes"] = $this->imagen_modelo->where("id_producto", $decrypted_data)->findAll();
 
         if (!empty($lista["detalle_producto"])) {
@@ -251,7 +259,7 @@ class Home extends Controller
 
       $idSucursal = session()->get('sucursal_cobertura');
 
-      $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal, $pagina, $clasificacion, null);
+      $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic(NULL,$idSucursal, $pagina, $clasificacion, null);
 
       $lista["lista_sucursal_info"] = $this->sucursales_localidad_modelo->_obtenerHorarios($this->session->get("sucursal_cobertura"));
 
@@ -275,7 +283,7 @@ class Home extends Controller
 
     $idSucursal = session()->get('sucursal_cobertura');
 
-    $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal, $pagina, null, null);
+    $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic(NULL,$idSucursal, $pagina, null, null);
 
     if ($this->session->get("sucursal_cobertura") != null) {
       $lista["lista_sucursal_info"] = $this->sucursales_localidad_modelo->_obtenerHorarios($this->session->get("sucursal_cobertura"));
@@ -298,7 +306,7 @@ class Home extends Controller
 
     $idSucursal = session()->get('sucursal_cobertura');
 
-    $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic($idSucursal, $pagina, null, null);
+    $lista["lista_productos"] = $this->productos_modelo->_getProductosPublic(NULL,$idSucursal, $pagina, null, null);
 
     $lista["lista_sucursal_info"] = $this->sucursales_localidad_modelo->_obtenerHorarios($this->session->get("sucursal_cobertura"));
 

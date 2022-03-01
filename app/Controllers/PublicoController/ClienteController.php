@@ -9,6 +9,7 @@ use App\Models\Admin\Localidades_modelo;
 use App\Models\Admin\Municipios_modelo;
 use App\Models\Admin\Status_modelo;
 use App\Models\Admin\Usuarios_modelo;
+use App\Models\Publico\Detalle_Venta_modelo;
 use App\Models\Publico\Direccion_modelo;
 use App\Models\Publico\Venta_modelo;
 use CodeIgniter\Controller;
@@ -28,6 +29,7 @@ class ClienteController extends Controller
     protected $estados_modelo;
     protected $direccion_modelo;
     protected $venta_modelo;
+    protected $detalle_venta_modelo;
     protected $funciones;
 
     protected $encrypter;
@@ -47,6 +49,7 @@ class ClienteController extends Controller
         $this->localidades_modelo = new Localidades_modelo();
         $this->direccion_modelo = new Direccion_modelo();
         $this->venta_modelo = new Venta_modelo();
+        $this->detalle_venta_modelo = new Detalle_Venta_modelo();
 
         $this->funciones = new Funciones();
         $this->session = session();
@@ -192,15 +195,24 @@ class ClienteController extends Controller
 
             $respuesta = null;
             try {
-                $respuesta = $this->direccion_modelo->save($datos_direccion);
+                if ($this->request->getVar("txtValue") == "5fny20dbw-e3d") {
+                    $respuesta = $this->direccion_modelo->insert($datos_direccion);
+                } else {
+                    $respuesta = $this->direccion_modelo->save($datos_direccion);
+                }
             } catch (\Throwable $th) {
                 $respuesta = $this->direccion_modelo->error();
             }
 
-            $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->direccion_modelo->errors());
-
-            $this->session->setFlashdata('respuesta', $respuesta);
-            return redirect()->to(base_url("micuenta"));
+            if ($this->request->getVar("txtValue") == "5fny20dbw-e3d" && ((int) $respuesta > 0)) {
+                $idValueId = bin2hex($this->encrypter->encrypt($respuesta));
+                $direccion = $this->request->getVar('txtCalle') . " " . $this->request->getVar('txtNumero') . " " .  $this->request->getVar('txtCp');
+                echo json_encode(array("0" => $idValueId, "1" => "success", "2" => $direccion));
+            } else {
+                $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->direccion_modelo->errors());
+                $this->session->setFlashdata('respuesta', $respuesta);
+                return redirect()->to(base_url("micuenta"));
+            }
         } else {
             $this->session->setFlashdata('respuesta', array("0" => "Ocurrió un error interno", "1" => "error"));
             return redirect()->to(base_url("micuenta"));
@@ -218,17 +230,28 @@ class ClienteController extends Controller
 
     public function miscompras($idCompra)
     {
-        $decrypted_data_id = $this->encrypter->decrypt(hex2bin($idCompra));
+        $piecesIdCompra = explode("-", $idCompra);
 
-        $lista["lista_compras"] = $this->venta_modelo->_obtenerMisVentas($decrypted_data_id);
+        $lista["lista_compras"] = $this->venta_modelo->_obtenerMisVentas($piecesIdCompra[1]);
 
-        if (!empty($lista["lista_compras"])) {
-            echo view($this->rutaHeader, $this->datamenu);
-            echo view($this->rutaModulo . 'miscompras', $lista);
-        
-        } else {
-            $this->session->setFlashdata('respuesta', array("0" => "No existe el Num. De Compra", "1" => "success"));
+        $lista_usuario = $this->usuarios_modelo->where("usuario", session()->get("usuario_cliente"))->findAll();
+
+        $lista["lista_mis_compras"] = $this->venta_modelo->where("id_cliente", $lista_usuario[0]["id"])->findAll();
+
+        $lista["lista_mis_detalles"] = $this->detalle_venta_modelo->select("venta.id as idVenta,venta.fecha,venta.total,venta.contacto,venta.precio_envio,
+                producto.nombre as nombre_producto, producto.descripcion,
+                detalle_venta.cantidad, detalle_venta.precio, detalle_venta.subtotal,
+                tipo_orden.id as idTipoOrden,tipo_orden.tipo as tipo_orden,
+                status_venta.nombre as status_pedido,badge,
+                imagen.id as idImagen , imagen.imagen")->join("venta", "venta.id = detalle_venta.id_venta")->join("producto", "producto.id = detalle_venta.id_producto")->join("imagen", "producto.id = imagen.id_producto")->join("status_venta", "status_venta.id = venta.status_venta")->join("tipo_orden", "tipo_orden.id = venta.tipo_orden")->where("id_venta",  $lista["lista_mis_compras"][0]["id"])->groupBy("producto.id")->findAll();
+
+
+        if (empty($lista["lista_mis_compras"]) && empty($lista["lista_compras"])) {
+            $this->session->setFlashdata('respuesta', array("0" => "Ocurrió un error interno", "1" => "error"));
             return redirect()->to(base_url(""));
         }
+
+        echo view($this->rutaHeader, $this->datamenu);
+        echo view($this->rutaModulo . 'miscompras', $lista);
     }
 }

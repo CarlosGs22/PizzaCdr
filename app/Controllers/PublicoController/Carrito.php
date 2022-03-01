@@ -82,12 +82,12 @@ class Carrito extends Controller
       $lista["listas_especiales"] = $this->especiales->findAll();
 
       $lista["lista_sucursales"] = $this->sucursales_modelo->where("status", "1")->findAll();
-      
-     if(session()->get("cp") != null && session()->get("tipo_orden") == "A Domicilio"){
-      $lista["lista_cobertura"] =  $this->sucursales_localidad_modelo->_obtenerCobertura($this->funciones->cleanSanitize("INT", session()->get("cp")));
-     }
-      
-      
+
+      if (session()->get("cp") != null && session()->get("tipo_orden") == "A Domicilio") {
+        $lista["lista_cobertura"] =  $this->sucursales_localidad_modelo->_obtenerCobertura($this->funciones->cleanSanitize("INT", session()->get("cp")));
+      }
+
+
       $lista["lista_sucursal_info"] = $this->sucursales_localidad_modelo->_obtenerHorarios($this->session->get("sucursal_cobertura"));
       $lista["listas_producto_existente"] = [];
 
@@ -150,7 +150,9 @@ class Carrito extends Controller
 
   public function accion_carrito()
   {
-  
+
+    $res = null;
+
     try {
       $idProducto = $this->encrypter->decrypt(hex2bin($this->request->getVar("idProducto")));
 
@@ -165,30 +167,42 @@ class Carrito extends Controller
 
         $producto_personalizado = array();
 
+
+        $idMenuEncrypt = bin2hex($this->encrypter->encrypt($lista["detalle_producto"][0]["idMenu"]));
+
         if ($ProductoInfo[0]["id_clasificacion"] == "2") {
           if ($ProductoInfo[0]["total"] > 1) {
             for ($i = 0; $i < $ProductoInfo[0]["total"]; $i++) {
               $encrypted_product = $this->request->getVar("prod_exis" . ($i + 1));
               if ($encrypted_product != null) {
                 $idProductoBuscar = $this->encrypter->decrypt(hex2bin($encrypted_product));
+               
                 $lista["detalle_producto"] = $this->productos_modelo->_obtenerProductospUBL($idProductoBuscar);
+                
+                foreach ($lista["detalle_producto"] as $keyD => $valueD) {
+                  $idMenuEncrypt = bin2hex($this->encrypter->encrypt($valueD["idMenu"]));
 
-                $producto_personalizado[] = array(
-                  "idProd" => $encrypted_product,
-                  "nomProd" => $lista["detalle_producto"][0]["nombre_menu"]
-                );
+                  $producto_personalizado[] = array(
+                    "idProd" => $encrypted_product,
+                    "nomProd" => $valueD["nombre_menu"],
+                    "idMenu" => $idMenuEncrypt
+                  );
+                }
+                
               }
             }
           } else {
             $producto_personalizado[] = array(
               "idProd" => $idProductoEncript,
-              "nomProd" => $lista["detalle_producto"][0]["nombre_menu"]
+              "nomProd" => $lista["detalle_producto"][0]["nombre_menu"],
+              "idMenu" => $idMenuEncrypt
             );
           }
         } else {
           $producto_personalizado[] = array(
             "idProd" => $idProductoEncript,
-            "nomProd" => $lista["detalle_producto"][0]["nombre_menu"]
+            "nomProd" => $lista["detalle_producto"][0]["nombre_menu"],
+            "idMenu" => $idMenuEncrypt
           );
         }
 
@@ -205,12 +219,12 @@ class Carrito extends Controller
                 $qtyValidate = ((int) $value["qty"] += (int) $cantidad);
 
                 $this->cart->update(array(
-                  'rowid' => $value["rowid"],     
+                  'rowid' => $value["rowid"],
                   'qty'     => $qtyValidate,
                 ));
 
-               $resValidate = 1;
-               break;
+                $resValidate = 1;
+                break;
               }
             }
           }
@@ -227,20 +241,30 @@ class Carrito extends Controller
           }
 
 
-          $this->session->setFlashdata('respuesta', array("0" => "Producto agregado exitosamente", "1" => "success"));
-          return redirect()->to(base_url("carrito"));
+          $res = array("0" => "Producto agregado exitosamente", "1" => "success");
         } else {
-          $this->session->setFlashdata('respuesta', array("0" => "aOcurrió un error interno", "1" => "error"));
-          return redirect()->to(base_url(""));
+          $res = array("0" => "aOcurrió un error interno", "1" => "error");
         }
       } else {
-        $this->session->setFlashdata('respuesta', array("0" => "bOcurrió un error interno", "1" => "error"));
-        return redirect()->to(base_url(""));
+        $res = array("0" => "aOcurrió un error interno", "1" => "error");
       }
     } catch (\Throwable $th) {
+      $res = array("0" => "aOcurrió un error interno", "1" => "error");
+    }
 
-      $this->session->setFlashdata('respuesta', array("0" => "cOcurrió un error interno", "1" => "error"));
-      return redirect()->to(base_url(""));
+ 
+
+    if ($this->request->getVar("txtModulo") == "0403435235") {
+      header('Content-Type: application/json');
+      echo json_encode($res);
+    } else {
+      if ($res[1] == "success") {
+        $this->session->setFlashdata('respuesta', $res);
+        return redirect()->to(base_url("carrito"));
+      } else {
+        $this->session->setFlashdata('respuesta', $res);
+        return redirect()->to(base_url(""));
+      }
     }
   }
 
@@ -258,13 +282,15 @@ class Carrito extends Controller
     return redirect()->to(base_url(""));
   }
 
-  public function accion_cantidad(){
+  public function accion_cantidad()
+  {
     $respuesta = null;
     $totalPrice = 0;
     $subTotal = 0;
+    $resValidate = 0;
 
-     
-    if($this->request->getVar("id") != null && $this->request->getVar("qty") != null){
+
+    if ($this->request->getVar("id") != null && $this->request->getVar("qty") != null) {
 
       foreach ($this->cart->contents() as $value) {
         $idValidateProducto = $this->encrypter->decrypt(hex2bin($this->request->getVar("id")));
@@ -274,27 +300,27 @@ class Carrito extends Controller
           $qtyValidate = (int) $this->request->getVar("qty");
 
           $this->cart->update(array(
-            'rowid' => $value["rowid"],     
+            'rowid' => $value["rowid"],
             'qty'     => $qtyValidate,
           ));
 
-         $resValidate = 1;
-         break;
+          $resValidate = 1;
+          break;
         }
       }
-      
-      if($resValidate == 1){
+
+      if ($resValidate == 1) {
 
         foreach ($this->cart->contents() as $value) {
-           $totalPrice += doubleval($value["price"]) * (int) $value["qty"];
-           $subTotal += doubleval($value["price"]);
+          $totalPrice += doubleval($value["price"]) * (int) $value["qty"];
+          $subTotal += doubleval($value["price"]);
         }
 
         $respuesta = array('0' => 200, '1' => $subTotal, '2' => $totalPrice);
-      }else{
-        $respuesta = array('0' => "No se pudó actualizar la cantidad", '1' => "error");    
+      } else {
+        $respuesta = array('0' => "No se pudó actualizar la cantidad", '1' => "error");
       }
-    }else{
+    } else {
       $respuesta = array('0' => "Ocurrió un error al guardar", '1' => "error");
     }
 
@@ -304,8 +330,26 @@ class Carrito extends Controller
 
   public function eliminarItem($item)
   {
-    $this->cart->remove($item);
-    $this->session->setFlashdata('respuesta', array("0" => "Producto eliminado exitosamente", "1" => "success"));
-    return redirect()->to(base_url("carrito"));
+
+    if (strpos($item, 'list') !== false) {
+
+      $pieces = explode("-", $item);
+
+      foreach ($this->cart->contents() as $value) {
+        $idProducto = $this->encrypter->decrypt(hex2bin($value["id"]));
+
+        if ($idProducto == $pieces[1]) {
+          $this->cart->remove($value["rowid"]);
+          break;
+        }
+      }
+
+      header('Content-Type: application/json');
+      echo json_encode(array('0' => "Registro eliminado exitosamente", '1' => "success"));
+    } else {
+      $this->cart->remove($item);
+      $this->session->setFlashdata('respuesta', array("0" => "Producto eliminado exitosamente", "1" => "success"));
+      return redirect()->to(base_url("carrito"));
+    }
   }
 }
