@@ -100,8 +100,7 @@ class Home extends Controller
 
 
     
-    
-    
+
     
     if ($this->session->get("sucursal_cobertura") != null) {
       $lista["lista_sucursal_info"] = $this->sucursales_localidad_modelo->_obtenerHorarios($this->session->get("sucursal_cobertura"));

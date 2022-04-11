@@ -175,9 +175,26 @@ class Productos_modelo extends Model
         LEFT JOIN menu_ingredientes on menu_ingredientes.id_menu = menu.id
         LEFT JOIN ingrediente on ingrediente.id = menu_ingredientes.id_ingrediente
         LEFT JOIN tamanio_ingrediente on tamanio_ingrediente.id_ingrediente = ingrediente.id
+        LEFT JOIN inventario on inventario.id_ingrediente_producto = ingrediente.id
         WHERE menu.id = ? and tamanio_ingrediente.id_tipo_tamanio = ?";
 
         $query = $this->query($sql, array($idMenu, $idTipoTamanio));
+        return $query->getResultArray();
+    }
+
+    public function _obtenerIngredientesTamanioMenu($idTipoTamanio)
+    {
+        $sql = "SELECT menu.id as idMenu,menu.nombre as nombreMenu,
+       ingrediente.id as idIngrediente, ingrediente.ingrediente,
+       porcion
+       FROM menu
+       LEFT JOIN menu_ingredientes on menu_ingredientes.id_menu = menu.id
+       LEFT JOIN ingrediente on ingrediente.id = menu_ingredientes.id_ingrediente
+       LEFT JOIN tamanio_ingrediente on tamanio_ingrediente.id_ingrediente = ingrediente.id
+       WHERE tamanio_ingrediente.id_tipo_tamanio = ?
+       GROUP BY menu.id;";
+
+        $query = $this->query($sql, $idTipoTamanio);
         return $query->getResultArray();
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+$encrypter = \Config\Services::encrypter();
+
 setlocale(LC_TIME, 'spanish');
 
 header('Content-Type: text/html; charset=UTF-8');
@@ -75,7 +77,7 @@ if ($lista_compras) {
 
     <?php
 
-    if (1==2) {
+    if (1 == 2) {
         if ($lista_mis_detalles) {
             $totalProd = 0;
 
@@ -199,3 +201,42 @@ if ($lista_compras) {
         }
     }
 </style>
+
+
+
+<?php
+$idValueIdVenta = bin2hex($encrypter->encrypt($idVenta));
+?>
+
+
+<script>
+    $(function() {
+
+        setInterval(function() {
+            $.ajax({
+                type: "GET",
+                url: "<?= base_url() ?>/status_compra",
+                dataType: 'json',
+                data: {
+                    idVenta: '<?= $idValueIdVenta ?>',
+                },
+                success: function(data) {
+                    $(".loader").fadeOut(1000);
+                    $(".element").text(data[0]["status_pedido"]);
+
+                },
+                error: function(request, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '',
+                        text: '' + request + ''
+                    });
+                    $(".loader").fadeOut(1000);
+                }
+            });
+
+        }, 30000);
+
+
+    });
+</script>

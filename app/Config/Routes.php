@@ -176,7 +176,7 @@ $routes->post('/accion_pasarela', 'PublicoController/PasarelaController::accion_
 
 //miscompras
 $routes->get('/miscompras/(:any)', 'PublicoController\ClienteController::miscompras/$1');
-
+$routes->get('/status_compra/', 'PublicoController\ClienteController::status_compra');
 
 
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {

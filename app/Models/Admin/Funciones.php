@@ -39,15 +39,22 @@ class Funciones
 
     public function _GuardarImagen($file, $ruta, $arreglo, $campobd)
     {
-        $nombreImg = null;
-        if ($img = $file) {
-            if ($img->isValid() && !$img->hasMoved()) {
-                $nombreImg = $img->getName();
-                $resImg = $img->move($ruta, $nombreImg);
-                return array_merge($arreglo, array("imagen" => $nombreImg));;
+
+        $arrayType = array("image/jpg","image/jpeg", "image/png","image/JPG", "image/PNG","image/JPEG");
+
+        if (!in_array($file->getClientMimeType(), $arrayType)) {
+            return $arreglo;
+        } else {
+            $nombreImg = null;
+            if ($img = $file) {
+                if ($img->isValid() && !$img->hasMoved()) {
+                    $nombreImg = $img->getName();
+                    $resImg = $img->move($ruta, $nombreImg);
+                    return array_merge($arreglo, array("imagen" => $nombreImg));;
+                }
             }
+            return $arreglo;
         }
-        return $arreglo;
     }
 
     public function array_push_assoc($array, $key, $value)
@@ -99,10 +106,10 @@ class Funciones
         return $cleanStep3;
     }
 
-    function findTextByValueInArray($fooArray, $searchValue,$columFind){
+    function findTextByValueInArray($fooArray, $searchValue, $columFind)
+    {
         $value = 0;
-        foreach ($fooArray as $bar )
-        {
+        foreach ($fooArray as $bar) {
             if ($bar[$columFind] == $searchValue) {
                 $value = 1;
                 break;
@@ -110,6 +117,4 @@ class Funciones
         }
         return $value;
     }
-
-
 }

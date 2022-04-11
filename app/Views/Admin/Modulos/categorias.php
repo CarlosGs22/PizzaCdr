@@ -131,7 +131,7 @@
                     <div class=" form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Imagen: </label>
                         <div class="col-sm-12 col-md-10">
-                            <input type="file" id="imgCategoria" name="imgCategoria" class="form-control-file form-control height-auto archivo">
+                            <input type="file"  id="imgCategoria" name="imgCategoria" class="form-control-file form-control height-auto archivo" accept=".jpg, .jpeg, .png">
                         </div>
                     </div>
                     <div class=" form-group row">

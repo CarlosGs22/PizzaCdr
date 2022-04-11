@@ -23,7 +23,6 @@ class Usuarios_modelo extends Model
     'status' => 'required|integer|is_numeric',
     'cve_usuario' => 'required|max_length[5]',
     //'id_sucursal' => 'required',
-    'imagen' => 'ext_in[png,jpg]',
   ];
 
 

@@ -45,7 +45,7 @@ $encrypter = \Config\Services::encrypter();
 
   <script src="https://js.stripe.com/v2/"></script>
   <script src="<?php echo base_url("public/Publico/js/stripe.js"); ?>"></script>
-  
+
 
 
 </head>
@@ -85,13 +85,15 @@ $encrypter = \Config\Services::encrypter();
   <?php endif; ?>
 
 
-  <?php if (isset($_SESSION['respuesta'][2])) : ?>
-    <script>
-      $(function() {
-        $("#modal_horarios").modal("show");
-      });
-    </script>
-  <?php endif; ?>
+  <?php if (isset($_SESSION['respuesta'][2])) {
+    if ($lista_sucursales) { ?>
+      <script>
+        $(function() {
+          $("#modal_horarios").modal("show");
+        });
+      </script>
+  <?php }
+  } ?>
 
 
   <?php if ($lista_sucursal_info) {
@@ -224,26 +226,36 @@ $encrypter = \Config\Services::encrypter();
 
 
 
-
-
                   </form>
                 </div>
                 <div class="col-6">
                   <form class="form text-center" id="frmChoose" action="<?php echo base_url("/buscar_cobertura") ?>" accept-charset="UTF-8" method="post">
-                    <div class="form-group">
-                      <h4>Recoje en sucursal</h4>
+
+
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="form-group">
+                          <h4>Recoje en sucursal</h4>
+                        </div>
+                      </div>
                     </div>
-                    <div class="form-group mr-2">
-                      <select name="txtSucursal" id="txtSucursal" class="form-control Sucursal">
-                        <option value="0"></option>
-                        <?php if ($lista_sucursales) { ?>
-                          <?php foreach ($lista_sucursales as $key => $value) {
-                            $idValueSucursal = bin2hex($encrypter->encrypt($value["id"])); ?> ?>
-                            <option value="<?= $idValueSucursal; ?>" <?php echo ($value['id'] ==  $id_sucursal) ? ' selected="selected"' : ''; ?>><?php echo $value['nombre']; ?></option>
-                        <?php }
-                        } ?>
-                      </select>
+
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="form-group mr-2">
+                          <select name="txtSucursal" id="txtSucursal" class="form-control Sucursal">
+                            <option value="0"></option>
+                            <?php if ($lista_sucursales) { ?>
+                              <?php foreach ($lista_sucursales as $key => $value) {
+                                $idValueSucursal = bin2hex($encrypter->encrypt($value["id"])); ?> ?>
+                                <option value="<?= $idValueSucursal; ?>" <?php echo ($value['id'] ==  $id_sucursal) ? ' selected="selected"' : ''; ?>><?php echo $value['nombre']; ?></option>
+                            <?php }
+                            } ?>
+                          </select>
+                        </div>
+                      </div>
                     </div>
+
                     <input type="hidden" name="txtReg" value="ZM8ByFx#">
                     <button type="submit" id="btnSeleccionarSucursal" class="btn btnForm mb-2">Seleccionar</button>
                   </form>
@@ -284,11 +296,11 @@ $encrypter = \Config\Services::encrypter();
                   if ($lista_sucursales) {
                     foreach ($lista_sucursales as $key1 => $value1) { ?>
                       <div class="container demo-bg">
-                        
+
                         <div class="row">
                           <div class="col-12 col-sm-12 col-md-12 col-lg-8 text-center p-2" style="align-self: center;">
-                          <h2><?=$value1["nombre"]?></h2>
-                            <img style="max-width: 40%; " src="<?=base_url("public/Admin/img/sucursales/".$value1["imagen"])?>" alt="">
+                            <h2><?= $value1["nombre"] ?></h2>
+                            <img style="max-width: 40%; " src="<?= base_url("public/Admin/img/sucursales/" . $value1["imagen"]) ?>" alt="">
                           </div>
                           <div class="col-12 col-sm-12 col-md-12 col-lg-4 p-2">
 
@@ -300,7 +312,7 @@ $encrypter = \Config\Services::encrypter();
                                   foreach ($lista_horarios as $key2 => $value2) {
                                     if ($value2["id_sucursal"] == $value1["id"]) {
                                 ?>
-                                      <li><?= $value2["dia_espanol"] ?> <span class="pull-right"><?=$value2["horade"] . ":" . $value2["horademns"] . " a " . $value2["horahasta"] . ":" . $value2["horahastamns"] . " Hrs"?></span></li>
+                                      <li><?= $value2["dia_espanol"] ?> <span class="pull-right"><?= $value2["horade"] . ":" . $value2["horademns"] . " a " . $value2["horahasta"] . ":" . $value2["horahastamns"] . " Hrs" ?></span></li>
 
                                 <?php }
                                   }

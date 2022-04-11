@@ -195,8 +195,16 @@ a:focus {
     margin: 0 10px;
 }
 
-.user_option .user_link {
-    color: #0b132b;
+@media (min-width: 993px) {
+    .user_option .user_link {
+        color: black;
+    }
+}
+
+@media (max-width: 992px) {
+    .user_option .user_link {
+        color: white;
+    }
 }
 
 .user_option .user_link:hover {

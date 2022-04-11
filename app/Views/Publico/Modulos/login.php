@@ -193,14 +193,14 @@
                                     <span class="input-group-text"><i class="dw dw-padlock1"></i></span>
                                 </div>
                             </div>
-                            <div class="row pb-30">
+                            <!--<div class="row pb-30">
                                 <div class="col-6">
 
                                 </div>
                                 <div class="col-12 text-center">
                                     <div class="forgot-password"><a href="forgot-password.html">¿Olvidaste tu contraseña?</a></div>
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="input-group mb-0">
@@ -283,46 +283,76 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="newsletter-subscribe">
+                    
                         <div class="container">
                             <div class="row">
 
                                 <div class="col-6 border-right">
 
-                                    <form id="frmSearch" class="form-inline" action="<?php echo base_url("/buscar_cobertura") ?>" accept-charset="UTF-8" method="post">
-                                        <div class="form-group">
-                                            <h4>Entrega a domicilio</h4>
+                                    <form id="frmSearch" class="form" action="<?php echo base_url("/buscar_cobertura") ?>" accept-charset="UTF-8" method="post">
+                                        <div class="row">
+                                            <div class="col-12 text-center">
+                                                <div class="form-group">
+                                                    <h4>Entrega a domicilio</h4>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="form-group mr-2">
-                                            <input type="text" class="form-control Código-Postal" name="txtCp" placeholder="CP" maxlength="5">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group mr-2">
+                                                    <input type="text" class="form-control Código-Postal" name="txtCp" placeholder="CP" maxlength="5">
+                                                </div>
+                                            </div>
                                         </div>
-                                        <input type="hidden" name="txtReg" value="32U3&#vUd">
-                                        <button type="submit" id="btnBuscarLocalización" class="btn btnForm mb-2">Buscar</button>
+                                        <div class="row">
+                                            <div class="col-12 text-center">
+                                                <input type="hidden" name="txtReg" value="32U3&#vUd">
+                                                <button type="submit" id="btnBuscarLocalización" class="btn btnForm mb-2">Buscar</button>
+                                            </div>
+                                        </div>
                                     </form>
                                 </div>
                                 <div class="col-6">
-                                    <form class="form-inline" id="frmChoose" action="<?php echo base_url("/buscar_cobertura") ?>" accept-charset="UTF-8" method="post">
-                                        <div class="form-group">
-                                            <h4>Recoje en sucursal</h4>
+                                    <form id="frmChoose" action="<?php echo base_url("/buscar_cobertura") ?>" accept-charset="UTF-8" method="post">
+                                        <div class="row">
+                                            <div class="col-12 text-center">
+                                                <div class="form-group">
+                                                    <h4>Recoje en sucursal</h4>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="form-group mr-2">
-                                            <select name="txtSucursal" id="txtSucursal" class="form-control Sucursal">
-                                                <option value="0"></option>
-                                                <?php if ($lista_sucursales) { ?>
-                                                    <?php foreach ($lista_sucursales as $key => $value) { ?>
-                                                        <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] ==  $id_sucursal) ? ' selected="selected"' : ''; ?>><?php echo $value['nombre']; ?></option>
-                                                <?php }
-                                                } ?>
-                                            </select>
+
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group mr-2">
+                                                    <select name="txtSucursal" id="txtSucursal" class="form-control Sucursal">
+                                                        <option value="0"></option>
+                                                        <?php if ($lista_sucursales) { ?>
+                                                            <?php foreach ($lista_sucursales as $key => $value) { ?>
+                                                                <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] ==  $id_sucursal) ? ' selected="selected"' : ''; ?>><?php echo $value['nombre']; ?></option>
+                                                        <?php }
+                                                        } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+
                                         </div>
-                                        <input type="hidden" name="txtReg" value="ZM8ByFx#">
-                                        <button type="submit" id="btnSeleccionarSucursal" class="btn btnForm mb-2">Seleccionar</button>
+
+                                        <div class="row">
+                                            <div class="col-12 text-center">
+                                                
+                                                    <input type="hidden" name="txtReg" value="ZM8ByFx#">
+                                                    <button type="submit" id="btnSeleccionarSucursal" class="btn btnForm mb-2">Seleccionar</button>
+                                               
+                                            </div>
+                                        </div>
+
+
                                     </form>
                                 </div>
                             </div>
                         </div>
 
-                    </div>
 
                 </div>
             </div>

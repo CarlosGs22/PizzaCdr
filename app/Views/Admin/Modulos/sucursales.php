@@ -157,7 +157,7 @@ $datos_dias = [
                             <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                                 <div class="form-group">
                                     <label>Imagen: *</label>
-                                    <input type="file" id="imgSucursal" name="imgSucursal" class="form-control-file form-control height-auto imagen">
+                                    <input type="file" id="imgSucursal" name="imgSucursal" class="form-control-file form-control height-auto imagen" accept=".jpg, .jpeg, .png">
                                 </div>
                             </div>
 

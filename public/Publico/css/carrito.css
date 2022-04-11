@@ -166,3 +166,7 @@ ol.custom-numbers li::before {
     color: #2b90d9;
     font-weight: bold;
 }
+
+.badgeError {
+    visibility: hidden;
+}

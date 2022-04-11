@@ -23,6 +23,8 @@ class Sucursal_Localidad_modelo extends Model
 
     public function _obtenerHorarios($idSucursal)
     {
+
+        $condicion = $idSucursal != null ? " AND sucursal.id = ".$idSucursal :  "";
         $sql = "SELECT horario.id as idHorario,horario.dia,horario.horade,horario.horademns,horario.horahasta,horario.horahastamns,horario.status, 
         sucursal.id as idSucurusal,sucursal.nombre as nombreEstado,
         localidad.id as idLocalidad, localidad.nombre as nombreLocalidad,
@@ -34,9 +36,9 @@ class Sucursal_Localidad_modelo extends Model
         INNER JOIN municipio on municipio.id = localidad.municipio_id
         INNER JOIN estado on estado.id = municipio.estado_id
         INNER JOIN horario on horario.id_sucursal = sucursal.id
-        WHERE horario.status = 1 and sucursal.status = 1 and sucursal.id = ?";
+        WHERE horario.status = 1 and sucursal.status = 1" . $condicion;
 
-        $query = $this->query($sql, $idSucursal);
+        $query = $this->query($sql);
         return $query->getResultArray();
     }
 

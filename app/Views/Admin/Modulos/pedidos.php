@@ -114,6 +114,7 @@ $cart = \Config\Services::cart();
                                                                             $idValueProduct = bin2hex($encrypter->encrypt($value["idProducto"]));
                                                                             ?>
                                                                             <input type="hidden" name="idProducto" value="<?= $idValueProduct;  ?>">
+                                                                            <input type="hidden" name="txtIdTipoTamanio" value="<?=$value["idTipoTamanio"];  ?>">
                                                                             <input type="text" name="qty" value="1" class="qty" maxlength="1" oninput="restrict(this);">
                                                                             <div class="qtyplus">+</div>
                                                                         </div>
@@ -135,15 +136,15 @@ $cart = \Config\Services::cart();
                 <?php  }
                     }
                 }  ?>
- <div class="col-12 text-center">
-                <div class="paginadordiv mt-30">
-                    <?php
-                    if ($pager) {
-                        echo $pager;
-                    }
-                    ?>
+                <div class="col-12 text-center">
+                    <div class="paginadordiv mt-30">
+                        <?php
+                        if ($pager) {
+                            echo $pager;
+                        }
+                        ?>
+                    </div>
                 </div>
- </div>
 
             <?php } else { ?>
                 <div class="col-12 text-center">
@@ -351,9 +352,13 @@ $cart = \Config\Services::cart();
                         });
 
                         $("#txtLabelTotal").text(total);
-
                     } else {
-                        btn.after('<div class="text-center m-5"><span class="badge badge-danger txtInfo">error</span></div>');
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: '',
+                            text: data[0]
+                        });
                     }
 
 
@@ -435,6 +440,7 @@ $cart = \Config\Services::cart();
 
 
         $("#txtTipoOrden").on("change", function() {
+            $("#txtLabelEnvio").text("0");
             if ($(this).prop('selectedIndex') == 0) {
                 $(".panelDom").show();
                 $(".panelSuc").hide();
@@ -461,7 +467,6 @@ $cart = \Config\Services::cart();
                     },
                     success: function(data) {
                         if (data[1] == "success") {
-
                             $("#txtLabelEnvio").text(data[0]);
                         } else {
                             Swal.fire({
@@ -484,6 +489,56 @@ $cart = \Config\Services::cart();
             } else {
                 $(".panelAddDatos").hide();
             }
+        });
+
+
+        $(".btnAddPedido").click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>/accion_pasarela",
+                data: $(this).closest("form").serialize(),
+                dataType: "json",
+                success: function(data) {
+                    if (data[1] == 'success') {
+                        let timerInterval
+                        Swal.fire({
+                            title: data[0],
+                            html: '',
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading()
+                                const b = Swal.getHtmlContainer().querySelector('b')
+                                timerInterval = setInterval(() => {
+                                    b.textContent = Swal.getTimerLeft()
+                                }, 100)
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval)
+                            }
+                        }).then((result) => {
+
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                location.reload();
+                            }
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '',
+                            text: data[0],
+                        });
+                    }
+                },
+                error: function(request, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '',
+                        text: 'Ocurrió un error interno (Verifique los horarios,cantidades, productos, direcciones, etc.)',
+                    });
+                }
+            });
         });
 
 

@@ -65,7 +65,7 @@
                                         <?php }  ?>
 
                                         <h6>Nueva fotografía</h6>
-                                        <input type="file" id="imgFoto" name="imgFoto" class="form-control-file form-control height-auto archivo">
+                                        <input type="file" id="imgFoto" name="imgFoto" class="form-control-file form-control height-auto archivo" accept=".jpg, .jpeg, .png">
                                     </div>
 
                                 </div>

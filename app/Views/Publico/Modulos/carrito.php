@@ -1,5 +1,11 @@
 <?php
 $cart = \Config\Services::cart();
+
+$encrypter = \Config\Services::encrypter();
+
+$cont = bin2hex($encrypter->encrypt("continuePasarela"));
+
+
 ?>
 
 <style>
@@ -189,6 +195,7 @@ $cart = \Config\Services::cart();
 														<div class="col-md-3 quantity textQty">
 															<label for="quantity">Cantidad:</label>
 															<input id="quantity" type="number" value="<?= $value["qty"] ?>" class="form-control quantity-input <?= $value["id"] ?>" onkeypress="return isNumberKey(event);" min="1" max="9">
+															<span class="badge badge-danger badgeError">Danger</span>
 														</div>
 
 														<div class="col-md-3 price">
@@ -232,7 +239,7 @@ $cart = \Config\Services::cart();
 							<?php } ?>
 
 							<div class="summary-item"><span class="text">Total</span><span class="price" id="labelTotalPrice">$<?= $totalPrice + $precioEnvio ?></span></div>
-							<a href="<?= base_url("pasarela") ?>" class="btn generalBackgroundColor btn-lg btn-block">Pasarela de Pago</a>
+							<a href="<?= base_url("pasarela") ?>" class="btn generalBackgroundColor btn-lg btn-block btnPasarela">Pasarela de Pago</a>
 							<a class="btn btn-primary btn-lg btn-block" href="<?php echo base_url("") ?>">Seguir Comprando</a>
 							<a class="btn btn-link btn-lg btn-block" href="<?php echo base_url("limpiar_carrito") ?>">Vaciar Carrito</a>
 						</div>
@@ -243,20 +250,18 @@ $cart = \Config\Services::cart();
 	</section>
 
 
+
 </main>
 
 
 <script>
 	$(function() {
 
-		$("#btnPasarela").click(function() {
-			$('html, body').animate({
-				scrollTop: $("#seccion_pasarela").offset().top
-			}, 2000);
-		});
 
+		$(".textQty").find("#quantity").bind('keyup mouseup', function() {
+			var thisElement = $(this);
+			thisElement.closest(".textQty").find(".badgeError").css("visibility", "hidden");
 
-		$(".textQty").find("#quantity").blur(function() {
 
 			if (isNumeric($(this).val()) && parseInt(this.value) > 0) {
 				$.ajax({
@@ -269,14 +274,24 @@ $cart = \Config\Services::cart();
 					dataType: "JSON",
 					success: function(data) {
 						if (data[0] == 200) {
-							$("#labelSubPrice").text("$" + data[1]);
-							$("#labelTotalPrice").text("$" + data[2]);
+
+
+						
+							var total = 0;
+
+							if (isNumeric($("#labelSubSend").text().replace("$", ""))) {
+								total = parseFloat(data[2]) + parseFloat($("#labelSubSend").text().replace("$", ""));
+							} else {
+								total = data[2];
+							}
+
+							$("#labelSubPrice").text("$" + data[2]);
+							$("#labelTotalPrice").text("$" + total);
 						} else {
-							Swal.fire({
-								icon: 'error',
-								title: '',
-								text: 'Ocurrió un error interno'
-							});
+
+						
+							thisElement.closest(".textQty").find(".badgeError").css("visibility", "visible");
+							thisElement.closest(".textQty").find(".badgeError").text(data[0]);
 						}
 					},
 					error: function(request, status, error) {
@@ -287,49 +302,31 @@ $cart = \Config\Services::cart();
 						});
 					}
 				});
+			}else{
+				thisElement.closest(".textQty").find(".badgeError").text("Número invalido");
+				thisElement.closest(".textQty").find(".badgeError").css("visibility", "visible");
 			}
 		});
 
-		$(".textQty").find("#quantity").on('change', function() {
 
-			if (isNumeric($(this).val()) && parseInt(this.value) > 0) {
-				$.ajax({
-					type: "GET",
-					url: "<?= base_url() ?>/accion_cantidad",
-					data: {
-						id: $(this).attr('class').split(' ').pop(),
-						qty: $(this).val()
-					},
-					dataType: "JSON",
-					success: function(data) {
-						if (data[0] == 200) {
-							var total = 0;
+		$(".btnPasarela").click(function(event) {
+			event.preventDefault();
+			var contVisible = 0;
 
-							if (isNumeric($("#labelSubSend").text().replace("$", ""))) {
-								total = parseFloat(data[2]) + parseFloat($("#labelSubSend").text().replace("$", ""));
-							} else {
-								total = data[2];
-							}
+			$(".items .product").each(function() {
+				if ($(this).find(".badgeError").css("visibility") == "visible") {
+					contVisible = 1;
+					return false;
+				}
+			});
 
-
-
-							$("#labelSubPrice").text("$" + data[2]);
-							$("#labelTotalPrice").text("$" + total);
-						} else {
-							Swal.fire({
-								icon: 'error',
-								title: '',
-								text: 'Ocurrió un error interno'
-							});
-						}
-					},
-					error: function(request, status, error) {
-						Swal.fire({
-							icon: 'error',
-							title: '',
-							text: 'Ocurrió un error interno'
-						});
-					}
+			if (contVisible == 0) {
+				location.href = "pasarela";
+			} else {
+				Swal.fire({
+					icon: 'error',
+					title: '',
+					text: 'Revise el inventario de productos'
 				});
 			}
 		});

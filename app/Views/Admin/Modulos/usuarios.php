@@ -56,7 +56,7 @@
                     <div class="row pd-20">
                         <?php if ($lista_usuarios) {
                             foreach ($lista_usuarios as $key => $value) { ?>
-                                <div class="col-md-3 col-lg-3 col-sm-6 col-12">
+                                <div class="col-md-4 col-lg-4 col-sm-6 col-12">
                                     <article class="material-card Red">
                                         <h2>
                                             <strong>
@@ -222,7 +222,7 @@
                         <div class="form-group row">
                             <label class="col-sm-12 col-md-2 col-form-label">Imagen: </label>
                             <div class="col-sm-12 col-md-10">
-                                <input type="file" id="imgUsuario" name="imgUsuario" class="form-control-file form-control height-auto">
+                                <input type="file" id="imgUsuario" name="imgUsuario" class="form-control-file form-control height-auto" accept=".jpg, .jpeg, .png">
                             </div>
                         </div>
 

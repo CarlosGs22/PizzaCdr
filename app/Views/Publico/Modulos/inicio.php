@@ -8,8 +8,12 @@ $encrypter = \Config\Services::encrypter();
 $productos_modelo = new Productos_modelo();
 $funciones = new Funciones();
 
+$mostrarPanelError = 0;
+
+
 ?>
 
+<?php if($lista_productos){ ?>
 <div class="hero_are">
 
   <div class="shadow rounded carouse-main">
@@ -242,6 +246,24 @@ $funciones = new Funciones();
     </div>
   </div>
 </section>
+
+
+<?php  }else{ ?>
+  <div class="page-404">
+    <div class="outer">
+        <div class="middle">
+            <div class="inner">
+                <!--BEGIN CONTENT-->
+                <div class="inner-circle"><i class="fa fa-home"></i><span>500</span></div>
+                <span class="inner-status">Sitio en mantenimiento</span>
+                <span class="inner-detail">
+                  Disculpa las demoras estamos resolviéndolo, en breve regresamos!
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<?php } ?>
 
 
 <section class="about_section layout_padding">

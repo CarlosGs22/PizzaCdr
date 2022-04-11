@@ -200,6 +200,7 @@
                         <label class="col-sm-12 col-md-1 col-form-label">Precio: *</label>
                         <div class="col-sm-12 col-md-2">
                             <input class="form-control precio" type="text" id="txtPrecio" value="<?php echo ($precio) ? $precio : '0'; ?>" name="txtPrecio" oninput="restrict(this);">
+                            <small id="emailHelp" class="form-text text-muted">Mantener el valor 0 para asignar el precio del menú</small>
                         </div>
                     </div>
 
@@ -431,7 +432,7 @@
                                                 <div class="form-group">
 
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input fileImagen" name="fileImagen">
+                                                        <input type="file" class="custom-file-input fileImagen" name="fileImagen" accept=".jpg, .jpeg, .png">
                                                         <label class="custom-file-label">Editar</label>
                                                     </div>
                                                 </div>
@@ -477,7 +478,7 @@
                                                         <div class="form-group">
 
                                                             <div class="custom-file">
-                                                                <input type="file" class="custom-file-input fileImagen" name="fileImagen">
+                                                                <input type="file" class="custom-file-input fileImagen" name="fileImagen" accept=".jpg, .jpeg, .png">
                                                                 <label class="custom-file-label">Editar</label>
                                                             </div>
                                                         </div>

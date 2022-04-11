@@ -6,9 +6,11 @@ use App\Models\Publico\Contacto_modelo;
 use App\Models\Admin\Especiales_modelo;
 use App\Models\Admin\Funciones;
 use App\Models\Admin\Imagenes_modelo;
+use App\Models\Admin\Inventario_modelo;
 use App\Models\Admin\Menu_modelo;
 use App\Models\Publico\Sucursal_Localidad_modelo;
 use App\Models\Admin\Sucursal_modelo;
+use App\Models\Admin\Tamanios_Ingredientes_modelo;
 use App\Models\Publico\Productos_modelo;
 use CodeIgniter\Controller;
 
@@ -26,6 +28,8 @@ class Carrito extends Controller
   protected $datamenu;
   protected $especiales;
   protected $contacto_modelo;
+  protected $inventario_modelo;
+  protected $tamanio_ingredientes_modelo;
   protected $imagen_modelo;
   protected $menu_modelo;
   protected $encrypter;
@@ -51,6 +55,9 @@ class Carrito extends Controller
     $this->contacto_modelo = new Contacto_modelo();
     $this->imagen_modelo = new Imagenes_modelo();
     $this->menu_modelo = new Menu_modelo();
+    $this->inventario_modelo = new Inventario_modelo();
+    $this->tamanio_ingredientes_modelo = new Tamanios_Ingredientes_modelo();
+
 
     $this->session = \Config\Services::session();
     $this->cart = \Config\Services::cart();
@@ -150,8 +157,24 @@ class Carrito extends Controller
 
   public function accion_carrito()
   {
-
     $res = null;
+
+    $idProducto = $this->encrypter->decrypt(hex2bin($this->request->getVar("idProducto")));
+    $idProductoEncript = $this->request->getVar("idProducto");
+    $cantidad = (int) $this->request->getVar("qty");
+
+    if ($this->inventario_modelo->validarInventario($idProducto, $idProductoEncript, $cantidad,0) == 1) {
+      $res = array("0" => "No hay inventario para este producto (879)", "1" => "error");
+      if ($this->request->getVar("txtModulo") == "0403435235") {
+        header('Content-Type: application/json');
+        echo json_encode($res);
+        return;
+      } else {
+        $this->session->setFlashdata('respuesta', $res);
+        return redirect()->to(base_url("detalle/". $this->request->getVar("idProducto")));
+      }
+    }
+
 
     try {
       $idProducto = $this->encrypter->decrypt(hex2bin($this->request->getVar("idProducto")));
@@ -176,9 +199,9 @@ class Carrito extends Controller
               $encrypted_product = $this->request->getVar("prod_exis" . ($i + 1));
               if ($encrypted_product != null) {
                 $idProductoBuscar = $this->encrypter->decrypt(hex2bin($encrypted_product));
-               
+
                 $lista["detalle_producto"] = $this->productos_modelo->_obtenerProductospUBL($idProductoBuscar);
-                
+
                 foreach ($lista["detalle_producto"] as $keyD => $valueD) {
                   $idMenuEncrypt = bin2hex($this->encrypter->encrypt($valueD["idMenu"]));
 
@@ -188,7 +211,6 @@ class Carrito extends Controller
                     "idMenu" => $idMenuEncrypt
                   );
                 }
-                
               }
             }
           } else {
@@ -216,7 +238,7 @@ class Carrito extends Controller
               $idValidateProducto2 = $this->encrypter->decrypt(hex2bin($value["id"]));
 
               if ($idValidateProducto == $idValidateProducto2) {
-                $qtyValidate = ((int) $value["qty"] += (int) $cantidad);
+                $qtyValidate = (int) $cantidad;
 
                 $this->cart->update(array(
                   'rowid' => $value["rowid"],
@@ -252,7 +274,7 @@ class Carrito extends Controller
       $res = array("0" => "aOcurrió un error interno", "1" => "error");
     }
 
- 
+
 
     if ($this->request->getVar("txtModulo") == "0403435235") {
       header('Content-Type: application/json');
@@ -288,6 +310,19 @@ class Carrito extends Controller
     $totalPrice = 0;
     $subTotal = 0;
     $resValidate = 0;
+
+    $idProducto = $this->encrypter->decrypt(hex2bin($this->request->getVar("id")));
+    $idProductoEncript = $this->request->getVar("id");
+    $cantidad = (int) $this->request->getVar("qty");
+
+
+    if ($this->inventario_modelo->validarInventario($idProducto, $idProductoEncript, $cantidad,0) == 1) {
+      $res = array("0" => "No hay inventario para este producto (879)", "1" => "error");
+      header('Content-Type: application/json');
+      echo json_encode($res);
+      return;
+    }
+
 
 
     if ($this->request->getVar("id") != null && $this->request->getVar("qty") != null) {
@@ -352,4 +387,6 @@ class Carrito extends Controller
       return redirect()->to(base_url("carrito"));
     }
   }
+
+
 }

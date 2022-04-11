@@ -116,21 +116,17 @@ class LoginController extends Controller
             }
             $session->set($newdata);
             return redirect()->to(base_url($redireccionar));
-
           } else {
-            $_SESSION['error'] = 'No tienes permisos asignados';
-            $session->markAsFlashdata('error');
+            $this->session->setFlashdata('respuesta', array("0" => "No tienes permisos asignados", "1" => "error"));
             return redirect()->to(base_url("login"));
           }
         } else {
-          $_SESSION['error'] = 'Credenciales inválidas';
-          $session->markAsFlashdata('error');
+          $this->session->setFlashdata('respuesta', array("0" => "Credenciales inválidas", "1" => "error"));
           return redirect()->to(base_url("login"));
         }
       }
     } else {
-      $_SESSION['error'] = 'Credenciales inválidas';
-      $session->markAsFlashdata('error');
+      $this->session->setFlashdata('respuesta', array("0" => "Credenciales inválidas", "1" => "error"));
       return redirect()->to(base_url("login"));
     }
   }

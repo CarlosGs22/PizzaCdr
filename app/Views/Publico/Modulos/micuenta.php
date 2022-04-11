@@ -38,11 +38,11 @@ if ($lista_micuenta) {
                                     <?php } else { ?>
                                         <img class="rounded-circle mt-5" src="<?= base_url("public/Publico/img/clientes/" . $value["imagen"]) ?>" style="max-width: 144px;">
                                     <?php  } ?>
-                                    <input type="file" name="txtImagen" class="form-control imagen">
+                                    <input type="file" name="txtImagen" class="form-control imagen" accept=".jpg, .jpeg, .png">
 
                                     <span class="font-weight-bold"><?= $value["nombres"] ?></span>
                                     <span class="text-black-50"><?= $value["usuario"] ?></span>
-                                    <span class="text-black-50"><a href="">Cambiar contraseña</a></span>
+                                    <!--<span class="text-black-50"><a href="">Cambiar contraseña</a></span>-->
                                 </div>
                             </div>
                             <div class="col-md-6 border-right">

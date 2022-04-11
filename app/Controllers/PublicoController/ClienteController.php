@@ -254,4 +254,12 @@ class ClienteController extends Controller
         echo view($this->rutaHeader, $this->datamenu);
         echo view($this->rutaModulo . 'miscompras', $lista);
     }
+
+    public function status_compra()
+    {
+        $idVenta = $this->encrypter->decrypt(hex2bin($this->request->getVar("idVenta")));
+        $lista["lista_compras"] = $this->venta_modelo->_obtenerMisVentas($idVenta);
+
+        echo json_encode( $lista["lista_compras"]);
+    }
 }

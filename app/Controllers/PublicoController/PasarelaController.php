@@ -224,7 +224,7 @@ class PasarelaController extends Controller
         if ($this->cart->totalItems() > 0) {
             foreach ($this->cart->contents() as $value) {
                 $decryptedIdProducto = $this->encrypter->decrypt(hex2bin($value["id"]));
-                $lista_productos = $this->productos_modelo->_getProductosPublic(NULL,session()->get("sucursal_cobertura"), "9999999999999", null, null);
+                $lista_productos = $this->productos_modelo->_getProductosPublic(NULL, session()->get("sucursal_cobertura"), "9999999999999", null, null);
 
                 foreach ($lista_productos as $key2 => $value2) {
                     if ($value2["idProducto"] == $decryptedIdProducto) {
@@ -275,7 +275,7 @@ class PasarelaController extends Controller
                     if ($res) {
                         foreach ($this->cart->contents() as $value) {
                             $decryptedIdProducto = $this->encrypter->decrypt(hex2bin($value["id"]));
-                            $lista_productos = $this->productos_modelo->_getProductosPublic(NULL,session()->get("sucursal_cobertura"), "999999999999", null, null);
+                            $lista_productos = $this->productos_modelo->_getProductosPublic(NULL, session()->get("sucursal_cobertura"), "999999999999", null, null);
 
                             foreach ($lista_productos as $key2 => $value2) {
                                 if ($value2["idProducto"] == $decryptedIdProducto) {
@@ -314,6 +314,7 @@ class PasarelaController extends Controller
                                                             if (!empty($lista['lista_menu_ingrediente'])) {
                                                                 foreach ($lista['lista_menu_ingrediente'] as $key3 => $value3) {
                                                                     if ($res) {
+                                                                        
                                                                         $lista['lista_porcion'] = $this->tamanio_ingredientes_modelo->where("id_ingrediente", $value3["idIngrediente"])->where("id_tipo_tamanio", $value2["idTipoTamanio"])->findAll();
 
                                                                         if (!empty($lista['lista_porcion'])) {
@@ -322,10 +323,9 @@ class PasarelaController extends Controller
                                                                                 $id_sucursal = (session()->get("sucursal_cobertura") != null ? session()->get("sucursal_cobertura") : session()->get("id_sucursal"));
 
                                                                                 $lista['lista_inventario'] = $this->inventario_modelo->where("id_ingrediente_producto", $value3["idIngrediente"])->where("id_sucursal", $id_sucursal)->findAll();
+                                                                                
 
                                                                                 if (!empty($lista['lista_inventario'])) {
-
-
 
                                                                                     if ((int) $lista['lista_inventario'][0]["cantidad"] > 0 && ((int) $lista['lista_inventario'][0]["cantidad"] >= (int) $lista['lista_porcion'][0]["porcion"])) {
 
@@ -335,8 +335,6 @@ class PasarelaController extends Controller
                                                                                             'cantidad' => $cantidad_restar
                                                                                         ];
 
-
-
                                                                                         try {
                                                                                             $respuesta = $this->inventario_modelo->update($lista['lista_inventario'][0]["id"], $datos_porcion_inventario);
                                                                                         } catch (\Throwable $th) {
@@ -344,8 +342,6 @@ class PasarelaController extends Controller
                                                                                             $respuesta = $this->inventario_modelo->error();
                                                                                             break;
                                                                                         }
-
-
 
 
                                                                                         $respuesta = $this->funciones->_CodigoFunciones($respuesta, $this->inventario_modelo->errors());
@@ -388,10 +384,6 @@ class PasarelaController extends Controller
                                                             $respuesta = array("0" => "Error en inventario " . $th->getMessage(), "1" => "error");
                                                             break;
                                                         }
-                                                    } else {
-                                                        $res = false;
-                                                        $respuesta = array("0" => "Ocurrió un errro interno (003)", "1" => "error");
-                                                        break;
                                                     }
                                                 }
                                             } else {
@@ -466,9 +458,13 @@ class PasarelaController extends Controller
             $redirect = "pasarela";
         }
 
-
-        $this->session->setFlashdata('respuesta', $respuesta);
-        return redirect()->to(base_url($redirect));
+        if ($this->request->getVar('txtPanel') == "9735393293239649") {
+            header('Content-Type: application/json');
+            echo json_encode($respuesta);
+        } else {
+            $this->session->setFlashdata('respuesta', $respuesta);
+            return redirect()->to(base_url($redirect));
+        }
     }
 
 
