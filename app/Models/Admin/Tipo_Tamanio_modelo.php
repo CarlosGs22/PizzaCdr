@@ -30,7 +30,7 @@ class Tipo_Tamanio_modelo extends Model
         FROM `tipo_tamanio`
         INNER JOIN tipo ON tipo.id = tipo_tamanio.id_tipo
         INNER JOIN tamanio ON tamanio.id = tipo_tamanio.id_tamanio
-        WHERE tipo.status = 1 and tamanio.status = 1";
+        WHERE tipo.status = 1 and tamanio.status = 1 ORDER BY tamanio.tamanio ASC ";
         $query = $this->query($sql);
         return $query->getResultArray();
     }

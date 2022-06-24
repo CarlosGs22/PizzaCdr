@@ -93,9 +93,7 @@ class PedidosController extends Controller
   public function pedidos()
   {
 
-    $pagina = 12;
-
-
+    $pagina = 30;
 
     $this->cart->destroy();
 

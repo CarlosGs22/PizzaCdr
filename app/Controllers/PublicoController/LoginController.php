@@ -82,7 +82,7 @@ class LoginController extends Controller
           'usuario_cliente' =>  $this->funciones->cleanSanitize("EMAIL", $tipo_usuario[0]["usuario"]),
           'imagen_cliente' => $tipo_usuario[0]["imagen"],
           'telefono_cliente' => $tipo_usuario[0]["telefono"]
-      ];
+        ];
 
         $session->set($datos_usuario);
 
@@ -114,8 +114,14 @@ class LoginController extends Controller
               ];
               break;
             }
-            $session->set($newdata);
-            return redirect()->to(base_url($redireccionar));
+
+            if ($newdata["nombre_sucursal"] != null) {
+              $session->set($newdata);
+              return redirect()->to(base_url($redireccionar));
+            } else {
+              $this->session->setFlashdata('respuesta', array("0" => "Usuario incorrecto, no hay sucursal asignada", "1" => "error"));
+              return redirect()->to(base_url("login"));
+            }
           } else {
             $this->session->setFlashdata('respuesta', array("0" => "No tienes permisos asignados", "1" => "error"));
             return redirect()->to(base_url("login"));

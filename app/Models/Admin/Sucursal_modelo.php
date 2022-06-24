@@ -27,7 +27,7 @@ class Sucursal_modelo extends Model
         'colonia' => 'required|max_length[255]',
         'cp' => 'required|max_length[5]',
         'presentacion' => 'required|max_length[255]',
-        'imagen' => 'ext_in[png,jpg]',
+        //'imagen' => 'ext_in[png,jpg]',
     ];
 
     protected $validationMessages = [

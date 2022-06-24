@@ -23,7 +23,9 @@ class App extends BaseConfig
 	| environments.
 	|
 	*/
-	public $baseURL = 'https://localhost/PizzaCdr/';
+	#public $baseURL = 'https://localhost/PizzaCdr/';
+
+	public $baseURL = 'http://pizzacdr.carksystems.com/PizzaCdr/';
 	/*
 	|--------------------------------------------------------------------------
 	| Index File

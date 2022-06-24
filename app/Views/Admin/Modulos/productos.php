@@ -70,11 +70,11 @@
                                 <div class="col-6 col-sm-6 col-md-3 col-lg-3 pb-20">
                                     <div class="card-box pricing-card card mt-30  h-100 cardProductos">
                                         <div class="price-title textoTipo divText">
-                                            <?= $value["nombreMenu"]; ?> <i class="icon-copy fa fa-check-circle" aria-hidden="true"></i>
+                                            <?= $value["nombreMenu"]; ?> <i class="icon-copy <?php echo $value["status"] == 1 ? "fa fa-check-circle" : "fa fa-close"?>" aria-hidden="true"></i>
                                         </div>
                                         <div class="pricing-icon">
                                             <div class="da-card card h-100" style="margin-left: 7%; margin-right:7%; border:none">
-                                                <div class="da-card-photo ">
+                                                <div class="da-card-photo">
                                                     <?php if ($value['imagen'] != null || $value['imagen'] = "") { ?>
                                                         <img style="height: 180px;" src="<?= base_url("public/Admin/img/productos/" . $value['imagen']) ?>" alt="">
                                                     <?php } else { ?>
@@ -300,7 +300,7 @@
                                 <option value="0"></option>
                                 <?php if ($lista_tipo_tamanio) { ?>
                                     <?php foreach ($lista_tipo_tamanio as $key => $valuec) { ?>
-                                        <option value="<?php echo $valuec['id_tipo_tamanio']; ?>" <?php echo ($valuec['id_tipo_tamanio'] ==  $id_tipo_tamanio) ? ' selected="selected"' : ''; ?>><?php echo $valuec['tipo'] . " " . $valuec['tamanio']; ?></option>
+                                        <option value="<?php echo $valuec['id_tipo_tamanio']; ?>" <?php echo ($valuec['id_tipo_tamanio'] ==  $id_tipo_tamanio) ? ' selected="selected"' : ''; ?>><?php echo $valuec['tamanio'] . ' ' .  $valuec['tipo']; ?></option>
 
                                 <?php }
                                 } ?>

@@ -15,8 +15,7 @@ protected $allowedFields = ['id', 'categoria','imagen','status','cve_fecha','cve
 protected $validationRules    = [
     'categoria' => 'required|max_length[50]',
     'status' => 'required|max_length[5]|integer',
-    'cve_usuario' => 'required|max_length[5]',
-    'imagen' => 'ext_in[png,jpg]'
+    'cve_usuario' => 'required|max_length[5]'
 ];
 
 

@@ -1,0 +1,5 @@
+productos
+Imagen
+Tipo_tamanio
+horario disponible 
+stock inventario > 0

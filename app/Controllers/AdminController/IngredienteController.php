@@ -65,7 +65,7 @@ class IngredienteController extends Controller
     public function ingredientes()
     {
 
-        $paginas = 10;
+        $paginas = 200;
 
         $search = null;
         if ($this->request->getVar('txtBuscar') != null) {
@@ -74,12 +74,12 @@ class IngredienteController extends Controller
         if ($search == null) {
             $lista['lista_ingredientes'] = $this->ingredientes_modelo->select("ingrediente.id as id, ingrediente, ingrediente.status as statusIngrediente, unidad.id as idUnidad, unidad.nombre, unidad.status as statusUnidad")
             ->join("unidad","unidad.id = ingrediente.id_unidad")
-            ->paginate($paginas);
+            ->orderBy('ingrediente', 'ASC')->paginate($paginas);
         } else {
             $lista['lista_ingredientes'] = $this->ingredientes_modelo->select("ingrediente.id as id, ingrediente, ingrediente.status as statusIngrediente, unidad.id as idUnidad, unidad.nombre, unidad.status as statusUnidad")
             ->join("unidad","unidad.id = ingrediente.id_unidad")
             ->paginate($paginas)
-            ->like("ingrediente", $search)->paginate($paginas);
+            ->like("ingrediente", $search)->orderBy('ingrediente', 'ASC')->paginate($paginas);
         }
 
         $lista['lista_tipo_tamanio'] = $this->tipo_tamanio_modelo->_obtenerTipoTamamanio();
@@ -91,9 +91,9 @@ class IngredienteController extends Controller
             $searchM = $this->request->getVar('txtBuscarMenu');
         }
         if ($searchM == null) {
-            $lista['lista_menu'] = $this->menu_modelo->paginate($paginas);
+            $lista['lista_menu'] = $this->menu_modelo->orderBy('nombre', 'ASC')->paginate($paginas);
         } else {
-            $lista['lista_menu'] = $this->menu_modelo->like("nombre", $searchM)->paginate($paginas);
+            $lista['lista_menu'] = $this->menu_modelo->like("nombre", $searchM)->orderBy('nombre', 'ASC')->paginate($paginas);
         }
 
 

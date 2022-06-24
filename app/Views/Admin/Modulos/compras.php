@@ -174,7 +174,7 @@
                             <div class="col-md-8 order-md-2 mb-4">
                                 <h5 class="d-flex justify-content-between align-items-center mb-3">
                                     <span class="text-muted">Ingredientes - Productos</span>
-                                    <span class="badge badge-secondary badge-pill"><?= $total ?></span>
+                                    <!--<span class="badge badge-secondary badge-pill"><?= $total ?></span>-->
                                 </h5>
 
                                 <ul class="list-group mb-3">

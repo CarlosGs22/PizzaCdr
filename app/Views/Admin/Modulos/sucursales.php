@@ -287,12 +287,7 @@ $datos_dias = [
                         </div>
 
                         <div class="row panelMasInfo">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="Horario">Horario</label>
-                                    <input class="form-control horario" type="text" id="txtHorario" value="<?php echo ($horario) ? $horario : ''; ?>" name="txtHorario">
-                                </div>
-                            </div>
+                            
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="Presentacion">Presentación</label>
