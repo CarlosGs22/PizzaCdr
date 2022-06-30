@@ -182,3 +182,9 @@
     text-align: center;
     color: #999999;
 }
+
+@media (max-width: 500px) {
+    .login-page {
+        background-size: auto;
+    }
+}

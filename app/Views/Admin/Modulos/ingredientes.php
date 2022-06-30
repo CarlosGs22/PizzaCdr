@@ -67,8 +67,7 @@
                         <div class="pb-20 pt-20">
 
 
-                            <table class="table tablaDatatable 
-                         dt-responsive nowrap" style="width:100%">
+                            <table class="table tablaDatatable  dt-responsive nowrap" style="width:100%">
 
                                 <thead>
                                     <tr>
@@ -141,10 +140,10 @@
 
                         <div class="pb-20 pt-20">
 
-                            <table class="table tablaDatatable dt-responsive nowrap" style="width:100%">
+                        <table class="table tablaDatatable  dt-responsive nowrap" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th class="table-plus">ID</th>
+                                    <th class="table-plus">ID</th>
                                         <th>Menu</th>
                                         <th>Status</th>
                                         <th>Acción</th>
@@ -155,9 +154,12 @@
                                         foreach ($lista_menu as $key => $value) { ?>
                                             <tr>
                                                 <td><?php echo $value['id']; ?></td>
-                                                <td><?php echo $value['nombre']; ?></td>
+                                                <td ><?php echo $value['nombre']; ?></td>
                                                 <td><?php echo ($value['status'] == "1") ? "Activo" : 'Inactivo'; ?></td>
-                                                <td><a href="<?php echo base_url("admin/ingredientes?idMenu=" . $value['id']) ?>" class="btn" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);"><i class="fa fa-edit"></i>Editar</a> <a href="<?php echo base_url("admin/ingredientes?idMenuIng=" . $value['id']) ?>" class="btn" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);"><i class="fa fa-edit"></i>Ingredientes</a></td>
+                                                <td>
+                                                    <a href="<?php echo base_url("admin/ingredientes?idMenu=" . $value['id']) ?>" class="btn" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);"><i class="fa fa-edit"></i>Editar</a> 
+                                                    <a href="<?php echo base_url("admin/ingredientes?idMenuIng=" . $value['id']) ?>" class="btn" data-bgcolor="#f46f30" data-color="#ffffff" style="color: rgb(255, 255, 255); background-color: rgb(244, 111, 48);"><i class="fa fa-edit"></i>Ingredientes</a>
+                                                </td>
 
                                             </tr>
                                     <?php }
