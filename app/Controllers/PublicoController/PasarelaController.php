@@ -224,7 +224,7 @@ class PasarelaController extends Controller
         if ($this->cart->totalItems() > 0) {
             foreach ($this->cart->contents() as $value) {
                 $decryptedIdProducto = $this->encrypter->decrypt(hex2bin($value["id"]));
-                $lista_productos = $this->productos_modelo->_getProductosPublic(NULL, session()->get("sucursal_cobertura"), "9999999999999", null, null);
+                $lista_productos = $this->productos_modelo->_getProductosPublic(NULL, session()->get("sucursal_cobertura"), "9999999999999", null, null,null);
 
                 foreach ($lista_productos as $key2 => $value2) {
                     if ($value2["idProducto"] == $decryptedIdProducto) {
@@ -275,7 +275,7 @@ class PasarelaController extends Controller
                     if ($res) {
                         foreach ($this->cart->contents() as $value) {
                             $decryptedIdProducto = $this->encrypter->decrypt(hex2bin($value["id"]));
-                            $lista_productos = $this->productos_modelo->_getProductosPublic(NULL, session()->get("sucursal_cobertura"), "999999999999", null, null);
+                            $lista_productos = $this->productos_modelo->_getProductosPublic(NULL, session()->get("sucursal_cobertura"), "999999999999", null, null,null);
 
                             foreach ($lista_productos as $key2 => $value2) {
                                 if ($value2["idProducto"] == $decryptedIdProducto) {

@@ -34,7 +34,6 @@
         body {
             background-image: url('<?php echo base_url('public/Publico/images/pizza_login.jpg') ?>');
             background-repeat: no-repeat;
-            background-size: cover;
             background-position-y: center;
         }
 

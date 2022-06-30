@@ -159,20 +159,49 @@ class Carrito extends Controller
   {
     $res = null;
 
-    $idProducto = $this->encrypter->decrypt(hex2bin($this->request->getVar("idProducto")));
-    $idProductoEncript = $this->request->getVar("idProducto");
-    $cantidad = (int) $this->request->getVar("qty");
+    if (((int) $this->request->getVar("idClasificacion")) == 1) {
 
-    if ($this->inventario_modelo->validarInventario($idProducto, $idProductoEncript, $cantidad,0) == 1) {
-      $res = array("0" => "No hay inventario para este producto (879)", "1" => "error");
-      if ($this->request->getVar("txtModulo") == "0403435235") {
-        header('Content-Type: application/json');
-        echo json_encode($res);
-        return;
-      } else {
-        $this->session->setFlashdata('respuesta', $res);
-        return redirect()->to(base_url("detalle/". $this->request->getVar("idProducto")));
+      $idProducto = $this->encrypter->decrypt(hex2bin($this->request->getVar("idProducto")));
+      $idProductoEncript = $this->request->getVar("idProducto");
+      $cantidad = (int) $this->request->getVar("qty");
+
+      if ($this->inventario_modelo->validarInventario($idProducto, $cantidad, 0) == 1) {
+        $res = array("0" => "No hay inventario para este producto (879)", "1" => "error");
+        if ($this->request->getVar("txtModulo") == "0403435235") {
+          header('Content-Type: application/json');
+          echo json_encode($res);
+          return;
+        } else {
+          $this->session->setFlashdata('respuesta', $res);
+          return redirect()->to(base_url("detalle/" . $this->request->getVar("idProducto")));
+        }
       }
+    }else{
+
+      $idProducto = $this->encrypter->decrypt(hex2bin($this->request->getVar("idProducto")));
+
+      $ProductoInfo = $this->productos_modelo->where("id", $idProducto)->findAll();
+      $idProductoEncript = $this->request->getVar("idProducto");
+      $cantidad = (int) $this->request->getVar("qty");
+
+      for ($i=0; $i < $ProductoInfo[0]["total"] ; $i++) { 
+
+        $encrypted_product = $this->request->getVar("prod_exis" . ($i + 1));
+        $idProductoBuscar = $this->encrypter->decrypt(hex2bin($encrypted_product));
+
+        if ($this->inventario_modelo->validarInventario($idProductoBuscar, $cantidad) == 1) {
+          $res = array("0" => "No hay inventario para este producto (879)", "1" => "error");
+          if ($this->request->getVar("txtModulo") == "0403435235") {
+            header('Content-Type: application/json');
+            echo json_encode($res);
+            return;
+          } else {
+            $this->session->setFlashdata('respuesta', $res);
+            return redirect()->to(base_url("detalle/" . $this->request->getVar("idProducto")));
+          }
+        }
+      }
+      
     }
 
 
@@ -243,6 +272,7 @@ class Carrito extends Controller
                 $this->cart->update(array(
                   'rowid' => $value["rowid"],
                   'qty'     => $qtyValidate,
+                  'options' => array($producto_personalizado)
                 ));
 
                 $resValidate = 1;
@@ -261,7 +291,6 @@ class Carrito extends Controller
               'options' => array($producto_personalizado)
             ));
           }
-
 
           $res = array("0" => "Producto agregado exitosamente", "1" => "success");
         } else {
@@ -316,7 +345,7 @@ class Carrito extends Controller
     $cantidad = (int) $this->request->getVar("qty");
 
 
-    if ($this->inventario_modelo->validarInventario($idProducto, $idProductoEncript, $cantidad,0) == 1) {
+    if ($this->inventario_modelo->validarInventario($idProducto, $idProductoEncript, $cantidad, 0) == 1) {
       $res = array("0" => "No hay inventario para este producto (879)", "1" => "error");
       header('Content-Type: application/json');
       echo json_encode($res);
@@ -387,6 +416,4 @@ class Carrito extends Controller
       return redirect()->to(base_url("carrito"));
     }
   }
-
-
 }

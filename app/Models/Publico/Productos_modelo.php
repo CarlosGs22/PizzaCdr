@@ -90,10 +90,11 @@ class Productos_modelo extends Model
         return $query->getResultArray();
     }
 
-    public function _getProductosPublic($txtBuscar, $idSucursal, $pagina, $idClasificacion, $idTipoTamanio)
+    public function _getProductosPublic($txtBuscar, $idSucursal, $pagina, $idClasificacion, $idTipoTamanio, $idMenu)
     {
         $funciones = new Funciones();
         $condicion = null;
+        $condicionMenu = "";
         if ($idClasificacion != null) {
             $condicion = "AND clasificacion.id = " . $idClasificacion;
         } else if ($idTipoTamanio != null) {
@@ -104,6 +105,7 @@ class Productos_modelo extends Model
             OR producto.descripcion like '%" . $txtBuscar . "%'
             ) ";
         }
+
 
         $this->table('ingrediente');
         $this->select(
@@ -162,6 +164,9 @@ class Productos_modelo extends Model
                 WHERE cantidad > 0
                 GROUP BY inventario.id HAVING cantidad > 0) ' . $condicion);
 
+        if ($idMenu != null) {
+            $this->where("menu.id !=", $idMenu);
+        }
 
         return $this->where("inventario.id_sucursal", $idSucursal)->paginate($pagina);
     }

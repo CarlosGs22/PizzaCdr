@@ -20,7 +20,7 @@ protected $validationRules    = [
     'id_sucursal' => 'required|integer'
 ];
 
-public function validarInventario($idProducto, $idProductoEncript, $cantidad)
+public function validarInventario($idProducto, $cantidad)
 {
   $productos_modelo = new Productos_modelo();
   $menu_modelo = new Menu_modelo();
@@ -29,7 +29,7 @@ public function validarInventario($idProducto, $idProductoEncript, $cantidad)
 
   $res = 0;
 
-  $lista_productos["lista_producto"] = $productos_modelo->_getProductosPublic(NULL, session()->get("sucursal_cobertura"), "999999999999", null, null);
+  $lista_productos["lista_producto"] = $productos_modelo->_getProductosPublic(NULL, session()->get("sucursal_cobertura"), "999999999999", null, null,null,null);
 
   $id_sucursal = (session()->get("sucursal_cobertura") != null ? session()->get("sucursal_cobertura") : session()->get("id_sucursal"));
 

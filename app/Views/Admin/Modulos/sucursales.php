@@ -57,7 +57,7 @@ $datos_dias = [
                         <?php if ($lista_sucursales) {
                             foreach ($lista_sucursales as $key => $value) { ?>
 
-                                <div class="col-6 col-lg-4 col-md-4 col-sm-12 mb-30">
+                                <div class="col-12 col-lg-4 col-md-4 col-sm-12 mb-30">
                                     <div class="da-card">
                                         <div class="da-card-photo">
                                             <img style="height: 345px;" src="<?php echo base_url("public/Admin/img/sucursales/" . $value['imagen']) ?>" alt="Sucursal">
